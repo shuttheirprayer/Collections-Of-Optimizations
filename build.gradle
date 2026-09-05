@@ -248,6 +248,7 @@ dependencies {
     compileOnly files('libs-compile/crittersandcompanions-forge-1.20.1-2.7.1.jar')
     compileOnly files('libs-compile/Cucumber-1.20.1-7.0.16.jar')
     compileOnly files('libs-compile/MysticalAgriculture-1.20.1-7.0.24.jar')
+    compileOnly files('libs-compile/DynamicTrees-1.20.1-1.4.11.jar')
 
     implementation fg.deobf(fileTree(dir: 'libs', include: ['*.jar']))
 }

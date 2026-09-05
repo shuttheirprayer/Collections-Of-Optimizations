@@ -248,6 +248,9 @@
     "fancymenu.MixinSeamlessWorldLoadingHandler",
     "fancymenu.MixinRenderScaleUtil",
     "fancymenu.MixinFancyMenuRenderState",
+    "fancymenu.MixinScreenIdentifierHandler",
+    "fancymenu.MixinUniversalScreenIdentifierRegistry",
+    "fancymenu.MixinScreenCustomization",
     "xaerolib.MixinClientConfigManager",
     "cofh.MixinCoreClientEvents",
     "xaeroworldmap.MixinMapLimiter",
@@ -283,6 +286,7 @@
     "oculus.MixinEntityRendererNameTag",
     "oculus.MixinItemStackFoil",
     "oculus.MixinSignRenderer",
+    "oculus.MixinRenderBuffersBatching",
     "vanilla.MixinItemEntityRenderer",
     "w2w2.MixinW2w2Mod",
     "xaerominimap.MixinMinimapFBORenderer",
@@ -310,7 +314,15 @@
     "cnc.MixinCncFogDistanceSetup",
     "cnc.MixinCncSobbingShaderProcedure",
     "crittersandcompanions.MixinCacSilkLeashRenderer",
-    "cucumber.MixinCucumberTagTooltip"
+    "cucumber.MixinCucumberTagTooltip",
+    "dynamictrees.MixinDTLeafPlacement",
+    "dynamictrees.MixinDTLeafHydration",
+    "dynamictrees.MixinDTThickBranchShape",
+    "vanilla.MixinEntityModelSetArmorBake",
+    "vanilla.MixinHumanoidArmorLayerBake",
+    "ironslib.MixinTransmogOuterLayerBake",
+    "vanilla.MixinLevelRendererOutlineEdges",
+    "create.MixinBigOutlinesPickRate"
   ],
   "injectors": {
     "defaultRequire": 0

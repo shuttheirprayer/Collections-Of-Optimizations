@@ -94,6 +94,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("immediatelyfast", "immediatelyfast"),
             Map.entry("modernfix", "modernfix"),
             Map.entry("fancymenu", "fancymenu"),
+            Map.entry("ironslib", "irons_lib"),
             Map.entry("bettercombat", "bettercombat"),
             Map.entry("cofh", "cofh_core"),
             Map.entry("xaerolib", "xaerolib"),
@@ -124,7 +125,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("cnc", "cnc"),
             Map.entry("crittersandcompanions", "crittersandcompanions"),
             Map.entry("cucumber", "cucumber"),
-            Map.entry("mysticalagriculture", "mysticalagriculture")
+            Map.entry("mysticalagriculture", "mysticalagriculture"),
+            Map.entry("dynamictrees", "dynamictrees")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(

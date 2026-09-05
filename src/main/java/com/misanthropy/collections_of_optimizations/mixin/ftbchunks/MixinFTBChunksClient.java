@@ -113,14 +113,19 @@ public abstract class MixinFTBChunksClient {
         }
 
         Minecraft mc = Minecraft.getInstance();
+
+        if (!FTBChunksClientConfig.MINIMAP_ENABLED.get()
+                || FTBChunksClientConfig.MINIMAP_VISIBILITY.get() == 0
+                || !FTBChunksWorldConfig.shouldShowMinimap(mc.player)) {
+            ci.cancel();
+            return;
+        }
+
         if (mc.screen != null) {
             return;
         }
 
-        if (mc.options.renderDebug
-                || !FTBChunksClientConfig.MINIMAP_ENABLED.get()
-                || FTBChunksClientConfig.MINIMAP_VISIBILITY.get() == 0
-                || !FTBChunksWorldConfig.shouldShowMinimap(mc.player)) {
+        if (mc.options.renderDebug) {
             ci.cancel();
         }
     }

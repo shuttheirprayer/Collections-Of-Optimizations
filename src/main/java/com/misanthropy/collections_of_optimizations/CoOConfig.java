@@ -51,6 +51,7 @@ public final class CoOConfig {
     public static boolean cofhCacheTranslucentRenderers = true;
 
     public static boolean createDedupeBigOutlineProbes = true;
+    public static int createBigOutlinePickInterval = 5;
 
     public static boolean xaerolibCacheConfigProfile = true;
     public static boolean xaerolibCacheEnforcementCheck = true;
@@ -71,6 +72,7 @@ public final class CoOConfig {
     public static int fancymenuSeamlessCaptureInterval = 30;
     public static boolean fancymenuSkipRedundantScaleWrites = true;
     public static boolean fancymenuPinRenderStateToRenderThread = true;
+    public static boolean fancymenuCacheScreenIdentifiers = true;
 
     public static boolean emfDropZeroAngerEntries = true;
 
@@ -80,6 +82,10 @@ public final class CoOConfig {
     public static boolean oculusSkipGlintInShadowPass = true;
     public static boolean oculusSkipNameTagsInShadowPass = true;
     public static boolean oculusSkipBannerPatternsInShadowPass = true;
+    public static boolean oculusSkipBatchingWithoutShaders = true;
+
+    public static boolean vanillaCacheArmorModelBakes = true;
+    public static boolean vanillaCacheOutlineEdges = true;
 
     public static boolean lootrSkipIdleTileTicker = true;
     public static int lootrTileTickerBudget = 512;
@@ -130,6 +136,10 @@ public final class CoOConfig {
 
     public static boolean cucumberLeanTileDispatch = true;
     public static boolean cucumberLeanTagTooltip = true;
+
+    public static boolean dynamictreesLeanLeafPlacement = true;
+    public static boolean dynamictreesLeanLeafHydration = true;
+    public static boolean dynamictreesCacheThickTrunkShape = true;
 
     public static boolean mysticalagricultureLeanAugmentLookup = true;
     public static boolean mysticalagricultureLeanAbilityCache = true;
@@ -474,6 +484,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Read each block position at most once per big outline pick. Stock tests a 3x3x3 neighbourhood at every raycast step, so neighbouring steps re-read the same positions.")
                 .define("dedupeBigOutlineProbes", true), v -> createDedupeBigOutlineProbes = v);
+        gate(builder
+                .comment("Shortest gap, in milliseconds, between Create's big outline raycasts. Create casts a fresh ray from your eye to your reach limit on every frame drawn, so above a hundred frames a second it casts far more often than the outline can visibly change. Skipped frames keep the previous target, which also feeds block breaking and placing, so a value here is how stale that target may get. Vanilla only recalculates it every 50. 0 casts on every frame.")
+                .defineInRange("bigOutlinePickInterval", 5, 0, 50), 0, v -> createBigOutlinePickInterval = v);
         builder.pop();
 
         builder.comment("XaeroLib patches.").push("xaerolib");
@@ -540,6 +553,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Hold FancyMenu's render scale, translation and rotation in plain fields for the render thread instead of in ThreadLocals. Stock reads or writes three ThreadLocals on every PoseStack push, pop, scale, translate and mulPose, which the profiler puts at 2.6 percent of the client thread. Other threads keep the stock ThreadLocal. Client.")
                 .define("pinRenderStateToRenderThread", true), v -> fancymenuPinRenderStateToRenderThread = v);
+        gate(builder
+                .comment("Remember which screen identifier belongs to which screen instead of working it out again on every render call. FancyMenu asks four times a frame, and answering walks a hash map, scans its whole universal identifier table for a matching value, and calls Class.forName. The cache is dropped whenever FancyMenu reloads or a new universal identifier is registered. Client.")
+                .define("cacheScreenIdentifiers", true), v -> fancymenuCacheScreenIdentifiers = v);
         builder.pop();
 
         builder.comment("Entity Model Features patches.").push("emf");
@@ -567,6 +583,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip banner pattern layers while rendering the shadow map, keeping the base cloth.")
                 .define("skipBannerPatternsInShadowPass", true), v -> oculusSkipBannerPatternsInShadowPass = v);
+        gate(builder
+                .comment("Use the vanilla entity buffer source while no shader pack is loaded. Oculus installs its batched entity renderer on every level render whether or not shaders are on, and that renderer rebuilds a translucency graph per frame. With shaders off the profiler puts it at 1.6 percent of the render thread for no visual difference. Turning a shader pack on restores the batched path. Client.")
+                .define("skipBatchingWithoutShaders", true), v -> oculusSkipBatchingWithoutShaders = v);
+        builder.pop();
+
+        builder.comment("Armour model patches.").push("armor");
+        gate(builder
+                .comment("Reuse the baked model parts an armour item builds for itself instead of baking them again on every call. Eighty six armour items in this pack build a whole model from scratch each time the game asks what model they use, and asking happens several times a frame per worn piece. With asynchronous model loading installed each of those bakes parks the render thread until a worker finishes. The reuse is limited to models built inside an armour model lookup and is dropped on a resource reload. Client.")
+                .define("cacheArmorModelBakes", true), v -> vanillaCacheArmorModelBakes = v);
+        gate(builder
+                .comment("Remember the edge list of a block outline shape instead of walking the shape again every frame. The walk is the same work for the same block and the game repeats it once per frame for whatever you are looking at, which at a few hundred frames a second is a few hundred identical walks a second. The drawing itself is unchanged. Client.")
+                .define("cacheOutlineEdges", true), v -> vanillaCacheOutlineEdges = v);
         builder.pop();
 
         builder.comment("Lootr patches.").push("lootr");
@@ -723,6 +751,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Ask whether an item has any tags instead of building the full lists, when you are not holding CTRL. With advanced tooltips on, stock collects every block tag, every item tag and every fluid tag, running a fluid handler capability lookup and a sorted distinct pass over them, once per hovered item per frame, and then throws all of it away to print 'Hold CTRL for tags'. Result is identical.")
                 .define("leanTagTooltip", true), v -> cucumberLeanTagTooltip = v);
+        builder.pop();
+
+        builder.comment("Dynamic Trees patches.").push("dynamictrees");
+        gate(builder
+                .comment("Read each block once while Dynamic Trees decides whether a leaf can go somewhere. Stock reads the target block three times and the block under it twice for a single yes or no, and the light check under it allocates a fresh position for the block below plus one per smother layer above. This check runs six times per leaf per ageing pass, and a tree generated by world gen ages its whole leaf cluster three times, so it is the single hottest thing the mod does while chunks are being built. The smother scan also stops at the first gap instead of always walking all four layers. Result is identical.")
+                .define("leanLeafPlacement", true), v -> dynamictreesLeanLeafPlacement = v);
+        gate(builder
+                .comment("Reuse one position object and one cell array while Dynamic Trees works out a leaf's hydration from its six neighbours. Stock allocates a six wide cell array plus a fresh BlockPos per side every time, and this runs for every leaf on every hydration update, every leaf ageing pass and every leaf it tries to grow, on both the world gen threads and the server thread. Result is identical.")
+                .define("leanLeafHydration", true), v -> dynamictreesLeanLeafHydration = v);
+        gate(builder
+                .comment("Hand out a prebuilt collision shape for thick trunks instead of building a new one per query. Any branch wider than a full block skips Dynamic Trees' own shape cache and builds a fresh AABB and VoxelShape every single time the game asks for its collision box, which is once per axis per entity per tick for anything walking near a big trunk. There are only sixteen possible widths so they are all built once at load. Result is identical.")
+                .define("cacheThickTrunkShape", true), v -> dynamictreesCacheThickTrunkShape = v);
         builder.pop();
 
         builder.comment("Mystical Agriculture patches.").push("mysticalagriculture");
