@@ -136,6 +136,7 @@ public final class CoOConfig {
 
     public static boolean cucumberLeanTileDispatch = true;
     public static boolean cucumberLeanTagTooltip = true;
+    public static boolean cucumberCacheTagLookup = true;
 
     public static boolean dynamictreesLeanLeafPlacement = true;
     public static boolean dynamictreesLeanLeafHydration = true;
@@ -751,6 +752,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Ask whether an item has any tags instead of building the full lists, when you are not holding CTRL. With advanced tooltips on, stock collects every block tag, every item tag and every fluid tag, running a fluid handler capability lookup and a sorted distinct pass over them, once per hovered item per frame, and then throws all of it away to print 'Hold CTRL for tags'. Result is identical.")
                 .define("leanTagTooltip", true), v -> cucumberLeanTagTooltip = v);
+        gate(builder
+                .comment("Remember which item a tag resolved to instead of re-reading config/cucumber-tags.json off disk. Cucumber only caches a tag once the file has been parsed successfully, so every tag it has not seen yet costs a file open plus a full Gson parse, and a malformed cucumber-tags.json makes that miss permanent: every ShapedTagRecipe in the recipe sync packet re-reads the broken file and logs a full stack trace, on the netty thread, once per player join. The memo is dropped whenever Cucumber rebuilds its own tag map, so it lives exactly as long as stock's. Result is identical.")
+                .define("cacheTagLookup", true), v -> cucumberCacheTagLookup = v);
         builder.pop();
 
         builder.comment("Dynamic Trees patches.").push("dynamictrees");
