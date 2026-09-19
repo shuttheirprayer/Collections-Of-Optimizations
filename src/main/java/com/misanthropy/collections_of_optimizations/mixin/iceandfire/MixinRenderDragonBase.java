@@ -2,13 +2,12 @@ package com.misanthropy.collections_of_optimizations.mixin.iceandfire;
 
 import com.github.alexthe666.iceandfire.client.render.entity.RenderDragonBase;
 import com.github.alexthe666.iceandfire.entity.EntityDragonBase;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,42 +32,35 @@ public abstract class MixinRenderDragonBase {
                 | (dragon.isBlinking() ? 1 : 0);
     }
 
-    @Inject(method = "getTextureLocation", at = @At("HEAD"), cancellable = true, require = 0)
-    private void coo$dragonTextureFromPackedKey(EntityDragonBase dragon, CallbackInfoReturnable<ResourceLocation> cir) {
-        if (!CoOConfig.iceandfireCacheDragonTexture || this.coo$dragonTextures == null) {
-            return;
-        }
-        int index = coo$packDragonState(dragon);
-        if (index < 0) {
-            return;
-        }
-        ResourceLocation[] slots = this.coo$dragonTextures.get(dragon.getVariantName(dragon.getVariant()));
-        if (slots == null) {
-            return;
-        }
-        ResourceLocation cached = slots[index];
-        if (cached != null) {
-            cir.setReturnValue(cached);
-        }
-    }
-
-    @Inject(method = "getTextureLocation", at = @At("RETURN"), require = 0)
-    private void coo$rememberDragonTexture(EntityDragonBase dragon, CallbackInfoReturnable<ResourceLocation> cir) {
+    @WrapMethod(method = "getTextureLocation", require = 0)
+    private ResourceLocation coo$memoDragonTexture(EntityDragonBase dragon, Operation<ResourceLocation> original) {
         if (!CoOConfig.iceandfireCacheDragonTexture) {
-            return;
+            return original.call(dragon);
         }
-        ResourceLocation resolved = cir.getReturnValue();
-        if (resolved == null) {
-            return;
-        }
+
         int index = coo$packDragonState(dragon);
         if (index < 0) {
-            return;
+            return original.call(dragon);
         }
-        if (this.coo$dragonTextures == null) {
-            this.coo$dragonTextures = new HashMap<>();
+
+        Map<String, ResourceLocation[]> textures = this.coo$dragonTextures;
+        String variant = dragon.getVariantName(dragon.getVariant());
+        if (textures != null) {
+            ResourceLocation[] slots = textures.get(variant);
+            if (slots != null && slots[index] != null) {
+                return slots[index];
+            }
         }
-        this.coo$dragonTextures
-                .computeIfAbsent(dragon.getVariantName(dragon.getVariant()), key -> new ResourceLocation[256])[index] = resolved;
+
+        ResourceLocation resolved = original.call(dragon);
+        if (resolved == null) {
+            return null;
+        }
+        if (textures == null) {
+            textures = new HashMap<>();
+            this.coo$dragonTextures = textures;
+        }
+        textures.computeIfAbsent(variant, key -> new ResourceLocation[256])[index] = resolved;
+        return resolved;
     }
 }

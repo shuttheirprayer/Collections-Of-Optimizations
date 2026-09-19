@@ -24,6 +24,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, String> GROUP_TO_MODID = Map.ofEntries(
             Map.entry("curios", "curios"),
+            Map.entry("oddaccessories", "oddaccessories"),
             Map.entry("artifacts", "artifacts"),
             Map.entry("caelus", "caelus"),
             Map.entry("lootr", "lootr"),
@@ -31,9 +32,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("justdirethings", "justdirethings"),
             Map.entry("dungeoncrawl", "dungeoncrawl"),
             Map.entry("goety", "goety"),
+            Map.entry("shouldersurfing", "shouldersurfing"),
             Map.entry("mythsandlegends", "mythsandlegends"),
             Map.entry("ambientsounds", "ambientsounds"),
             Map.entry("arsnouveau", "ars_nouveau"),
+            Map.entry("arselemental", "ars_elemental"),
             Map.entry("goetydelight", "goetydelight"),
             Map.entry("regionsunexplored", "regions_unexplored"),
             Map.entry("endinglibrary", "ending_library"),
@@ -41,6 +44,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("revelationfix", "revelationfix"),
             Map.entry("geckolib", "geckolib"),
             Map.entry("gnetum", "gnetum"),
+            Map.entry("tooltipoverhaul", "tooltipoverhaul"),
+            Map.entry("cablefacades", "cable_facades"),
             Map.entry("oculus", "oculus"),
             Map.entry("naturesaura", "naturesaura"),
             Map.entry("xaerominimap", "xaerominimap"),
@@ -49,11 +54,14 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("terramity", "terramity"),
             Map.entry("armageddon", "armageddon_mod"),
             Map.entry("borninchaos", "born_in_chaos_v1"),
+            Map.entry("brutalbosses", "brutalbosses"),
+            Map.entry("brutality", "brutality"),
             Map.entry("bossesrise", "block_factorys_bosses"),
             Map.entry("soulsweapons", "soulsweapons"),
             Map.entry("konweapon", "weapon"),
             Map.entry("immersiveaircraft", "immersive_aircraft"),
             Map.entry("ftbchunks", "ftbchunks"),
+            Map.entry("ftbxmodcompat", "ftbxmodcompat"),
             Map.entry("structurify", "structurify"),
             Map.entry("bloodmagic", "bloodmagic"),
             Map.entry("animus", "animus"),
@@ -61,8 +69,10 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("placebo", "placebo"),
             Map.entry("punchy", "punchy"),
             Map.entry("l2hostility", "l2hostility"),
+            Map.entry("l2complements", "l2complements"),
             Map.entry("integratedapi", "integrated_api"),
             Map.entry("elysiumapi", "elysium_api"),
+            Map.entry("cerbonsapi", "cerbons_api"),
             Map.entry("echelon", "tiered"),
             Map.entry("enigmaticdice", "enigmaticdice"),
             Map.entry("balm", "balm"),
@@ -116,6 +126,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("enigmaticdelicacy", "enigmaticdelicacy"),
             Map.entry("enigmaticlegacy", "enigmaticlegacy"),
             Map.entry("traveloptics", "traveloptics"),
+            Map.entry("celestialcore", "celestial_core"),
             Map.entry("celestialenchantments", "celestial_enchantments"),
             Map.entry("uniqueaccessories", "uniqueaccessories"),
             Map.entry("biolith", "biolith"),
@@ -126,7 +137,63 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("crittersandcompanions", "crittersandcompanions"),
             Map.entry("cucumber", "cucumber"),
             Map.entry("mysticalagriculture", "mysticalagriculture"),
-            Map.entry("dynamictrees", "dynamictrees")
+            Map.entry("dynamictrees", "dynamictrees"),
+            Map.entry("konkrete", "konkrete"),
+            Map.entry("titanium", "titanium"),
+            Map.entry("lithostitched", "lithostitched"),
+            Map.entry("domesticationinnovation", "domesticationinnovation"),
+            Map.entry("moreartifacts", "moreartifacts"),
+            Map.entry("simplymore", "simplymore"),
+            Map.entry("simplyswords", "simplyswords"),
+            Map.entry("celestisynth", "celestisynth"),
+            Map.entry("covenantoftheseven", "covenant_of_the_seven"),
+            Map.entry("hexerei", "hexerei"),
+            Map.entry("easyvillagers", "easy_villagers"),
+            Map.entry("companions", "companions"),
+            Map.entry("manybows", "too_many_bows"),
+            Map.entry("immersivearmors", "immersive_armors"),
+            Map.entry("starcatcher", "starcatcher"),
+            Map.entry("neobackports", "neobackports"),
+            Map.entry("faunify", "faunify"),
+            Map.entry("textanimator", "textanimator"),
+            Map.entry("darkdoppelganger", "darkdoppelganger"),
+            Map.entry("torchmaster", "torchmaster"),
+            Map.entry("cognition", "experienceobelisk"),
+            Map.entry("opposingforce", "opposing_force"),
+            Map.entry("peyroscythe", "peyroscythe"),
+            Map.entry("somakespells", "somakespells"),
+            Map.entry("biomancy", "biomancy"),
+            Map.entry("notenoughanimations", "notenoughanimations"),
+            Map.entry("lethality", "lethality"),
+            Map.entry("castercuriosbonus", "caster_curios_bonus"),
+            Map.entry("legendaryspellbooks", "legendary_spellbooks"),
+            Map.entry("meetyourfight", "meetyourfight"),
+            Map.entry("bmd", "bosses_of_mass_destruction"),
+            Map.entry("mahoutsukai", "mahoutsukai"),
+            Map.entry("primitivemobs", "primitive_mobs"),
+            Map.entry("ribbits", "ribbits"),
+            Map.entry("hazennstuff", "hazennstuff"),
+            Map.entry("species", "species"),
+            Map.entry("cookingforblockheads", "cookingforblockheads"),
+            Map.entry("integratedvillages", "integrated_villages"),
+            Map.entry("deeperdarker", "deeperdarker"),
+            Map.entry("goetyhostility", "goetyhostility"),
+            Map.entry("fdbosses", "fdbosses"),
+            Map.entry("mutantmonsters", "mutantmonsters"),
+            Map.entry("cnb", "cnb"),
+            Map.entry("mobgrindingutils", "mob_grinding_utils"),
+            Map.entry("transmog", "transmog"),
+            Map.entry("ironsspellbooks", "irons_spellbooks"),
+            Map.entry("hostilenetworks", "hostilenetworks"),
+            Map.entry("extrahnn", "extrahnn"),
+            Map.entry("l2archery", "l2archery"),
+            Map.entry("blessfulled", "blessfulled"),
+            Map.entry("tomeofblood", "tomeofblood"),
+            Map.entry("betterspellcasting", "better_spellcasting"),
+            Map.entry("arsadditions", "ars_additions"),
+            Map.entry("adamsarsplus", "adamsarsplus"),
+            Map.entry("duplicationless", "duplicationless"),
+            Map.entry("fluidium", "fluidium")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(
@@ -150,29 +217,52 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
             "vanilla.MixinChunkMapEntityTracker", new String[]{"vmp", "hariplayer"},
 
-            "vanilla.MixinClientLevelBiomeBlend", new String[]{"betterbiomeblend", "betterbiomereblend"}
+            "vanilla.MixinClientLevelBiomeBlend", new String[]{"betterbiomeblend", "betterbiomereblend"},
+
+            // Lomka @Overwrites these three methods; injecting into a merged method at equal priority is a hard error.
+            "vanilla.MixinPoseStackAxisRotation", new String[]{"lomka"},
+            "vanilla.MixinBlockPosBetweenClosed", new String[]{"lomka"},
+            "vanilla.MixinPalettedContainerUniform", new String[]{"lomka"}
     );
 
-    private static final Map<String, String[]> MIXIN_REQUIRES = Map.of(
-            "elysiumapi.MixinElysiumTerrablenderHelper", new String[]{"terrablender"},
+    private static final Map<String, String[]> MIXIN_REQUIRES = Map.ofEntries(
+            Map.entry("elysiumapi.MixinElysiumTerrablenderHelper", new String[]{"terrablender"}),
 
-            "goetyrevelation.MixinATAHelper", new String[]{"curios"},
+            Map.entry("goetyrevelation.MixinATAHelper", new String[]{"curios"}),
 
-            "goety.MixinCuriosFinder", new String[]{"curios"},
+            Map.entry("goety.MixinCuriosFinder", new String[]{"curios"}),
 
-            "goety.MixinCuriosFinderFilter", new String[]{"curios"},
+            Map.entry("goety.MixinCuriosFinderFilter", new String[]{"curios"}),
 
-            "morerelics.MixinMoreRelicsUtil", new String[]{"curios", "relics"},
+            Map.entry("morerelics.MixinMoreRelicsUtil", new String[]{"curios", "relics"}),
 
-            "modernfix.MixinJEIRuntimeCapturer", new String[]{"jei"},
+            Map.entry("modernfix.MixinJEIRuntimeCapturer", new String[]{"jei"}),
 
-            "w2w2.MixinW2w2Mod", new String[]{"xaerominimap"},
+            Map.entry("w2w2.MixinXaeronCompatibility", new String[]{"xaerominimap"}),
 
-            "summonity.MixinSoloistsSealItem", new String[]{"curios"},
+            Map.entry("summonity.MixinSoloistsSealItem", new String[]{"curios"}),
 
-            "summonity.MixinPolychromicNecklaceItem", new String[]{"curios"},
+            Map.entry("summonity.MixinPolychromicNecklaceItem", new String[]{"curios"}),
 
-            "summonity.MixinConductiveBatteryItem", new String[]{"curios"}
+            Map.entry("summonity.MixinConductiveBatteryItem", new String[]{"curios"}),
+
+            Map.entry("enigmaticlegacy.MixinSuperpositionCurioLookup", new String[]{"curios"}),
+
+            Map.entry("lethality.MixinLethalityCharmScan", new String[]{"curios"}),
+
+            Map.entry("castercuriosbonus.MixinCcbCurioLookup", new String[]{"curios"}),
+
+            Map.entry("legendaryspellbooks.MixinLsTornadoTracker", new String[]{"legendary_monsters"}),
+
+            Map.entry("legendaryspellbooks.MixinLsTornadoScan", new String[]{"legendary_monsters"}),
+
+            Map.entry("meetyourfight.MixinMyfCurioLookup", new String[]{"curios"}),
+
+            Map.entry("meetyourfight.MixinMyfSpectresEye", new String[]{"curios"}),
+
+            Map.entry("copycats.MixinBlockRendererColorContext", new String[]{"embeddium"}),
+
+            Map.entry("ironsspellbooks.MixinIsbCurioEquipCheck", new String[]{"curios"})
     );
 
     private static final Map<String, String[]> MIXIN_ANY_OF = Map.of(

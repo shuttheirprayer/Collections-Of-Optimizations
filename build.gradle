@@ -112,10 +112,15 @@ repositories {
         name "Shedaniel"
         url "https://maven.shedaniel.me/"
     }
+    maven {
+        name "Bawnorton"
+        url "https://maven.bawnorton.com/releases"
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.4")
     annotationProcessor 'org.spongepowered:mixin:0.8.7:processor'
 
     implementation("org.jspecify:jspecify:1.0.0")
@@ -123,6 +128,11 @@ dependencies {
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4"))
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:[0.5.4,)")) {
         jarJar.ranged(it, "[0.5.4,)")
+    }
+
+    compileOnly("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.4")
+    implementation(jarJar("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.4")) {
+        jarJar.ranged(it, "[0.3.4,)")
     }
     implementation fg.deobf("curse.maven:curios-309927:6418456")
     implementation fg.deobf("curse.maven:artifacts-312353:7903806")
@@ -149,7 +159,7 @@ dependencies {
     implementation fg.deobf("curse.maven:rhino-416294:6186971")
     implementation fg.deobf("curse.maven:xaeros-minimap-263420:8449808")
     implementation fg.deobf("curse.maven:xaeros-world-map-317780:8449908")
-    implementation fg.deobf("curse.maven:xaeros-minimap-world-map-waystones-compability-887484:4637926")
+    compileOnly files('libs-compile/xaeros_waystones_compatibility-1.1.jar')
     implementation fg.deobf("curse.maven:waystones-245755:7682270")
     implementation fg.deobf("curse.maven:terrablender-563928:6290448")
     implementation fg.deobf("curse.maven:terramity-1084134:6054971")
@@ -180,23 +190,31 @@ dependencies {
     implementation 'com.google.guava:guava:33.0.0-jre'
 
     compileOnly files('libs-compile/armageddon-3.0.05.jar')
+    compileOnly files('libs-compile/CerbonsApi-Forge-1.20.1-1.0.0.jar')
+    compileOnly files('libs-compile/adamsarsplus-1.20.1-5.0.3.jar')
+    compileOnly files('libs-compile/duplicationless-1.20.1-1.2.1.jar')
+    compileOnly files('libs-compile/fluidium-1.20.1-1.4.0.jar')
     compileOnly files('libs-compile/born_in_chaos-1.7.5.jar')
     compileOnly files('libs-compile/bossesrise-1.0.9.2b.jar')
     compileOnly files('libs-compile/kon-weapon-0.1.5.jar')
     compileOnly files('libs-compile/l2hostility-2.5.19.jar')
     compileOnly files('libs-compile/brutality-0.8.5-1.20.1.jar')
+    compileOnly files('libs-compile/brutalbosses-1.20.1-8.5.jar')
+    compileOnly files('libs-compile/too_many_bows-forge-4.1.2.jar')
     compileOnly files('libs-compile/lithostitched-forge-1.20.1-1.4.11.jar')
     compileOnly files('libs-compile/GoetyRevelation-2.3.1.jar')
     compileOnly files('libs-compile/mythsandlegends-0.0.8.8.jar')
     compileOnly files('libs-compile/ambientsounds-6.3.8-apionly.jar')
     compileOnly files('libs-compile/creativecore-2.12.39-apionly.jar')
     compileOnly files('libs-compile/ars_nouveau-4.12.7-apionly.jar')
+    compileOnly files('libs-compile/ars_elemental-1.20.1-0.6.8.0.jar')
     compileOnly files('libs-compile/Dungeon Crawl-1.20.1-2.3.15.jar')
     compileOnly files('libs-compile/Zeta-1.0-31.jar')
     compileOnly files('libs-compile/Quark-4.0-462.jar')
     compileOnly files('libs-compile/Perception-FORGE-0.1.4+1.20.1.jar')
     compileOnly files('libs-compile/pehkui-3.8.2-apionly.jar')
     compileOnly files('libs-compile/relics-1.20.1-0.8.0.13.jar')
+    compileOnly files('libs-compile/oddaccessories-1.1.6.jar')
     compileOnly files('libs-compile/morehitboxes-forge-1.20.1-1.9.2.jar')
     compileOnly files('libs-compile/moonlight-2.16.34-apionly.jar')
     compileOnly files('libs-compile/SubtleEffects-forge-1.20.1-1.14.3.jar')
@@ -232,6 +250,7 @@ dependencies {
     compileOnly files('libs-compile/traveloptics-6.3.0-1.20.1.jar')
     compileOnly files('libs-compile/celestial_enchantments-1.3.7.jar')
     compileOnly files('libs-compile/celestial_core-1.5.8.jar')
+    compileOnly files('libs-compile/l2library-2.5.3.jar')
     compileOnly files('libs-compile/uniqueaccessories-1.3.3-forge-mc1.20.1.jar')
     compileOnly files('libs-compile/irons_spellbooks-1.20.1-3.15.6.jar')
     compileOnly files('libs-compile/EnigmaticLegacy-2.30.1.jar')
@@ -242,6 +261,7 @@ dependencies {
     compileOnly files('libs-compile/biolith-forge-1.0.1-beta.1.jar')
     compileOnly files('libs-compile/RegionsUnexploredForge-0.5.6+1.20.1.jar')
     compileOnly files('libs-compile/EndingLibraryTweaked-1.20.1-2.1.19.jar')
+    compileOnly files('libs-compile/RevelationFix-1.20.1-4.0.jar')
     compileOnly files('libs-compile/modernfix-forge-5.27.77+mc1.20.1.jar')
     compileOnly files('libs-compile/jei-1.20.1-forge-15.49.0.191.jar')
     compileOnly files('libs-compile/summonity-0.1.4.jar')
@@ -249,6 +269,33 @@ dependencies {
     compileOnly files('libs-compile/Cucumber-1.20.1-7.0.16.jar')
     compileOnly files('libs-compile/MysticalAgriculture-1.20.1-7.0.24.jar')
     compileOnly files('libs-compile/DynamicTrees-1.20.1-1.4.11.jar')
+    compileOnly files('libs-compile/konkrete_forge_1.8.0_MC_1.20-1.20.1.jar')
+    compileOnly files('libs-compile/domesticationinnovation-1.7.1-1.20.1.jar')
+    compileOnly files('libs-compile/moreartifacts-1.5.5-1.20.1.jar')
+    compileOnly files('libs-compile/easy-villagers-forge-1.20.1-1.1.23.jar')
+    compileOnly files('libs-compile/celestisynth-1.20.1-1.3.4-all.jar')
+    compileOnly files('libs-compile/capabilitysyncer-1.20.1-4.0.1.jar')
+    compileOnly files('libs-compile/covenant_of_the_seven-2.2.6-hotfix.jar')
+    compileOnly files('libs-compile/hexerei-0.4.2.3.jar')
+    compileOnly files('libs-compile/simplymore-forge-1.1.3.jar')
+    compileOnly files('libs-compile/simplyswords-forge-1.56.0-1.20.1.jar')
+    compileOnly files('libs-compile/knightlib-forge-1.20.1-1.6.1.jar')
+    compileOnly files('libs-compile/companions-forge-1.20.1-1.3.2.jar')
+    compileOnly files('libs-compile/TextAnimator-1.20.1-Forge-2.5.4.jar')
+    compileOnly files('libs-compile/torchmaster-20.1.9.jar')
+    compileOnly files('libs-compile/cookingforblockheads-forge-1.20.1-16.0.15.jar')
+    compileOnly files('libs-compile/integrated_villages-1.3.2+1.20.1-forge.jar')
+    compileOnly files('libs-compile/deeperdarker-forge-1.20.1-1.3.3.jar')
+    compileOnly files('libs-compile/fdbosses-3.1.0.3-1.20.1.jar')
+    compileOnly files('libs-compile/mob_grinding_utils-1.20.1-1.1.0.jar')
+    compileOnly files('libs-compile/transmog-forge-1.3.0+1.20.jar')
+    compileOnly files('libs-compile/entity_model_features-3.3.6-1.20.1-forge.jar')
+    compileOnly files('libs-compile/entity_texture_features-7.2.1-1.20.1-forge.jar')
+    compileOnly files('libs-compile/ShoulderSurfing-Forge-1.20.1-5.0.11.jar')
+    compileOnly files('libs-compile/HostileNeuralNetworks-1.20.1-5.3.3.jar')
+    compileOnly files('libs-compile/l2archery-2.5.0.jar')
+    compileOnly files('libs-compile/l2complements-2.6.1.jar')
+    compileOnly files('libs-compile/ars_additions-1.20.1-1.6.7.jar')
 
     implementation fg.deobf(fileTree(dir: 'libs', include: ['*.jar']))
 }

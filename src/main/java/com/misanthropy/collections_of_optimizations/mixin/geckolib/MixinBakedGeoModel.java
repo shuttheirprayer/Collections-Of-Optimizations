@@ -1,11 +1,10 @@
 package com.misanthropy.collections_of_optimizations.mixin.geckolib;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 
@@ -19,43 +18,26 @@ public abstract class MixinBakedGeoModel {
     @Unique
     private volatile Map<String, Optional<GeoBone>> coo$boneLookup;
 
-    @Inject(
-            method = "getBone",
-            at = @At("HEAD"),
-            cancellable = true,
-            require = 0
-    )
-    private void coo$readBoneLookup(String name, CallbackInfoReturnable<Optional<GeoBone>> cir) {
+    @WrapMethod(method = "getBone", require = 0)
+    private Optional<GeoBone> coo$cacheBoneLookup(String name, Operation<Optional<GeoBone>> original) {
         if (!CoOConfig.geckolibCacheBoneLookup) {
-            return;
+            return original.call(name);
         }
         Map<String, Optional<GeoBone>> cache = this.coo$boneLookup;
-        if (cache == null) {
-            return;
+        if (cache != null) {
+            Optional<GeoBone> hit = cache.get(name);
+            if (hit != null) {
+                return hit;
+            }
         }
-        Optional<GeoBone> hit = cache.get(name);
-        if (hit != null) {
-            cir.setReturnValue(hit);
-        }
-    }
-
-    @Inject(
-            method = "getBone",
-            at = @At("RETURN"),
-            require = 0
-    )
-    private void coo$writeBoneLookup(String name, CallbackInfoReturnable<Optional<GeoBone>> cir) {
-        if (!CoOConfig.geckolibCacheBoneLookup) {
-            return;
-        }
-        Map<String, Optional<GeoBone>> cache = this.coo$boneLookup;
+        Optional<GeoBone> result = original.call(name);
         if (cache == null) {
             cache = new ConcurrentHashMap<>();
             this.coo$boneLookup = cache;
         }
-        Optional<GeoBone> result = cir.getReturnValue();
         if (result != null) {
             cache.put(name, result);
         }
+        return result;
     }
 }

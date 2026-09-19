@@ -11,6 +11,7 @@ public final class FancyMenuIdentifierCache {
     private static final String NULL = new String(" coo$null");
 
     private static final Object2ByteOpenHashMap<String> VALID = new Object2ByteOpenHashMap<>(256);
+    private static final Object2ByteOpenHashMap<String> BLACKLISTED = new Object2ByteOpenHashMap<>(256);
     private static final Object2ObjectOpenHashMap<String, String> BEST = new Object2ObjectOpenHashMap<>(256);
     private static final Object2ObjectOpenHashMap<String, String> UNIVERSAL = new Object2ObjectOpenHashMap<>(256);
 
@@ -18,6 +19,7 @@ public final class FancyMenuIdentifierCache {
 
     static {
         VALID.defaultReturnValue(UNKNOWN);
+        BLACKLISTED.defaultReturnValue(UNKNOWN);
     }
 
     private FancyMenuIdentifierCache() {
@@ -31,6 +33,7 @@ public final class FancyMenuIdentifierCache {
         if (dirty) {
             dirty = false;
             VALID.clear();
+            BLACKLISTED.clear();
             BEST.clear();
             UNIVERSAL.clear();
         }
@@ -43,6 +46,14 @@ public final class FancyMenuIdentifierCache {
 
     public static void putValid(String identifier, boolean valid) {
         VALID.put(identifier, valid ? (byte) 1 : (byte) 0);
+    }
+
+    public static byte getBlacklisted(String identifier) {
+        return BLACKLISTED.getByte(identifier);
+    }
+
+    public static void putBlacklisted(String identifier, boolean blacklisted) {
+        BLACKLISTED.put(identifier, blacklisted ? (byte) 1 : (byte) 0);
     }
 
     public static String getBest(String identifier) {

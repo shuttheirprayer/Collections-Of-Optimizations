@@ -1,12 +1,11 @@
 package com.misanthropy.collections_of_optimizations.mixin.copycats;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = BlockBehaviour.BlockStateBase.class, priority = 1500)
 public abstract class MixinBlockStateOccludeMemo {
@@ -14,21 +13,17 @@ public abstract class MixinBlockStateOccludeMemo {
     @Unique
     private byte coo$occludeMemo;
 
-    @Inject(method = "canOcclude", at = @At("HEAD"), cancellable = true, require = 0)
-    private void coo$serveOccludeMemo(CallbackInfoReturnable<Boolean> cir) {
+    @WrapMethod(method = "canOcclude", require = 0)
+    private boolean coo$memoOcclusion(Operation<Boolean> original) {
         if (!CoOConfig.copycatsMemoStateOcclusion) {
-            return;
+            return original.call();
         }
         byte memo = this.coo$occludeMemo;
         if (memo != 0) {
-            cir.setReturnValue(memo == 1);
+            return memo == 1;
         }
-    }
-
-    @Inject(method = "canOcclude", at = @At("RETURN"), require = 0)
-    private void coo$storeOccludeMemo(CallbackInfoReturnable<Boolean> cir) {
-        if (CoOConfig.copycatsMemoStateOcclusion && this.coo$occludeMemo == 0) {
-            this.coo$occludeMemo = (byte) (cir.getReturnValueZ() ? 1 : 2);
-        }
+        boolean value = original.call();
+        this.coo$occludeMemo = (byte) (value ? 1 : 2);
+        return value;
     }
 }

@@ -44,10 +44,11 @@ public abstract class MixinClientLevelSkyColour {
         Vec3 cached = this.coo$skyColour;
         if (cached != null
                 && stamp == this.coo$skyStamp
-                && partialTick == this.coo$skyPartial
-                && pos.x == this.coo$skyX
-                && pos.y == this.coo$skyY
-                && pos.z == this.coo$skyZ) {
+                && (CoOConfig.vanillaMemoSkyColourPerTick
+                        || (partialTick == this.coo$skyPartial
+                                && pos.x == this.coo$skyX
+                                && pos.y == this.coo$skyY
+                                && pos.z == this.coo$skyZ))) {
             return cached;
         }
 

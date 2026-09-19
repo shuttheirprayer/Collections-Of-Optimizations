@@ -10,6 +10,8 @@ public final class AreaPreviewChunkCache {
 
     private static final Long2ByteOpenHashMap CHUNKS = new Long2ByteOpenHashMap();
 
+    private static final int RESCAN_TICKS = 20;
+
     private static int stamp = Integer.MIN_VALUE;
 
     private static boolean anyPresent;
@@ -18,7 +20,7 @@ public final class AreaPreviewChunkCache {
     }
 
     public static byte state(int tick, long chunkKey) {
-        if (tick != stamp) {
+        if (tick < stamp || (long) tick - stamp >= RESCAN_TICKS) {
             stamp = tick;
             anyPresent = false;
             CHUNKS.clear();
@@ -33,6 +35,6 @@ public final class AreaPreviewChunkCache {
     }
 
     public static boolean scannedAndEmpty(int tick) {
-        return tick == stamp && !anyPresent;
+        return tick >= stamp && (long) tick - stamp < RESCAN_TICKS && !anyPresent;
     }
 }

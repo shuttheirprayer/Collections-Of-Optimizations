@@ -25,6 +25,8 @@ public final class CoOConfig {
     public static boolean curiosFastEquippedItemMiss = true;
     public static boolean curiosFastFindFirstMiss = true;
     public static boolean curiosReuseCurioMapView = true;
+    public static boolean curiosReconcileCachedSlotModifiers = true;
+    public static boolean curiosThreadSafeCaches = true;
 
     public static boolean artifactsSkipClientTickOnNonPlayers = true;
     public static boolean artifactsFastPathKittySlippers = true;
@@ -35,7 +37,6 @@ public final class CoOConfig {
     public static boolean blockswapPaletteFilteredRetroGen = true;
     public static boolean justdirethingsAvoidChunkTickets = true;
     public static boolean justdirethingsLeanAreaPreviewScan = true;
-    public static int goetydelightCakeScanInterval = 4;
     public static boolean goetydelightSkipIdleVisualEffects = true;
     public static boolean goetydelightLeanLogScan = true;
     public static boolean goetydelightCacheLogItems = true;
@@ -57,6 +58,10 @@ public final class CoOConfig {
     public static boolean xaerolibCacheEnforcementCheck = true;
 
     public static int xaeroworldmapVramPollInterval = 500;
+    public static int xaeroworldmapRenderProcessInterval = 4;
+    public static boolean tooltipoverhaulCacheFrameTagKeys = true;
+    public static boolean cablefacadesSkipEmptyLookup = true;
+    public static boolean fancymenuCacheScreenBlacklist = true;
 
     public static boolean geckolibReuseRenderVectors = true;
     public static boolean geckolibCacheBoneLookup = true;
@@ -73,10 +78,24 @@ public final class CoOConfig {
     public static boolean fancymenuSkipRedundantScaleWrites = true;
     public static boolean fancymenuPinRenderStateToRenderThread = true;
     public static boolean fancymenuCacheScreenIdentifiers = true;
+    public static boolean fancymenuTrackPoseStackOnlyInScreens = true;
 
     public static boolean emfDropZeroAngerEntries = true;
+    public static boolean emfCacheNbtPerTick = true;
+    public static boolean emfCacheBlockEntityTypeName = true;
 
-    public static boolean etfFastValidPath = true;
+    public static boolean shouldersurfingSkipIdleCrosshairPick = true;
+    public static double shouldersurfingCameraSweepStep = 0.125;
+    public static boolean shouldersurfingMemoAdaptiveItemPatterns = true;
+
+    public static boolean mowziesmobsReuseKnownLeader = true;
+    public static boolean mahoutsukaiMemoAllEntities = true;
+    public static boolean geckolibReuseBoneQueues = true;
+    public static int fancymenuInternetProbeSeconds = 600;
+    public static boolean vanillaMemoBiomeFogColour = true;
+    public static boolean vanillaMemoSkyColourPerTick = true;
+    public static boolean vanillaSkipEmptyBeardifier = true;
+
 
     public static boolean oculusSkipSignTextInShadowPass = true;
     public static boolean oculusSkipGlintInShadowPass = true;
@@ -96,6 +115,7 @@ public final class CoOConfig {
     public static boolean w2w2DeferWaypointSave = true;
 
     public static boolean terrablenderCacheNamespaceRule = true;
+    public static boolean terrablenderThreadLocalAreaCache = true;
 
     public static boolean biomeswevegoneSkipForeignChunkTerrain = true;
 
@@ -117,6 +137,18 @@ public final class CoOConfig {
     public static boolean borninchaosSkipForeignEntityAnimations = true;
     public static boolean borninchaosSkipRedundantDimensionRefresh = true;
     public static boolean borninchaosNarrowMinionScans = true;
+
+    public static boolean brutalbossesSkipNonLivingBossCapability = true;
+    public static boolean brutalbossesLeanBossUiTick = true;
+
+    public static boolean brutalityFixDoubleTickCounters = true;
+    public static int brutalityProximityScanInterval = 4;
+    public static boolean brutalityFastArmorSetCheck = true;
+
+    public static boolean mutantmonstersLeanSpawnLimitScan = true;
+    public static boolean mutantmonstersSkipEmptyShoulderLookup = true;
+
+    public static boolean manybowsSkipInactiveOriginsQuiver = true;
     public static boolean cncSkipClientEncounterScans = true;
     public static int cncEncounterScanInterval = 5;
     public static boolean cncSkipForeignEntityAnimations = true;
@@ -138,14 +170,18 @@ public final class CoOConfig {
     public static boolean cucumberLeanTagTooltip = true;
     public static boolean cucumberCacheTagLookup = true;
 
+    public static boolean konkreteDeferSoundVolumeThread = true;
+
     public static boolean dynamictreesLeanLeafPlacement = true;
     public static boolean dynamictreesLeanLeafHydration = true;
     public static boolean dynamictreesCacheThickTrunkShape = true;
+    public static boolean dynamictreesBoundedRapidRot = true;
 
     public static boolean mysticalagricultureLeanAugmentLookup = true;
     public static boolean mysticalagricultureLeanAbilityCache = true;
     public static boolean mysticalagricultureSkipIdleSoulExtractor = true;
     public static boolean mysticalagricultureMemoCropNameKey = true;
+    public static boolean mysticalagricultureCacheFurnaceRecipe = true;
 
     public static boolean skarriermobsSkipForeignEntityAnimations = true;
     public static boolean skarriermobsLeanDaylightBurnScan = true;
@@ -161,10 +197,16 @@ public final class CoOConfig {
     public static int enigmaticlegacyGuardianHeartScanInterval = 4;
     public static boolean enigmaticlegacyNarrowCursedRingAngerScan = true;
     public static boolean enigmaticlegacyPruneAngeredGuardians = true;
+    public static boolean enigmaticlegacyCachedCurioLookup = true;
     public static boolean travelopticsLeanClimbCurioScan = true;
     public static boolean travelopticsLeanCastEffectChecks = true;
     public static boolean celestialenchantmentsSkipUnenchantedTick = true;
     public static boolean celestialenchantmentsLeanSlotEnchScan = true;
+    public static boolean celestialcoreLeanItemTransformScan = true;
+    public static boolean celestialcoreMatchStatBlockRecipe = true;
+    public static boolean adamsarsplusLeanDisruptionPurge = true;
+    public static boolean adamsarsplusSkipClientFlameAura = true;
+    public static int adamsarsplusFlameAuraScanInterval = 10;
     public static boolean uniqueaccessoriesLeanWaistWarmerScan = true;
     public static boolean uniqueaccessoriesSkipUnsetPersistentData = true;
 
@@ -183,6 +225,10 @@ public final class CoOConfig {
     public static boolean structurifyCacheStructureSetEntries = true;
     public static boolean structurifySkipStartCheckWrap = true;
 
+    public static boolean lithostitchedFastTemplateShuffle = true;
+    public static boolean lithostitchedCacheBiomeModifierList = true;
+    public static boolean lithostitchedCacheBlockSwapMap = true;
+
     public static boolean bossesriseNarrowCinematicScan = true;
     public static boolean bossesriseLeanVfxScan = true;
     public static boolean soulsweaponsLeanDespawnTimer = true;
@@ -191,6 +237,8 @@ public final class CoOConfig {
     public static boolean ftbchunksSkipHiddenMinimapWork = true;
     public static boolean ftbchunksFastRegionWrite = true;
     public static boolean ftbchunksMemoMinimapRegions = true;
+    public static boolean ftbchunksDisableMapWriting = false;
+    public static boolean ftbchunksDisableWaystoneIcons = false;
     public static boolean punchyCacheResourceStackMisses = true;
     public static boolean l2hostilitySkipTraitlessCapLookup = true;
     public static boolean iceandfireFastEntityDataLookup = true;
@@ -225,9 +273,9 @@ public final class CoOConfig {
     public static boolean integratedapiSkipEmptyBeardifier = true;
     public static boolean echelonCacheTierAttributeUuids = true;
     public static boolean elysiumapiMemoClimateSample = true;
-    public static boolean elysiumapiSkipUnusedBiomeReplacerLookup = true;
     public static boolean enigmaticdiceFastCurioMiss = true;
     public static boolean balmMemoDynamicModelKeys = true;
+    public static boolean balmCacheConfigIdentifier = true;
 
     public static boolean dungeoncrawlSkipBlockEntityProbe = true;
 
@@ -258,6 +306,7 @@ public final class CoOConfig {
 
     public static boolean goetyCacheCapabilityOptional = true;
     public static boolean goetySkipCapabilityFallback = true;
+    public static boolean goetyCacheBrewEffects = true;
     public static boolean goetyMemoAttributeModifiers = true;
     public static boolean goetyFastEmptyAllyCheck = true;
     public static boolean goetyFastCurioItemMiss = true;
@@ -272,17 +321,28 @@ public final class CoOConfig {
     public static boolean fromtheshadowsCacheShakeScan = true;
     public static boolean gtbcsCacheShakeScan = true;
     public static boolean legendarymonstersCacheShakeScan = true;
+    public static int legendarymonstersBossMusicInterval = 10;
+    public static boolean legendarymonstersSkipDeadZoomWork = true;
+    public static boolean legendarymonstersGuardCameraNullPlayer = true;
+    public static boolean legendarymonstersFixAnnihilatorProcChance = true;
 
     public static boolean mythsandlegendsCacheFogBossScan = true;
     public static boolean mythsandlegendsCacheShakeScan = true;
 
     public static boolean ambientsoundsMemoBiomeMatch = true;
     public static int arsnouveauSkyTextureInterval = 1;
+
+    public static boolean arselementalFixGlobalHealBoost = true;
+    public static boolean arselementalSkipBangleScan = true;
+    public static boolean arselementalLeanCurioFallback = true;
+    public static boolean arselementalSkipNonSonicMirrorRoll = true;
+    public static boolean arselementalFixCurioBagKeybind = true;
     public static boolean pehkuiMemoInteractionBoxScales = true;
     public static boolean pehkuiCacheClientScales = true;
 
     public static boolean relicsClampEssenceSpeed = true;
     public static boolean morerelicsHoistEquippedCurios = true;
+    public static boolean morerelicsSafeDelayedTasks = true;
     public static boolean terracurioCachedCurioLookup = true;
     public static boolean terracurioLeanAttributeMap = true;
     public static boolean terracurioSkipIdleAggroScan = true;
@@ -294,6 +354,7 @@ public final class CoOConfig {
 
     public static boolean goetyrevelationCacheHaloLookup = true;
     public static boolean revelationfixSkipMobFluidStandScan = true;
+    public static boolean revelationfixSkipOutlineScan = true;
     public static boolean revelationfixSkipNonSpiderHurtByTargetEvents = true;
 
     public static boolean macabreSkipForeignEntityAnimations = true;
@@ -339,7 +400,12 @@ public final class CoOConfig {
     public static boolean vanillaDisableFlyingKick = true;
     public static boolean vanillaCacheModelPartLookups = true;
     public static boolean vanillaLeanKeyframeAnimation = true;
+    public static boolean vanillaUniformSectionLookup = true;
+    public static boolean vanillaAxisAlignedRotation = true;
+    public static boolean vanillaLeanBlockPosRange = true;
     public static boolean createsolarMemoGogglesLookup = true;
+    public static int xaeroworldmapUploadHeadroomMicros = 1000;
+    public static boolean xaeroworldmapOrphanUploadPbo = true;
     public static boolean xaeroworldmapIdleMapFrameWait = true;
     public static int xaeroworldmapMapFrameSpinTail = 200;
     public static boolean gnetumMemoCacheSettings = true;
@@ -355,6 +421,209 @@ public final class CoOConfig {
     public static boolean summonityFastCurioMiss = true;
     public static boolean summonitySkipUnchangedSlotSync = true;
     public static boolean summonityMemoDroneModifierIds = true;
+
+    public static boolean oddaccessoriesFastCurioMiss = true;
+    public static boolean oddaccessoriesGateMealToyScan = true;
+    public static int oddaccessoriesCloakAggroScanInterval = 4;
+    public static int oddaccessoriesCloakActionBarInterval = 10;
+    public static int oddaccessoriesNameUpdateInterval = 10;
+    public static boolean oddaccessoriesMemoBagRewardPool = true;
+    public static boolean titaniumSkipRedundantProgressWrite = true;
+    public static boolean titaniumMemoRecipeLists = true;
+    public static boolean titaniumSkipEmptyTransferScan = true;
+    public static boolean titaniumCachedFacingState = true;
+
+    public static boolean domesticationinnovationFastEnchantLookup = true;
+    public static boolean domesticationinnovationSafeCollarPrune = true;
+
+    public static boolean moreartifactsFastEquipState = true;
+    public static boolean moreartifactsTickEndPhaseOnly = true;
+    public static boolean moreartifactsPruneDamageMaps = true;
+
+    public static boolean simplymoreSkipUnheldFootfalls = true;
+
+    public static boolean celestisynthFastCapabilityLookup = true;
+
+    public static boolean hexereiDisableDynamicLights = true;
+    public static boolean hexereiCacheLightToggle = true;
+    public static boolean hexereiSkipEmptyLightScan = true;
+
+    public static boolean covenantofthesevenTickEndPhaseOnly = true;
+    public static boolean covenantofthesevenSilenceDebugSpam = true;
+
+    public static int simplyswordsConfigRereadInterval = 1000;
+
+    public static int easyvillagersDirtyMarkInterval = 20;
+
+    public static boolean companionsLeanEntityTracker = true;
+    public static boolean companionsDeferTeslaRebuild = true;
+    public static int companionsTeslaPruneInterval = 200;
+    public static boolean companionsFastOwnerWalk = true;
+
+    public static boolean immersivearmorsLeanSteampunkOverlay = true;
+    public static boolean immersivearmorsSkipClientSetBonusWrite = true;
+
+    public static int starcatcherFishRadarScanIntervalMs = 5000;
+    public static boolean starcatcherTournamentProfileFallback = true;
+
+    public static boolean neobackportsCacheComponentDefaults = true;
+
+    public static boolean faunifyLeanPlayerProximityScan = true;
+    public static int faunifyMillipedeParentScanInterval = 20;
+
+    public static boolean darkdoppelgangerLeanBossBarNameCheck = true;
+    public static boolean darkdoppelgangerFixDoubleMinionSpawn = true;
+    public static boolean darkdoppelgangerSkipDuplicateSpellScan = true;
+
+    public static boolean torchmasterCacheLevelLightRegistry = true;
+    public static boolean torchmasterMegaTorchRangeCheckFirst = true;
+
+    public static boolean textanimatorSkipUnknownEffectTags = true;
+    public static boolean textanimatorStacklessEffectErrors = true;
+    public static boolean textanimatorSkipIdleTypewriterProbe = true;
+
+    public static boolean cognitionSkipClientInfection = true;
+    public static boolean cognitionCacheInfectingRecipes = true;
+    public static boolean cognitionLeanPlayerScan = true;
+    public static boolean cognitionSkipForeignTooltipScan = true;
+
+    public static boolean opposingforceCacheStealthVisibility = true;
+    public static boolean opposingforceSkipClientEffectTicks = true;
+
+    public static boolean peyroscytheServerOnlyAuraScans = true;
+    public static int peyroscytheAuraEffectApplyInterval = 10;
+    public static boolean peyroscytheBlackFlameWingsServerOnlyContact = true;
+
+    public static boolean somakespellsSkipUnlinkedConnectionTick = true;
+    public static boolean somakespellsCacheBalanceUuids = true;
+
+    public static boolean biomancySkipEmptySpawnQuery = true;
+    public static boolean biomancyCacheSpatialStorage = true;
+    public static boolean biomancyCacheSpatialLevelKey = true;
+
+    public static boolean notenoughanimationsCachePetScan = true;
+    public static boolean notenoughanimationsSkipServerSwordTracking = true;
+
+    public static boolean lethalitySkipDuplicateTickPhases = true;
+    public static boolean lethalityServerOnlyBiomeBladeState = true;
+    public static boolean lethalityLeanBonusDropCheck = true;
+    public static boolean lethalitySkipUnequippedCharmScan = true;
+    public static boolean lethalityFixServerSideSosName = true;
+
+    public static boolean castercuriosbonusCachedCurioLookup = true;
+    public static boolean castercuriosbonusServerOnlyManaToHealth = true;
+    public static boolean castercuriosbonusPerPlayerCurioThrottle = true;
+
+    public static boolean legendaryspellbooksLeanTornadoScan = true;
+    public static boolean legendaryspellbooksLocalPlayerDriftScan = true;
+    public static int legendaryspellbooksAnnihilationBonusInterval = 10;
+
+    public static boolean meetyourfightCachedCurioLookup = true;
+    public static boolean meetyourfightServerOnlyGlowSweep = true;
+
+    public static boolean bmdLeanWardSpawnScan = true;
+    public static boolean bmdLeanMonolithExplosionScan = true;
+    public static boolean bmdLeanLevitationFlightScan = true;
+    public static boolean bmdSinglePlayerTickPhase = true;
+
+    public static boolean mahoutsukaiSkipClientAuthorityTick = true;
+    public static boolean mahoutsukaiLeanRipperTick = true;
+    public static boolean mahoutsukaiLeanProjectorEnchantScan = true;
+    public static boolean mahoutsukaiFixStaffSensitivity = true;
+    public static boolean mahoutsukaiPurgeInsightTargets = true;
+
+    public static boolean primitivemobsSkipVillagerGoblinAvoid = false;
+    public static int primitivemobsVillagerGoblinAvoidInterval = 5;
+    public static int primitivemobsSheepmanPiglinAvoidInterval = 5;
+
+    public static int ribbitsWaterCropsScanInterval = 20;
+    public static int ribbitsFishScanInterval = 20;
+    public static int ribbitsBandScanInterval = 10;
+    public static boolean ribbitsFixPerformerCrash = true;
+    public static boolean hazennstuffCacheGeoResources = true;
+
+    public static boolean speciesFixDoubleRenderListener = true;
+    public static boolean speciesSkipClientEffectTick = true;
+    public static int speciesWickedHauntScanInterval = 20;
+    public static int speciesLimpetScareScanInterval = 10;
+
+    public static boolean cookingforblockheadsIdempotentCompatReload = true;
+    public static boolean cookingforblockheadsCacheOvenSmeltingResult = true;
+    public static boolean cookingforblockheadsOvenFacingFromState = true;
+    public static boolean cookingforblockheadsIndexRecipeBookScan = true;
+
+    public static boolean integratedvillagesIsolateWorkstationPicks = true;
+
+    public static boolean deeperdarkerLeanBreakEvent = true;
+    public static boolean deeperdarkerFixSculkJawGuards = true;
+    public static boolean deeperdarkerFixSculkJawRepeatBite = true;
+    public static boolean deeperdarkerLeanStaffChargeTag = true;
+    public static boolean deeperdarkerReuseHeartRandom = true;
+
+    public static boolean goetyhostilityLeanBossMusicTick = true;
+    public static boolean goetyhostilityLeanGolemProximityScan = true;
+    public static boolean goetyhostilityLeanWildfireDropProbe = true;
+
+    public static boolean fdbossesSkipArenaProtectionScan = true;
+    public static boolean fdbossesSkipKineticFieldCollision = true;
+    public static boolean fdbossesSkipHellscapeSkyScan = true;
+    public static boolean fdbossesLocalOnlyPhaseSphereTick = true;
+
+    public static int cnbCactemFollowElderScanInterval = 10;
+    public static int cnbCactemBecomeElderScanInterval = 20;
+    public static int cnbCactemTradeScanInterval = 10;
+    public static int cnbCactemHealScanInterval = 10;
+    public static int cnbSporelingConvertScanInterval = 10;
+    public static boolean cnbSkipClientAnimDataWrites = true;
+
+    public static boolean mobgrindingutilsFastEnderInhibitorScan = true;
+    public static boolean mobgrindingutilsLeanFanBroadcast = true;
+    public static boolean mobgrindingutilsCacheChickenSwellModel = true;
+    public static boolean mobgrindingutilsLeanChickenTag = true;
+
+    public static boolean transmogIdentityAppearanceCache = true;
+
+    public static boolean ironsspellbooksLeanCurioEquipCheck = true;
+    public static boolean ironsspellbooksClearStaleSyncedData = true;
+
+    public static boolean hostilenetworksCacheModelHolder = true;
+    public static boolean hostilenetworksSkipBrokenModelOnKill = true;
+    public static boolean hostilenetworksLeanEntityCache = true;
+
+    public static boolean extrahnnFixSharedBaseDrop = true;
+    public static boolean extrahnnCacheStoredModels = true;
+    public static int extrahnnRenderedModelCap = 4;
+
+    public static boolean l2archeryCacheBowUpgrades = true;
+    public static boolean l2archeryCacheArrowTexture = true;
+    public static boolean l2archerySkipIdleBowFov = true;
+    public static boolean l2archeryCacheBowInfoText = true;
+
+    public static boolean l2complementsLeanAttackChecks = true;
+    public static boolean l2complementsLeanEnchantmentLookup = true;
+    public static boolean l2complementsSkipUnrelatedTooltips = true;
+    public static boolean l2complementsFixBreakerSetRace = true;
+
+    public static boolean blessfulledFixGeckolibHurtOverlay = true;
+    public static boolean blessfulledSkipInvisibleHurtOverlay = true;
+    public static boolean blessfulledSkipIdleSwingSound = true;
+
+    public static boolean tomeofbloodFixMimicAugmentIndex = true;
+    public static boolean tomeofbloodCacheLivingUpgradeUuids = true;
+    public static boolean tomeofbloodSilenceServerStartLog = true;
+
+    public static boolean betterspellcastingExpireQueuedSpell = true;
+    public static int betterspellcastingQueuedSpellWindow = 40;
+    public static boolean betterspellcastingSkipRedundantSwingPacket = true;
+
+    public static boolean arsadditionsSkipStowedCharmTick = true;
+    public static boolean arsadditionsCacheRuinedPortalScan = true;
+    public static int arsadditionsMagelightParticleDistance = 32;
+
+    public static boolean duplicationlessLazyEntityTracker = true;
+
+    public static boolean fluidiumCacheClaimLookups = true;
+    public static boolean fluidiumRefreshDepartedDimension = true;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -419,6 +688,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Hand out one reusable unmodifiable view of an entity's curio slot map instead of wrapping the map again on every single call.")
                 .define("reuseCurioMapView", true), v -> curiosReuseCurioMapView = v);
+        gate(builder
+                .comment("Stop Curios from throwing away extra slots that a different slot type is providing, and stop the per tick scan that goes with it. Slot bonuses an item grants while worn are transient, so Curios writes them into the save as cached modifiers and restores them on load so the slot count is right before the items are ticked back on. On the first tick it is supposed to drop that cache again, keeping only the entries that a worn item still vouches for, but it only ever asks the items sitting in the same slot type as the bonus. A Relics belt grants charm slots from the belt slot and a cursed ring grants a blasphemy slot from the ring slot, so their cached entries are never vouched for and never dropped: every tick Curios rebuilds the attribute map of every charm and every blasphemy looking for them, and the moment a charm that itself grants charm slots is equipped the whole charm cache is purged, the belt's bonus with it, the charm slots shrink and the charms in them fall out (Curios issue 575, the reason the pack carried the Curios pre-calculate slots mod, which re-applied every modifier of every curio every tick instead). With this on a restored cache entry is dropped the moment anyone re-applies that modifier, the first purge waits one tick so the equip pass and equip hooks have run, and what is still cached after that is checked against every worn curio and armour piece before it goes. Steady state is a handful of isEmpty checks per player per tick. Server.")
+                .define("reconcileCachedSlotModifiers", true), v -> curiosReconcileCachedSlotModifiers = v);
+        gate(builder
+                .comment("Make the two caches Curios keys by slot name safe to touch from two threads. The slot UUID cache and the slot attribute cache are plain HashMaps filled through computeIfAbsent, and in single player the render thread fills them from tooltips and the render layer while the server thread fills them from the equip pass, which is the case where a HashMap can hand back a wrong entry or spin inside a resize. With this on both are swapped for concurrent maps when the class loads. This one is decided when the Curios classes first load, which is before configs finish loading, so turning it off only takes effect from the next game start.")
+                .define("threadSafeCaches", true), v -> curiosThreadSafeCaches = v);
         builder.pop();
 
         builder.comment("Artifacts patches.").push("artifacts");
@@ -450,14 +725,11 @@ public final class CoOConfig {
                 .comment("Read the item entity's block state through getChunkNow instead of the loading getChunk.")
                 .define("avoidChunkTickets", true), v -> justdirethingsAvoidChunkTickets = v);
         gate(builder
-                .comment("Stop the area preview renderer copying every block entity of all 169 nearby chunks into a fresh list every frame, and skip the whole 169 chunk sweep for the rest of a tick once that tick's first frame found no area affecting block at all. A preview switched on part way through a tick shows up on the next one.")
+                .comment("Stop the area preview renderer copying every block entity of all 169 nearby chunks into a fresh list every frame, and remember per chunk whether it holds any area affecting block for one second before sweeping again. A preview switched on shows up within a second.")
                 .define("leanAreaPreviewScan", true), v -> justdirethingsLeanAreaPreviewScan = v);
         builder.pop();
 
         builder.comment("Goety's Delight patches.").push("goetydelight");
-        gate(builder
-                .comment("Run the cherry blossom cake entity sweep once every N server ticks instead of every tick.")
-                .defineInRange("cakeScanInterval", 4, 1, 100), 1, v -> goetydelightCakeScanInterval = v);
         gate(builder
                 .comment("Skip the per-frame walk over every entity in the level while no entity carries a visual effect. The walk re-arms as soon as one is added or synced.")
                 .define("skipIdleVisualEffects", true), v -> goetydelightSkipIdleVisualEffects = v);
@@ -504,11 +776,20 @@ public final class CoOConfig {
                 .comment("Milliseconds between the map limiter's free VRAM query, which stock fires a blocking glGetIntegerv for on every single frame. 0 restores the stock every frame behaviour. Client.")
                 .defineInRange("vramPollInterval", 500, 0, 60000), 0, v -> xaeroworldmapVramPollInterval = v);
         gate(builder
+                .comment("Run the map tile upload pass at most this often in milliseconds instead of once per rendered frame, so its per frame time budget stops scaling with framerate. The world map screen is never throttled. 0 disables.")
+                .defineInRange("renderProcessInterval", 4, 0, 200), 0, v -> xaeroworldmapRenderProcessInterval = v);
+        gate(builder
                 .comment("Wait out the world map screen's frame budget by parking instead of spinning. While the map screen is open Xaero busy loops on System.nanoTime until 1.6ms of the frame has passed, which burns a whole core for most of every map frame. Pacing is unchanged, the thread just idles instead.")
                 .define("idleMapFrameWait", true), v -> xaeroworldmapIdleMapFrameWait = v);
         gate(builder
                 .comment("Microseconds of the world map frame budget still spent spinning, so the wait ends on time even though the operating system wakes a parked thread late. Raise it if the map screen feels choppier than before, lower it to give the core back sooner.")
                 .defineInRange("mapFrameSpinTail", 200, 0, 1600), 1600, v -> xaeroworldmapMapFrameSpinTail = v);
+        gate(builder
+                .comment("Microseconds of upload headroom the map assumes a saturated frame still has. Stock hardcodes 3000 and spends a quarter of it uploading region textures every frame, so at 200fps the map takes 750us of a 5ms frame. The floor only applies once the frame has no time left, so lowering it changes nothing at 60fps. The world map screen always uses the stock value. 3000 restores stock.")
+                .defineInRange("uploadHeadroomMicros", 1000, 100, 3000), 3000, v -> xaeroworldmapUploadHeadroomMicros = v);
+        gate(builder
+                .comment("Discard the old contents of a region texture's pixel buffer before mapping it for writing. Stock maps a buffer the driver may still be reading last frame's texture upload out of, which blocks the render thread until the GPU catches up.")
+                .define("orphanUploadPbo", true), v -> xaeroworldmapOrphanUploadPbo = v);
         builder.pop();
 
         builder.comment("GeckoLib patches.").push("geckolib");
@@ -518,6 +799,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Memoise BakedGeoModel#getBone(String) per baked model.")
                 .define("cacheBoneLookup", true), v -> geckolibCacheBoneLookup = v);
+        gate(builder
+                .comment("Reuse each animation controller's bone keyframe queues between frames instead of allocating a fresh set for every bone on every frame. Client.")
+                .define("reuseBoneQueues", true), v -> geckolibReuseBoneQueues = v);
         builder.pop();
 
         builder.comment("Saint's Dragons patches.").push("saintsdragons");
@@ -557,18 +841,39 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember which screen identifier belongs to which screen instead of working it out again on every render call. FancyMenu asks four times a frame, and answering walks a hash map, scans its whole universal identifier table for a matching value, and calls Class.forName. The cache is dropped whenever FancyMenu reloads or a new universal identifier is registered. Client.")
                 .define("cacheScreenIdentifiers", true), v -> fancymenuCacheScreenIdentifiers = v);
+        gate(builder
+                .comment("Remember whether a screen class is on FancyMenu's blacklist instead of running every blacklist rule against its name on each render call. Dropped whenever FancyMenu reloads or a new rule is added. Client.")
+                .define("cacheScreenBlacklist", true), v -> fancymenuCacheScreenBlacklist = v);
+        gate(builder
+                .comment("Only run FancyMenu's PoseStack scale, translation and rotation tracking while a screen is open. FancyMenu hooks every pushPose, popPose, scale, translate and mulPose in the game to keep its own copy of the transform for its screen elements, allocating two state objects per push; in the world with no screen open nothing reads that copy. Client.")
+                .define("trackPoseStackOnlyInScreens", true), v -> fancymenuTrackPoseStackOnlyInScreens = v);
+        gate(builder
+                .comment("Seconds between FancyMenu's internet availability probes, an HTTPS request to docs.fancymenu.net that the mod makes every 20 seconds. 0 keeps the stock interval. Client.")
+                .defineInRange("internetProbeSeconds", 600, 0, 86400), 0, v -> fancymenuInternetProbeSeconds = v);
         builder.pop();
 
         builder.comment("Entity Model Features patches.").push("emf");
         gate(builder
                 .comment("Stop the anger time map growing one entry per neutral mob ever rendered.")
                 .define("dropZeroAngerEntries", true), v -> emfDropZeroAngerEntries = v);
+        gate(builder
+                .comment("Remember each nbt() animation result per entity for one client tick instead of serialising the whole entity to NBT and regex matching it on every frame. Equipment or inventory changes show up at most one tick later. Client.")
+                .define("cacheNbtPerTick", true), v -> emfCacheNbtPerTick = v);
+        gate(builder
+                .comment("Remember BlockEntityType.toString() per type. EMF keys every block entity render on that string, and the vanilla type has no toString, so each render built a fresh class name plus hex hash. Client.")
+                .define("cacheBlockEntityTypeName", true), v -> emfCacheBlockEntityTypeName = v);
         builder.pop();
 
-        builder.comment("Entity Texture Features patches.").push("etf");
+        builder.comment("Shoulder Surfing Reloaded patches.").push("shouldersurfing");
         gate(builder
-                .comment("Answer ResourceLocation#isValidPath at HEAD when the path is valid.")
-                .define("fastValidPath", true), v -> etfFastValidPath = v);
+                .comment("Skip the two crosshair raytraces on frames where their result cannot be shown: a static crosshair with the obstruction indicator off, or set to only show while aiming, while you are not aiming. Client.")
+                .define("skipIdleCrosshairPick", true), v -> shouldersurfingSkipIdleCrosshairPick = v);
+        gate(builder
+                .comment("Distance in blocks between the raytraces the dynamic camera offset sweeps along the camera arm every frame. The mod hardcodes 0.03125, which is 96 raytraces per frame for the default arm length. 0.125 is 24. Client.")
+                .defineInRange("cameraSweepStep", 0.125, 0.03125, 1.0), 0.03125, v -> shouldersurfingCameraSweepStep = v);
+        gate(builder
+                .comment("Compile the adaptive crosshair item patterns once instead of on every frame the aim state is checked. Client.")
+                .define("memoAdaptiveItemPatterns", true), v -> shouldersurfingMemoAdaptiveItemPatterns = v);
         builder.pop();
 
         builder.comment("Oculus / Iris shadow pass patches.").push("oculus");
@@ -647,6 +952,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Cache TerraBlender's per-block namespace lookup for the duration of a biome.")
                 .define("cacheNamespaceRule", true), v -> terrablenderCacheNamespaceRule = v);
+        gate(builder
+                .comment("Give every chunk generation worker its own copy of TerraBlender's region noise cache instead of one cache behind a lock. The lock is taken on every biome region lookup during world generation and sixteen workers fight over it; the cached function is pure, so per thread copies return the same values.")
+                .define("threadLocalAreaCache", true), v -> terrablenderThreadLocalAreaCache = v);
         builder.pop();
 
         builder.comment("Terramity patches.").push("terramity");
@@ -692,6 +1000,42 @@ public final class CoOConfig {
         gate(builder
                 .comment("Narrow the four Born in Chaos minion claim scans to the mod's own entities.")
                 .define("narrowMinionScans", true), v -> borninchaosNarrowMinionScans = v);
+        builder.pop();
+
+        builder.comment("Brutal Bosses patches.").push("brutalbosses");
+        gate(builder
+                .comment("Only hand the boss capability to living entities. Brutal Bosses attaches a fresh BossCapability plus a LazyOptional to every single entity the client builds, arrows and dropped items and experience orbs included, which also forces Forge to build a capability dispatcher for entities that would otherwise have none, and on the server it runs a reverse registry lookup per spawn to decide. Only living entities can ever be a boss, so everything else is pure allocation.")
+                .define("skipNonLivingBossCapability", true), v -> brutalbossesSkipNonLivingBossCapability = v);
+        gate(builder
+                .comment("Run the boss bar bookkeeping once per client tick for the local player instead of twice for every player entity the client is ticking. The handler has no phase check so it counts the start and the end of the same tick, and it fires for remote players too, which also means another player looking at a boss is what keeps your own boss bar alive. Turn off for stock behaviour.")
+                .define("leanBossUiTick", true), v -> brutalbossesLeanBossUiTick = v);
+        builder.pop();
+
+        builder.comment("Brutality patches.").push("brutality");
+        gate(builder
+                .comment("Only let Brutality's tick counters advance once per game tick. Both ServerTickHandler and ClientTickHandler subscribe without a phase check, so they count the START and the END of the same tick and every duration measured off getServerTick runs at double speed, and the tick sync packet is broadcast to every player every ten ticks instead of every twenty. Fixing it makes those durations twice as long as you are used to, because that is what the mod meant them to be.")
+                .define("fixDoubleTickCounters", true), v -> brutalityFixDoubleTickCounters = v);
+        gate(builder
+                .comment("Only look for a nearby black hole, ruined king and explosion ray every this many client ticks. Stock walks every entity the client has loaded three separate times every single client tick just to decide the sky and fog colour, and the third walk is not behind a config toggle at all. Colours can settle up to interval minus one ticks late. Set to 1 for stock behaviour.")
+                .defineInRange("proximityScanInterval", 4, 1, 40), 1, v -> brutalityProximityScanInterval = v);
+        gate(builder
+                .comment("Answer 'is this entity wearing a full Noir set' from the chest slot before walking the armour iterator. The renderer asks it twice per living entity per frame and the mob visibility event asks it again for every entity a mob can see, and almost every answer is no.")
+                .define("fastArmorSetCheck", true), v -> brutalityFastArmorSetCheck = v);
+        builder.pop();
+
+        builder.comment("Mutant Monsters patches.").push("mutantmonsters");
+        gate(builder
+                .comment("Reuse the per dimension spawn count that caps body parts, endersoul fragments and creeper minion eggs instead of rebuilding it for every single one. Stock answers 'how many of these already exist' by streaming every entity in the whole dimension and counting the matches, once per spawn, so a mutant zombie bursting into body parts or a mutant enderman throwing fragments runs dozens of full dimension entity walks inside one tick. With this on the walk runs at most once per dimension per entity type per server tick and every further spawn in that tick reads the remembered number plus the ones already let through, which is the same number stock would have produced. Entities of that type that are removed inside the same tick are not noticed until the next one, so the cap can be up to one tick stricter than stock, never looser. Turn off for stock behaviour.")
+                .define("leanSpawnLimitScan", true), v -> mutantmonstersLeanSpawnLimitScan = v);
+        gate(builder
+                .comment("Skip the parrot on shoulder lookup when there is nothing on the shoulder. The player tick handler runs the creeper minion ambient sound check for both shoulders, on both logical sides, every tick, and it reads the shoulder id and parses it into a ResourceLocation and does a registry lookup before it ever checks whether the shoulder tag holds anything at all, which for almost every player is an empty tag being parsed into nothing four times a tick. With this on an empty or missing shoulder tag returns immediately, which is the same answer the lookup gave, and it also closes the null tag path that would throw. Turn off for stock behaviour.")
+                .define("skipEmptyShoulderLookup", true), v -> mutantmonstersSkipEmptyShoulderLookup = v);
+        builder.pop();
+
+        builder.comment("Too Many Bows patches.").push("manybows");
+        gate(builder
+                .comment("Skip the Origins quiver bookkeeping when Apoli is not installed. Too Many Bows hooks ItemStack#shrink and hands every single shrink in the game to OriginsQuiverCompat, which takes the monitor on one static Collections.synchronizedMap wrapping a WeakHashMap and runs a remove plus a stale entry expunge, from every thread that ever shrinks a stack. Without Apoli that map can never be written to, so the whole lookup is dead work on one of the hottest methods in the game, and the same check also drops the synchronized reflection lookup behind Player#getProjectile. Turn off for stock behaviour.")
+                .define("skipInactiveOriginsQuiver", true), v -> manybowsSkipInactiveOriginsQuiver = v);
         builder.pop();
 
         builder.comment("Critters n' Crawlers patches.").push("cnc");
@@ -757,6 +1101,12 @@ public final class CoOConfig {
                 .define("cacheTagLookup", true), v -> cucumberCacheTagLookup = v);
         builder.pop();
 
+        builder.comment("Konkrete patches.").push("konkrete");
+        gate(builder
+                .comment("Only start Konkrete's audio volume thread once a mod actually registers a sound with it. Konkrete spawns a plain non daemon thread at client setup that wakes ten times a second for the whole session, reads the master volume slider and pushes it onto every clip it is holding. FancyMenu 3 and Drippy Loading Screen both moved to their own audio systems, so on a normal pack that map is empty and the thread wakes six hundred times a minute to iterate nothing, while holding an OS thread and its stack. The thread now starts on the first registerSound call instead, and registerSound already sets the clip volume itself, so a mod that does use Konkrete audio gets the same behaviour.")
+                .define("deferSoundVolumeThread", true), v -> konkreteDeferSoundVolumeThread = v);
+        builder.pop();
+
         builder.comment("Dynamic Trees patches.").push("dynamictrees");
         gate(builder
                 .comment("Read each block once while Dynamic Trees decides whether a leaf can go somewhere. Stock reads the target block three times and the block under it twice for a single yes or no, and the light check under it allocates a fresh position for the block below plus one per smother layer above. This check runs six times per leaf per ageing pass, and a tree generated by world gen ages its whole leaf cluster three times, so it is the single hottest thing the mod does while chunks are being built. The smother scan also stops at the first gap instead of always walking all four layers. Result is identical.")
@@ -767,6 +1117,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Hand out a prebuilt collision shape for thick trunks instead of building a new one per query. Any branch wider than a full block skips Dynamic Trees' own shape cache and builds a fresh AABB and VoxelShape every single time the game asks for its collision box, which is once per axis per entity per tick for anything walking near a big trunk. There are only sixteen possible widths so they are all built once at load. Result is identical.")
                 .define("cacheThickTrunkShape", true), v -> dynamictreesCacheThickTrunkShape = v);
+        gate(builder
+                .comment("Stop the world gen rot cascade at a branch that did not actually go away. When a freshly generated tree is trimmed, every branch that rots recurses into its same-block neighbours to rot them too, and nothing checks that the block was really removed. A world gen region only accepts writes one chunk around the chunk being decorated but lets you read further out, so once the cascade walks into a neighbouring tree's branches in a chunk it may not write to, the removal is silently refused, the species still reports a rot, and two adjacent stuck branches recurse into each other until the stack overflows and the chunk generation thread dies. This is Dynamic Trees issue 1150 and it is still there in 1.4.11. A branch that is still standing after its rot call is now reported as not rotted, so the walk stops at the write border. Result is identical everywhere the removal succeeds.")
+                .define("boundedRapidRot", true), v -> dynamictreesBoundedRapidRot = v);
         builder.pop();
 
         builder.comment("Mystical Agriculture patches.").push("mysticalagriculture");
@@ -782,6 +1135,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember a crop's translation key instead of rebuilding it with String.format on every name lookup. The mystical seed and essence items, roughly a hundred of them, resolve their name and their description id through it, so it runs once per hovered item per frame and again whenever a recipe viewer indexes or searches names. Result is identical.")
                 .define("memoCropNameKey", true), v -> mysticalagricultureMemoCropNameKey = v);
+        gate(builder
+                .comment("Give the essence furnaces the recipe cache vanilla furnaces already have. The five tiers share their own copy of the furnace tick, and that copy calls RecipeManager.getRecipeFor every tick the input slot is filled, which is a linear scan over every smelting recipe in the pack with an ingredient test on each. Vanilla's furnace remembers the last matched recipe and tries it first, and FastFurnace only patches the vanilla tick, so these were left paying the full scan for every tick of every smelt. This remembers the last match per furnace exactly the way vanilla does and drops it on any recipe reload.")
+                .define("cacheFurnaceRecipe", true), v -> mysticalagricultureCacheFurnaceRecipe = v);
         builder.pop();
 
         builder.comment("Skarrier Mobs patches.").push("skarriermobs");
@@ -839,6 +1195,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Drop removed entities from the angered guardian map when a new one is added. Enigmatic Legacy keeps every guardian that has ever targeted a Heart of the Guardian bearer in a strong keyed multimap and only clears it when a world is loaded, so a session at a guardian farm retains every dead guardian.")
                 .define("pruneAngeredGuardians", true), v -> enigmaticlegacyPruneAngeredGuardians = v);
+        gate(builder
+                .comment("Answer SuperpositionHandler.hasCurio out of the per tick curio contents already cached for the entity instead of walking the curios inventory again. Every question resolves the curios capability, walks every slot of every slot type and allocates an Optional and a triple, and it is asked dozens of times per player per tick by Enigmatic Legacy and its addons, worst of all by Covenant of the Seven whose twenty odd tick handlers each open with two or three of them, plus another eleven per frame from its two hud overlays. The cached contents are rebuilt whenever the entity ticks and whenever Curios reports an equip, unequip or slot change, so the answer is the same one the walk would have given, except for a curio swapped and asked about again inside the same tick, which is seen on the next tick instead.")
+                .define("cachedCurioLookup", true), v -> enigmaticlegacyCachedCurioLookup = v);
         builder.pop();
 
         builder.comment("Traveloptics patches.").push("traveloptics");
@@ -857,6 +1216,27 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the per slot enchantment map allocation for equipment slots that hold nothing enchanted.")
                 .define("leanSlotEnchScan", true), v -> celestialenchantmentsLeanSlotEnchScan = v);
+        builder.pop();
+
+        builder.comment("Celestial Core patches.").push("celestialcore");
+        gate(builder
+                .comment("Check the block the item is lying on before running the transformation recipe lookup. Celestial Core hooks the tick of every item entity in the world and, on the server, builds a nine slot container and runs a full recipe manager lookup for its transformation recipe type on every single one of them on every single tick, and only after that does it look at whether the item is even lying on the block the recipe wants. The container, the stream the lookup builds and the position list are all thrown away again immediately, so a floor covered in dropped loot is thousands of allocations a second to almost always find nothing. With this on the two block states under the item are read first, exactly the two the mod itself reads, and the lookup only happens when one of them is a block some transformation recipe actually asks for. If the recipe list cannot be read the stock lookup is left alone.")
+                .define("leanItemTransformScan", true), v -> celestialcoreLeanItemTransformScan = v);
+        gate(builder
+                .comment("Pick the transformation recipe whose block the item is actually lying on. The recipe's own matches check returns true for everything, so the lookup hands back whichever recipe happens to come first in the map and the mod then throws it away when its block does not match, which means only one transformation recipe in the whole pack can ever fire and any others added by a datapack or KubeJS silently never work. With this on the recipes that ask for a different block are skipped during that one lookup, so the right one is found. Celestial Core itself ships a single transformation recipe, so nothing changes unless more have been added. Requires leanItemTransformScan.")
+                .define("matchStatBlockRecipe", true), v -> celestialcoreMatchStatBlockRecipe = v);
+        builder.pop();
+
+        builder.comment("Adam's Ars Plus patches.").push("adamsarsplus");
+        gate(builder
+                .comment("Expire the beneficial effects the Disruption effect is meant to strip instead of removing them out from under the game's own effect loop. Disruption ticks every single tick, and for every effect the victim has it rebuilds the whole active effect list into a fresh list through a stream, twice, just to read one entry out of it by index, so an entity with eight effects pays sixteen full list copies a tick for as long as Disruption is on it. It then removes an effect while the entity is in the middle of iterating that same effect map, which vanilla catches and silently swallows, and swallowing it abandons the rest of that entity's effect tick, so every other effect on the victim stops counting down for that tick. Removing by index off a list that shrinks underneath it also means it skips roughly every other beneficial effect on each pass. With this on the beneficial effects are marked expired in one pass with no list copies, the game removes them itself on its own terms, nothing is thrown, and none of them get skipped. The client side pass is dropped because the server already owns which effects an entity has and sends the removals down.")
+                .define("leanDisruptionPurge", true), v -> adamsarsplusLeanDisruptionPurge = v);
+        gate(builder
+                .comment("Skip the Flame Deity aura sweep on the client. The effect asks the level for every living entity in a thirty six block cube around its holder and the only thing it does with the answer is apply Marked For Cremation, which is entity state the server owns and syncs, so the client copy of the sweep is the same work done twice for nothing.")
+                .define("skipClientFlameAura", true), v -> adamsarsplusSkipClientFlameAura = v);
+        gate(builder
+                .comment("How many ticks between Flame Deity aura sweeps. The effect has no tick gate at all: every tick it builds a box eighteen blocks in every direction, thirty six blocks across and roughly forty six thousand blocks of volume, and asks the level for every living entity inside it, then walks that list to hand out Marked For Cremation. The Ryan armour set re-applies Flame Deity every tick while it is worn, so anyone wearing that set pays that sweep twenty times a second forever, and it runs on both the server and the client. The mark it hands out lasts eighty ticks and is only re-applied when it has run out, so sweeping less often changes nothing except how quickly something that just walked into the aura gets marked. At the default of ten that is at worst half a second late. Set to 1 for the stock every tick behaviour.")
+                .defineInRange("flameAuraScanInterval", 10, 1, 200), 1, v -> adamsarsplusFlameAuraScanInterval = v);
         builder.pop();
 
         builder.comment("Unique Accessories patches.").push("uniqueaccessories");
@@ -913,6 +1293,18 @@ public final class CoOConfig {
                 .define("skipStartCheckWrap", true), v -> structurifySkipStartCheckWrap = v);
         builder.pop();
 
+        builder.comment("Lithostitched patches.").push("lithostitched");
+        gate(builder
+                .comment("Build a template pool's weighted shuffle from primitive arrays instead of rebuilding a boxed entry list three times per jigsaw connector.")
+                .define("fastTemplateShuffle", true), v -> lithostitchedFastTemplateShuffle = v);
+        gate(builder
+                .comment("Merge Lithostitched's biome modifiers into Forge's list once per world load instead of once per biome.")
+                .define("cacheBiomeModifierList", true), v -> lithostitchedCacheBiomeModifierList = v);
+        gate(builder
+                .comment("Resolve a block swap processor's id to id table to a block to block table once instead of three registry lookups per placed block.")
+                .define("cacheBlockSwapMap", true), v -> lithostitchedCacheBlockSwapMap = v);
+        builder.pop();
+
         builder.comment("Bosses' Rises patches.").push("bossesrise");
         gate(builder
                 .comment("Only collect Bosses' Rises entities in its per player cinematic scan.")
@@ -950,6 +1342,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Reuse the region and its image across the 225 chunk tiles of one minimap rebuild instead of taking the shared map lock for every tile.")
                 .define("memoMinimapRegions", true), v -> ftbchunksMemoMinimapRegions = v);
+        gate(builder
+                .comment("Stop FTB Chunks recording map data entirely. No chunk is scanned when it arrives from the server, no block change is re-rendered, and nothing new is written to disk. Turn this on only if another map mod is doing the job. Already recorded regions still load and display.")
+                .define("disableMapWriting", false), v -> ftbchunksDisableMapWriting = v);
+        gate(builder
+                .comment("Stop the FTB XMod Compat integration from putting Waystones icons on the FTB minimap and large map.")
+                .define("disableWaystoneIcons", false), v -> ftbchunksDisableWaystoneIcons = v);
         builder.pop();
 
         builder.comment("Regions Unexplored patches.").push("regionsunexplored");
@@ -962,6 +1360,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Resolve an event handler's mod id with one map lookup instead of a containsKey followed by a get.")
                 .define("singleModIdLookup", true), v -> gnetumSingleModIdLookup = v);
+        builder.pop();
+
+        builder.comment("Cable Facades patches.").push("cablefacades");
+        gate(builder
+                .comment("Answer a facade lookup with a single flag read while no facade has been placed in the loaded world. Cable Facades queries this map from seven hooks in the hottest vanilla block methods, so it runs for every block of every chunk rebuild and every light update. Client.")
+                .define("skipEmptyLookup", true), v -> cablefacadesSkipEmptyLookup = v);
+        builder.pop();
+
+        builder.comment("Tooltip Overhaul patches.").push("tooltipoverhaul");
+        gate(builder
+                .comment("Build a frame's item tag keys once instead of rebuilding the whole list from strings on every tooltip match.")
+                .define("cacheFrameTagKeys", true), v -> tooltipoverhaulCacheFrameTagKeys = v);
         builder.pop();
 
         builder.comment("Ending Library patches.").push("endinglibrary");
@@ -1055,6 +1465,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Build the sunstrike, solar beam and solar flare render types once instead of once per entity per frame.")
                 .define("cacheEffectRenderTypes", true), v -> mowziesmobsCacheEffectRenderTypes = v);
+        gate(builder
+                .comment("Hand back the leader an Elokosa follower already knows instead of scanning a 64 block cube of entities for it, which the leap goal does twice per candidate block and six times per block. Server.")
+                .define("reuseKnownLeader", true), v -> mowziesmobsReuseKnownLeader = v);
         builder.pop();
 
         builder.comment("Pick Up Notifier patches.").push("pickupnotifier");
@@ -1100,9 +1513,6 @@ public final class CoOConfig {
         gate(builder
                 .comment("Answer a repeated climate sample for the same position from a one entry cache.")
                 .define("memoClimateSample", true), v -> elysiumapiMemoClimateSample = v);
-        gate(builder
-                .comment("Skip Elysium API's duplicate biome resolution entirely when no biome replacer exists.")
-                .define("skipUnusedBiomeReplacerLookup", true), v -> elysiumapiSkipUnusedBiomeReplacerLookup = v);
         builder.pop();
 
         builder.comment("Enigmatic Dice patches.").push("enigmaticdice");
@@ -1115,6 +1525,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop rebuilding a block state's toString on every quad request.")
                 .define("memoDynamicModelKeys", true), v -> balmMemoDynamicModelKeys = v);
+        gate(builder
+                .comment("Remember which config file belongs to each Balm config class instead of working it out again on every read. Every Balm mod reads its settings through getActive, and each of those reads asks the JVM for the class annotation, builds a brand new ResourceLocation out of the same two strings, validating both character by character, and allocates a lambda before it even looks in the map that already holds the answer. Waystones does that twice per waystone per frame from its block renderer and Cooking for Blockheads does it up to a dozen times per oven per tick, so it adds up across a pack. With this on the identifier is worked out once per class and the config object is looked up straight out of Balm's own map, and only if it is missing there does the stock path run. Turn it off for stock behaviour.")
+                .define("cacheConfigIdentifier", true), v -> balmCacheConfigIdentifier = v);
         builder.pop();
 
         builder.comment("Moonlight Lib patches.").push("moonlight");
@@ -1151,6 +1564,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Build the combined curio inventory once per equipped relic scan instead of twice for every single slot. More Relics calls getEquippedCurios() inside both the loop condition and the loop body, so a thirty slot player allocates sixty throwaway inventory wrappers per relic overlay per frame.")
                 .define("hoistEquippedCurios", true), v -> morerelicsHoistEquippedCurios = v);
+        gate(builder
+                .comment("Walk More Relics' delayed task list off a snapshot, drop each task before it runs, and throw the list away when the server it was filled for is gone. Stock iterates the live ArrayList while running the tasks, so any task that ends up scheduling another one, which the Twin Fangs hurt handler does, is a ConcurrentModificationException in the server tick, a task that throws is never removed and so throws again every tick forever, and nothing ever clears the list when a single player world is closed, so its runnables keep the old world and its players alive and then fire into the next world you load. A task scheduled from inside another task now runs on the following tick instead of the same one.")
+                .define("safeDelayedTasks", true), v -> morerelicsSafeDelayedTasks = v);
         builder.pop();
 
         builder.comment("Terra Curio patches.").push("terracurio");
@@ -1254,6 +1670,9 @@ public final class CoOConfig {
                 .comment("Stop building the throwaway capability fallback on every query.")
                 .define("skipCapabilityFallback", true), v -> goetySkipCapabilityFallback = v);
         gate(builder
+                .comment("Share one BrewEffects table between the Patchouli brewing page processors instead of walking every item and entity type in the registry for each page. Rebuilt after five seconds. Client.")
+                .define("cacheBrewEffects", true), v -> goetyCacheBrewEffects = v);
+        gate(builder
                 .comment("Memoise the constant attribute modifiers Goety rebuilds every tick.")
                 .define("memoAttributeModifiers", true), v -> goetyMemoAttributeModifiers = v);
         gate(builder
@@ -1310,6 +1729,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the camera shake and dynamic zoom entity scans once per tick instead of once per frame. Client.")
                 .define("cacheShakeScan", true), v -> legendarymonstersCacheShakeScan = v);
+        gate(builder
+                .comment("Ticks between boss music state broadcasts. Every loaded boss with music sends a packet to every player on the server on every tick, so 20 packets per second per boss per player even when nothing changed. A state change is still sent immediately; this only limits the repeats that let players who moved in or out of hearing range resync. 1 restores the stock every tick behaviour.")
+                .defineInRange("bossMusicInterval", 10, 1, 200), 1, v -> legendarymonstersBossMusicInterval = v);
+        gate(builder
+                .comment("Skip the dynamic camera zoom listener. It scans for zoom entities every frame and then throws away the only value it computes, so the eight view clip raycasts behind that value change nothing. Client.")
+                .define("skipDeadZoomWork", true), v -> legendarymonstersSkipDeadZoomWork = v);
+        gate(builder
+                .comment("Skip the camera shake listener when there is no client player instead of reading its tick count first, which is a null dereference placed above the mod's own null check. Client.")
+                .define("guardCameraNullPlayer", true), v -> legendarymonstersGuardCameraNullPlayer = v);
+        gate(builder
+                .comment("Fix the Annihilator Leggings shockwave roll. The mod multiplies a full range random int by 100 and compares it to 25, which overflows and fires about half the time instead of the intended quarter.")
+                .define("fixAnnihilatorProcChance", true), v -> legendarymonstersFixAnnihilatorProcChance = v);
         builder.pop();
 
         builder.comment("Myths and Legends patches.").push("mythsandlegends");
@@ -1333,6 +1764,24 @@ public final class CoOConfig {
                 .defineInRange("skyTextureInterval", 1, 0, 200), 0, v -> arsnouveauSkyTextureInterval = v);
         builder.pop();
 
+        builder.comment("Ars Elemental patches.").push("arselemental");
+        gate(builder
+                .comment("Only give the 50 percent healing bonus to a player actually holding an earth focus. Stock code reads the focus toggle with an or instead of an and, so while \"Enable glyph empowering\" is on every heal of every living entity in the world is multiplied by 1.5.")
+                .define("fixGlobalHealBoost", true), v -> arselementalFixGlobalHealBoost = v);
+        gate(builder
+                .comment("Skip the per-attack bangle curio walk when the cached curio set already proves neither side is wearing a school bangle.")
+                .define("skipBangleScan", true), v -> arselementalSkipBangleScan = v);
+        gate(builder
+                .comment("Build the throwaway empty curio result only when the curio inventory is actually missing, instead of on every focus and bangle lookup.")
+                .define("leanCurioFallback", true), v -> arselementalLeanCurioFallback = v);
+        gate(builder
+                .comment("Check for sonic boom damage before reading the mirror enchantment level and rolling for a reflect, instead of after.")
+                .define("skipNonSonicMirrorRoll", true), v -> arselementalSkipNonSonicMirrorRoll = v);
+        gate(builder
+                .comment("Make the curio pouch keybind work. Ars Elemental registers the key but its handler is a non static method on the mod event bus, so the game never calls it. Client.")
+                .define("fixCurioBagKeybind", true), v -> arselementalFixCurioBagKeybind = v);
+        builder.pop();
+
         builder.comment("Goety Revelation patches.").push("goetyrevelation");
         gate(builder
                 .comment("Answer ATAHelper#hasHalo and #hasBrokenHalo from the per-tick curio set.")
@@ -1344,6 +1793,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the walk-on-fluid probe for entities that can never walk on fluid.")
                 .define("skipMobFluidStandScan", true), v -> revelationfixSkipMobFluidStandScan = v);
+        gate(builder
+                .comment("Check a drawn string for the Apollyon or Eden colour with an allocation free pass before building the per character colour map RevelationFix wants for its outline. RevelationFix built that map, with an Optional per character, for every string the game draws. Client.")
+                .define("skipOutlineScan", true), v -> revelationfixSkipOutlineScan = v);
         gate(builder
                 .comment("Stop posting RevelationFix's hurt-by-target events for mobs that ignore them.")
                 .define("skipNonSpiderHurtByTargetEvents", true), v -> revelationfixSkipNonSpiderHurtByTargetEvents = v);
@@ -1461,6 +1913,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Work out the sky colour once per camera position per frame. Fog setup, the sky renderer and shader uniform packs each ask for it separately and every call samples 27 biomes.")
                 .define("memoSkyColour", true), v -> vanillaMemoSkyColour = v);
+        gate(builder
+                .comment("Keep the sky colour for a whole client tick instead of recomputing it whenever the camera position or partial tick changes, which is every frame while moving. The biome blend it samples spans 24 blocks, so one tick of camera movement cannot change it visibly. Needs memoSkyColour. Client.")
+                .define("memoSkyColourPerTick", true), v -> vanillaMemoSkyColourPerTick = v);
+        gate(builder
+                .comment("Sample the blended biome fog colour once per client tick instead of once per frame. Same 216 biome lookups and Vec3 garbage per call as the sky colour. Client.")
+                .define("memoBiomeFogColour", true), v -> vanillaMemoBiomeFogColour = v);
+        gate(builder
+                .comment("Give NoiseChunk the empty beardifier marker when the chunk has no structure pieces or junctions to adapt terrain to, including the enhanced lists YUNG's API, Moog's Structure Lib and Integrated API keep. Beardifier.compute is called per noise cell and four mods inject into it, boxing a Double per call, so most chunks paid for structures they do not have. Server.")
+                .define("skipEmptyBeardifier", true), v -> vanillaSkipEmptyBeardifier = v);
         fastBiomeBlendValue = gate(builder
                 .comment("Blend biome colours from a cached, incrementally summed grid instead of resampling the biome under every block in the blend square. Vanilla resamples the full square for every block, which is up to 225 biome lookups per block at the default blend radius. Output is identical.")
                 .define("fastBiomeBlend", true), v -> vanillaFastBiomeBlend = v);
@@ -1479,6 +1940,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run keyframe animations with plain loops. Vanilla allocates two capturing lambdas per animated bone and one more per animation channel, every entity every frame, which is a large part of the garbage the render thread produces. Output is identical, but a mod injecting into the middle of KeyframeAnimations.animate will not run while this is on.")
                 .define("leanKeyframeAnimation", true), v -> vanillaLeanKeyframeAnimation = v);
+        gate(builder
+                .comment("Answer block and biome lookups in a chunk section that holds a single value with one type check and a field read instead of two interface calls through the palette and the bit storage. Air, deep stone and open water sections are all single value sections and they are the most common kind, so a large share of the lookups world generation, lighting, pathfinding and mob spawning make land here. Output is identical.")
+                .define("uniformSectionLookup", true), v -> vanillaUniformSectionLookup = v);
+        gate(builder
+                .comment("Rotate a pose stack around a single axis with the short form of the multiplication instead of the general quaternion product. Nearly every rotation an entity, item or model part applies is around X, Y or Z alone, and JOML does about three times the arithmetic for those. Same result up to floating point rounding. Client.")
+                .define("axisAlignedRotation", true), v -> vanillaAxisAlignedRotation = v);
+        gate(builder
+                .comment("Walk BlockPos.betweenClosed with three counters instead of two integer divisions per position. Same positions in the same order. An inverted range yields nothing instead of looping forever.")
+                .define("leanBlockPosRange", true), v -> vanillaLeanBlockPosRange = v);
         builder.pop();
 
         builder.push("gnetum");
@@ -1530,6 +2000,624 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember the Copper Drone's two attribute modifier ids instead of rebuilding them from an MD5 of the entity uuid twice per drone per tick.")
                 .define("memoDroneModifierIds", true), v -> summonityMemoDroneModifierIds = v);
+        builder.pop();
+
+        builder.comment("Odd Accessories patches.").push("oddaccessories");
+        gate(builder
+                .comment("Answer the mod's 'is this accessory equipped' helper from the shared per tick curio presence set when the answer is no. CuriosUtil#isEquipped walks every curio slot type and every slot in it, and the damage handler alone calls it ten times for one hit, on the attacker and the victim, so most of those walks are on mobs that own no curio slots at all. A curio swapped without firing CurioChangeEvent reads stale for the rest of that tick.")
+                .define("fastCurioMiss", true), v -> oddaccessoriesFastCurioMiss = v);
+        gate(builder
+                .comment("Only let the Collectible Meal Toy run its mob scan on the ticks it actually does something. Stock scans a box as wide as the configured toy range, twenty five blocks by default, every single tick, while the pathing and particle work inside it is already limited to every tenth and every eightieth tick. A baby undead can stay locked on its old target for up to nine ticks longer than stock before the toy pacifies it.")
+                .define("gateMealToyScan", true), v -> oddaccessoriesGateMealToyScan = v);
+        gate(builder
+                .comment("Only let the Fiberglass Cloak clear nearby mob aggro every this many ticks. Stock runs a twenty four block wide mob scan every tick for as long as the wearer stays cloaked, on top of the four block scan that decides whether cloaking is allowed, which is left alone. A mob can keep targeting the wearer for up to interval minus one ticks longer than stock. Set to 1 for stock behaviour.")
+                .defineInRange("cloakAggroScanInterval", 4, 1, 20), 1, v -> oddaccessoriesCloakAggroScanInterval = v);
+        gate(builder
+                .comment("Only resend the Fiberglass Cloak action bar indicator every this many ticks. Stock sends a chat packet to the wearer twenty times a second for a two character string that never changes, and the vanilla action bar holds text for sixty ticks anyway. The indicator can appear up to interval minus one ticks late. Set to 1 for stock behaviour.")
+                .defineInRange("cloakActionBarInterval", 10, 1, 40), 1, v -> oddaccessoriesCloakActionBarInterval = v);
+        gate(builder
+                .comment("Only rebuild the Guts and Clay Vessel display names every this many ticks. Both run from the curio tick and the inventory tick, so a Guts sitting unequipped in a backpack still costs a statistics lookup, a String#format and a component to string conversion every tick. The name is cosmetic and can lag up to interval minus one ticks behind. Set to 1 for stock behaviour.")
+                .defineInRange("nameUpdateInterval", 10, 1, 40), 1, v -> oddaccessoriesNameUpdateInterval = v);
+        gate(builder
+                .comment("Remember the Suspicious Bag reward pool instead of streaming the whole item registry through four filters every time a bag is opened or a naturally generated chest rolls one. The pool is rebuilt whenever the bag blacklist or the disabled accessory list changes, and the item registry is frozen after load, so the result and the random rolls are identical.")
+                .define("memoBagRewardPool", true), v -> oddaccessoriesMemoBagRewardPool = v);
+        builder.pop();
+
+        builder.comment("Titanium patches. Titanium is the library Industrial Foregoing is built on, so these apply to every Industrial Foregoing machine.").push("titanium");
+        gate(builder
+                .comment("Skip the block entity dirty flag when a machine progress bar is written with the value it already holds. An idle machine re-writes progress zero every tick, and every one of those writes marks the chunk unsaved and runs a comparator neighbour update on four sides. On Industrial Foregoing it also re-runs whatever the machine overrode setChanged with, which for the Resourceful Furnace and the Dissolution Chamber is a full recipe lookup. Progress itself is unchanged, so the bar, the container sync and comparator readings are identical.")
+                .define("skipRedundantProgressWrite", true), v -> titaniumSkipRedundantProgressWrite = v);
+        gate(builder
+                .comment("Remember the recipe list RecipeUtil hands out instead of looking the recipe manager map up by reflection and copying every recipe of that type into a fresh list on every call. The Stonework Factory asks for one every tick and the Resourceful Furnace asks for the smelting list three times per setChanged. The cache is keyed on the recipe map itself, which the game replaces on every datapack reload, so a reload is picked up. The returned list is now immutable and shared.")
+                .define("memoRecipeLists", true), v -> titaniumMemoRecipeLists = v);
+        gate(builder
+                .comment("Stop the sided inventory push and pull from scanning every slot of the neighbouring inventory when the slot it tried to take from was empty. The destination scan runs before the empty check, and it calls isItemValid on every target slot, which on filtered or recipe backed inventories is not cheap. The result is unused in that case.")
+                .define("skipEmptyTransferScan", true), v -> titaniumSkipEmptyTransferScan = v);
+        gate(builder
+                .comment("Read the machine facing from the block entity cached block state instead of asking the world for the block state two to four times per call. getFacingDirection runs on every item and fluid capability query against a Titanium machine, so every adjacent pipe, hopper or machine pays it. The game keeps the cached state in sync whenever the block state changes.")
+                .define("cachedFacingState", true), v -> titaniumCachedFacingState = v);
+        builder.pop();
+
+        builder.comment("Domestication Innovation patches.").push("domesticationinnovation");
+        gate(builder
+                .comment("Read pet upgrade levels out of a small per thread map instead of walking the whole stored enchantment list on every question. The mod asks whether a pet has a given upgrade about twenty times per pet per tick on the server and another eight times per pet per frame in the render layer, and every one of those walked the list and parsed a fresh ResourceLocation out of every entry. The map is rebuilt whenever the list is replaced, resized or written back, so the answers are the same.")
+                .define("fastEnchantLookup", true), v -> domesticationinnovationFastEnchantLookup = v);
+        gate(builder
+                .comment("Prune the collar swap cooldown map through its own iterator. The stock loop removes entries straight off the map while it is iterating the key set, which throws a ConcurrentModificationException and takes the level tick with it whenever two or more pets have a pending cooldown and the expiring one is not the last in iteration order. Timings are untouched.")
+                .define("safeCollarPrune", true), v -> domesticationinnovationSafeCollarPrune = v);
+        builder.pop();
+
+        builder.comment("More Artifacts patches.").push("moreartifacts");
+        gate(builder
+                .comment("Read the equipped artifact set out of one pass over the curio slots instead of asking the curios inventory forty nine separate times. The player tick handler rebuilds this set to decide whether the damage reduction and damage increase totals need recomputing, and the stock version resolves the curios capability, allocates an Optional and a capturing lambda and walks every curio slot once per artifact, so a player with nothing equipped still paid forty nine full inventory scans per tick per side. The resulting map holds the same items, so the totals and the recompute decision are unchanged.")
+                .define("fastEquipState", true), v -> moreartifactsFastEquipState = v);
+        gate(builder
+                .comment("Run the damage bookkeeping tick on the end phase only. The handler has no phase check at all, so it does the whole equip comparison twice per tick per player. Anything it would have noticed at the start of a tick is noticed at the end of the same tick instead.")
+                .define("tickEndPhaseOnly", true), v -> moreartifactsTickEndPhaseOnly = v);
+        gate(builder
+                .comment("Drop players that are gone from the five static maps the damage handler keys on the player object. Nothing ever removes from them, so every logout, respawn and dimension change leaves a whole player entity and its cached artifact map reachable forever, on the server and in singleplayer on the client too. The sweep runs about once every thirty seconds and only removes entries whose player has already been discarded, so live players keep their cached totals.")
+                .define("pruneDamageMaps", true), v -> moreartifactsPruneDamageMaps = v);
+        builder.pop();
+
+        builder.comment("Simply More patches.").push("simplymore");
+        gate(builder
+                .comment("Skip the footfall particle call for a Simply More unique weapon that is not the entity's main hand item. Every unique in the mod calls the shared footfall helper from inventoryTick with no guard at all, for every slot the weapon sits in, on both sides, and the helper bottoms out in Simply Swords' config reader, which reads and parses general.json5 off disk on every single call. The helper's own first check is whether the stack is the main hand item, so a stack in any other slot only ever paid for that file read and did nothing. The step counter still advances exactly as it did, so the particle rhythm when the weapon is drawn is unchanged.")
+                .define("skipUnheldFootfalls", true), v -> simplymoreSkipUnheldFootfalls = v);
+        builder.pop();
+
+        builder.comment("Simply Swords patches.").push("simplyswords");
+        gate(builder
+                .comment("Milliseconds to reuse Simply Swords' parsed config values before reading the json5 files off disk again. Config.safeValueFetch runs a Files.exists check, a full file read and a Gson parse on every single getBoolean, getInt, getFloat and getDouble call, and those sit in weapon tick and hit handlers, so holding one unique weapon is dozens of file reads and parses per second per side. The values are the same, an edit made to a config file while the game is running is picked up up to this many milliseconds later, and the unsynchronised HashMaps the parse writes into stop being rewritten from both logical sides at once. 0 restores the stock read every call behaviour.")
+                .defineInRange("configRereadInterval", 1000, 0, 60000), 0, v -> simplyswordsConfigRereadInterval = v);
+        builder.pop();
+
+        builder.comment("Celestisynth patches.").push("celestisynth");
+        gate(builder
+                .comment("Hand back the Celestisynth entity capability out of a field on the entity instead of walking the capability dispatcher on every question. Every living entity in the game carries this capability, and the mod asks for it from isInvisible, isInvisibleTo, the living tick listener, the entity renderer, the living entity renderer and the render layer hook, so a single mob pays for it several times per tick on both sides and several more times per frame while it is on screen. Each of those asks walked every capability provider attached to the entity, which in a large modpack is dozens of them. The cached handle is dropped and looked up again whenever it stops being valid, so entities that are removed, revived or have their capabilities reattached still get the live one.")
+                .define("fastCapabilityLookup", true), v -> celestisynthFastCapabilityLookup = v);
+        builder.pop();
+
+        builder.comment("Hexerei patches.").push("hexerei");
+        gate(builder
+                .comment("Turn off the dynamic lights Hexerei bundles inside itself. It ships a private fork of LambDynamicLights that nobody asked for and that no other mod can see or coordinate with, wired into LevelRenderer.getLightColor so it runs once per block face for every quad of every chunk section the client meshes, and into EntityRenderer.getBlockLightLevel for every entity on screen every frame. With this on the whole thing reports itself as switched off, exactly as if the mod's own toggle had been used, so nothing registers as a light source, nothing is scanned and both hooks return the stock lighting immediately. Anything already lit when this takes effect is cleared and its chunks are rebuilt on the next frame. Held torches and glowing entities stop lighting the world unless you install a real dynamic light mod, so turn this off if you want Hexerei's version back.")
+                .define("disableDynamicLights", true), v -> hexereiDisableDynamicLights = v);
+        gate(builder
+                .comment("Hold Hexerei's dynamic light toggle in a plain field instead of reading it back out of the config spec on every question. The bundled dynamic light code asks for that toggle first thing inside LevelRenderer.getLightColor, which runs once per block face for every quad of every chunk section the game meshes, and again inside EntityRenderer.getBlockLightLevel for every entity on screen every frame, so a single chunk rebuild is hundreds of thousands of config lookups. The cached answer is thrown away at the start of every dynamic light update pass and whenever the mod's own toggle command runs, so flipping the setting still takes effect on the next frame.")
+                .define("cacheLightToggle", true), v -> hexereiCacheLightToggle = v);
+        gate(builder
+                .comment("Return straight away from the dynamic light distance scans when nothing in the world is currently emitting dynamic light. Both scans take the shared read lock, allocate an iterator and walk the whole light source set before clamping the result, and they run once per quad during chunk meshing and once per entity per frame. Entities only enter that set while they are actually lit, so most of the time it is empty and the scan can only ever return zero, which is the value the fast path hands back. When anything is lit the stock scan runs exactly as before.")
+                .define("skipEmptyLightScan", true), v -> hexereiSkipEmptyLightScan = v);
+        builder.pop();
+
+        builder.comment("Covenant of the Seven patches.").push("covenantoftheseven");
+        gate(builder
+                .comment("Run the Blasphemy and Cursed Scroll attribute bookkeeping on the end phase only. Neither handler checks the tick phase at all, so both do their whole job twice per tick per player. The Blasphemy one is the expensive half: for each of the twelve spell schools it builds a ResourceLocation, looks the attribute up in the forge registry, strips its modifier and, for a player wearing the Cursed Ring, resolves and renders a translation key to compare it against the player's affinity string, all of it whether or not anything is equipped. Both handlers only remove and re add their own modifiers, so doing that once at the end of a tick leaves the same attribute values in place for the next one.")
+                .define("tickEndPhaseOnly", true), v -> covenantofthesevenTickEndPhaseOnly = v);
+        gate(builder
+                .comment("Drop the four leftover debug prints in the Melodious Harmony living tick handler. They were never removed before release and they go to System.out, which is unbuffered and synchronised, from the server tick thread for every Iron's Spellbooks summon of a player wearing the Benediction Charm, every tick. Nothing else about the handler changes.")
+                .define("silenceDebugSpam", true), v -> covenantofthesevenSilenceDebugSpam = v);
+        builder.pop();
+
+        builder.comment("Easy Villagers patches.").push("easyvillagers");
+        gate(builder
+                .comment("Ticks between the idle dirty marks the Easy Villagers blocks make. The trader, auto trader, farmer, iron farm and breeder block entities all call setChanged unconditionally on every single tick while a villager is inside them, and setChanged is not a flag write: it marks the chunk unsaved and then runs the comparator update, which allocates a position and reads the block state for all four horizontal neighbours and can walk a second ring on top of that. A trading hall or an iron farm wall is dozens of those blocks doing it twenty times a second for a villager whose only change is one tick of age. The blocks still mark themselves dirty on the ticks that actually do something, since those paths call setChanged themselves, so nothing is lost on save, and a comparator reading one of these blocks updates within this many ticks instead of instantly. 1 restores the stock every tick behaviour.")
+                .defineInRange("dirtyMarkInterval", 20, 1, 200), 1, v -> easyvillagersDirtyMarkInterval = v);
+        builder.pop();
+
+        builder.comment("Companions patches.").push("companions");
+        gate(builder
+                .comment("Only remember players and the mod's own entities in the Companions entity tracker. The mod puts a weak reference into a static map for every single entity that joins a server level and takes it back out when it leaves, so every arrow, item, experience orb and vanilla mob on the whole server pays a UUID hash, an allocation and a concurrent map write on spawn and another on removal, and the map is as large as the entity count of the world. The only things ever looked back up out of it are players, dinamos, shades and the mod's own summons, so everything else is tracked for nothing. With this on the map holds just those, and any entity that is skipped is simply not in it, exactly as if it had already been removed.")
+                .define("leanEntityTracker", true), v -> companionsLeanEntityTracker = v);
+        gate(builder
+                .comment("Collapse the tesla network distance rebuilds down to at most one per server tick. Registering a tesla block, unregistering one, adding or removing a wire and indexing a dinamo all kick off a full rebuild of the whole dimension's tesla graph, and that rebuild walks every connected component, runs a breadth first search from every generator and, for each entity node it reaches, scans the entire incoming edge map to find that node's outgoing edges. Every tesla block entity registers itself the moment its chunk loads, so walking back into a base with fifty coils and pillars is fifty whole graph rebuilds in the same tick. With this on the rebuilds are marked instead of run and one rebuild happens at the end of the tick, so a chain's distance and its power cut off can be one tick behind a wire being cut or a block being placed.")
+                .define("deferTeslaRebuild", true), v -> companionsDeferTeslaRebuild = v);
+        gate(builder
+                .comment("Ticks between sweeps of the tesla network for block entities that no longer exist. The network only ever drops a block entity when its block is broken, so every tesla block entity that goes away with its chunk stays in the network's map for the rest of the session, holding the block entity and through it the level it belonged to, and still taking part in every distance rebuild. The sweep drops the entries whose block entity has been removed or has lost its level, which also means a tesla chain that runs through chunks nobody has loaded stops counting as connected until those chunks come back. 0 turns the sweep off.")
+                .defineInRange("teslaPruneInterval", 200, 0, 24000), 0, v -> companionsTeslaPruneInterval = v);
+        gate(builder
+                .comment("Walk the owner chain for the mod's friendly fire check without allocating. Companions asks whether two entities are linked before almost every hit, every projectile impact and every target pick, and the very first thing that check does twice is build a HashSet purely to guard against a loop while walking at most a projectile to its shooter to its owner. That set is allocated and thrown away for every candidate entity of every area of effect scan on every tick. The replacement walks the same chain with a plain loop and a depth limit of thirty two, which returns the same answer including the nothing at the end of a loop.")
+                .define("fastOwnerWalk", true), v -> companionsFastOwnerWalk = v);
+        builder.pop();
+
+        builder.comment("Immersive Armors patches.").push("immersivearmors");
+        gate(builder
+                .comment("Answer the steampunk hud overlay check with one item comparison instead of a registry lookup per armor slot per frame. The overlay hook runs from the vanilla hud render every single frame whether or not anything from this mod is worn, and for each of the four armor slots it asks the item registry for that item's id and then builds a fresh ResourceLocation for the steampunk chestplate to compare it against, so a player wearing no Immersive Armors at all still pays four reverse registry lookups and four ResourceLocation allocations, namespace and path validation included, every frame. With this on the chestplate item is resolved once and the frame is dropped straight away unless that exact item is actually in one of the armor slots, which is the only case the stock code could ever have drawn anything in. If the item cannot be resolved the stock scan is left alone.")
+                .define("leanSteampunkOverlay", true), v -> immersivearmorsLeanSteampunkOverlay = v);
+        gate(builder
+                .comment("Stop the client rewriting the armor set counter into its own copy of the stack. Every armor effect of every equipped Immersive Armors piece runs the same base tick on both logical sides, and once a second that tick calls getOrCreateTag on the stack, which permanently attaches an empty compound to a stack that had none, and puts the set count back into it after building a three stage stream over the armor slots to recount it. The server writes the same number into the real stack and that value is what the client is sent, so the client side pass recomputes a number it is about to be handed anyway. With this on the base tick is skipped on the client only; the server side write, the tooltips that read it and everything the individual effects do in their own overrides are untouched.")
+                .define("skipClientSetBonusWrite", true), v -> immersivearmorsSkipClientSetBonusWrite = v);
+        builder.pop();
+
+        builder.comment("Starcatcher patches.").push("starcatcher");
+        gate(builder
+                .comment("Milliseconds between full rescans of the fish radar overlay. The radar keeps a counter of how long it has been since it last rebuilt its list and rebuilds when that counter passes a hundred, but nothing ever puts the counter back to zero, so from the very first frame the radar is on screen it rebuilds the list again on every single frame instead of every five seconds. A rebuild walks the entire fish registry, which is around a hundred and thirty entries in this pack before any addon datapacks, and for every entry that has a guide page it runs the full catch chance calculation, which allocates a bait container and then evaluates every restriction that fish carries, biome, dimension, height, weather and time of day included. With this on the rebuild is allowed through at most once per interval and the list is kept in between, which is what the counter was written to do. 0 restores the stock behaviour of rebuilding every frame.")
+                .defineInRange("fishRadarScanIntervalMs", 5000, 0, 60000), 0, v -> starcatcherFishRadarScanIntervalMs = v);
+        gate(builder
+                .comment("Do not let a missing player profile take the server down when a tournament ends. The tournament tick runs once a second, and when a tournament runs out of time it looks the winner up in the server's game profile cache and calls get on the Optional without checking whether anything came back, so a winner whose entry is not in the cache, an offline player whose cache entry has expired, a score added by command or a usercache that was deleted between the tournament starting and finishing throws out of the server tick and kills the server. With this on the announcement falls back to the same question marks placeholder the mod already uses when it has no winner uuid at all, and everything else about the tournament ending is unchanged.")
+                .define("tournamentProfileFallback", true), v -> starcatcherTournamentProfileFallback = v);
+        builder.pop();
+
+        builder.comment("NeoBackports patches.").push("neobackports");
+        gate(builder
+                .comment("Stop rebuilding the whole default data component table on every data component question. Every has, get and getOrDefault on an item stack asks NeoBackports for the map of registered defaults, and that getter hands back a fresh ImmutableMap copy of the backing map every time instead of the map itself. Starcatcher asks whether a stack is a golden fish at the head of the vanilla item render type lookup, which is once per item drawn per frame, so a single open inventory or JEI page is thousands of those copies a second, and every mod that ships this library pays the same on every component read. With this on the copy is built once and reused until the backing map gains an item, which is the only way it can ever change, and the returned map is still immutable so nothing can write through it.")
+                .define("cacheComponentDefaults", true), v -> neobackportsCacheComponentDefaults = v);
+        builder.pop();
+
+        builder.comment("Faunify patches.").push("faunify");
+        gate(builder
+                .comment("Answer the mod's nearby player checks off the level's own player list instead of running a full entity box query. Faunify asks for every player in a box around the mob from the mouse's seed stealing goal, the dragonfly's darting goal and the silk moth and beefly flight goals, all of which the goal selector re-evaluates every other tick for every one of those mobs, and again from the silk moth's own tick on every server tick while it is sitting on the ground. Each of those calls walks every entity section the box touches and type checks everything it finds, to build a list that on a normal server has one to a handful of entries in it. The replacement walks the level's player list and keeps the players whose hitbox overlaps that same box and who are not spectators, which is exactly what the stock query returns.")
+                .define("leanPlayerProximityScan", true), v -> faunifyLeanPlayerProximityScan = v);
+        gate(builder
+                .comment("Stop a millipede body segment re-running its hundred block wide search for the segment in front of it on every client tick and every frame. On the client a segment resolves its parent by asking for every entity in a fifty block inflated box and comparing UUIDs, and it does that from its own tick and again from the renderer, which asks it for the head to pick which millipede texture to draw and walks the whole chain of parents to get there. While the parent is loaded that is a cached field read, but the moment it is missing, which is every chunk load and any time the head is outside client tracking range, every segment pays that sweep twenty times a second plus once per frame, forever. With this on a failed lookup is not retried for this many ticks. The server side lookup, which is a plain UUID map read, is untouched, and so is everything about how the millipede moves, since the segment positions are driven by the head on the server; the only visible effect is that a segment can draw with the default texture for up to this many ticks after its head appears. Set to 1 for stock behaviour.")
+                .defineInRange("millipedeParentScanInterval", 20, 1, 200), 1, v -> faunifyMillipedeParentScanInterval = v);
+        builder.pop();
+
+        builder.comment("Text Animator patches.").push("textanimator");
+        gate(builder
+                .comment("Stop every angle bracket in the game's text being parsed as an effect tag and thrown away through an exception. Text Animator replaces the vanilla string decomposer outright, which is the method every single piece of text in the game goes through to be measured, wrapped and drawn, and in its replacement every < it meets starts a scan forward for the matching >, splits whatever is between them and hands the first word to the effect factory. If that word is not one of the fifteen effect names the mod knows, the factory throws, and building that exception walks and copies the whole call stack, which inside the font renderer is dozens of frames deep. Any text with a bracket pair in it, a chat line a mod formatted as one string, a quest description, a book page, an item name, pays that on every measure and every draw and so several times a frame for as long as it is on screen. With this on the first word is checked against the effect names before any of that happens, and a tag that is not an effect is handed back as no tag at all, which is exactly the same result the exception path produced, just without the exception, the split and the string building. Closing tags and effect tags are untouched and still work.")
+                .define("skipUnknownEffectTags", true), v -> textanimatorSkipUnknownEffectTags = v);
+        gate(builder
+                .comment("Drop the stack trace from the unknown effect type error. The effect factory throws this exception for every tag name it does not recognise and every caller in the mod catches it and ignores it, so the stack trace it fills in is never read by anything and only ever costs time. With this on the same exception type with the same meaning is thrown without capturing a stack, which is the whole cost of it. This is the backstop for the paths skipUnknownEffectTags does not cover, the typewriter prefix check and the style deserializer.")
+                .define("stacklessEffectErrors", true), v -> textanimatorStacklessEffectErrors = v);
+        gate(builder
+                .comment("Skip the typewriter mode lookup for text that has no typewriter on it. The decomposer reads the typewriter mode option at the top of every call, before it has looked at whether the style it was handed even has a typewriter track, and the answer is only ever used when there is one, which is almost never. The lookup itself reaches into the client's option instances, so on a single player world the server thread ends up reading the client's options too. With this on the option is only read when the style actually carries a typewriter track, which is the only case the value could have changed anything in.")
+                .define("skipIdleTypewriterProbe", true), v -> textanimatorSkipIdleTypewriterProbe = v);
+        builder.pop();
+
+        builder.comment("Dark Doppelganger patches.").push("darkdoppelganger");
+        gate(builder
+                .comment("Stop the mod flattening every boss bar's name into a fresh string on every frame. Dark Doppelganger subscribes to the boss bar customise event, which fires once per boss bar per frame for every boss bar on screen no matter which mod put it there, and the first thing its listener does is call getString on the bar's name component and ask whether the result starts with Dark Doppelganger. getString walks the whole component tree, resolves the translation and builds a new String through a visitor every single time, and the answer it produces cannot change while the component object is the same one. With this on the answer is remembered against the component instance itself, eight of them at a time, so a bar that is not the doppelganger's costs eight reference compares instead of a full component render, and the listener returns immediately. The doppelganger's own bar still goes through the mod's untouched drawing code.")
+                .define("leanBossBarNameCheck", true), v -> darkdoppelgangerLeanBossBarNameCheck = v);
+        gate(builder
+                .comment("Stop each boss minion being added to the world twice. The minion summon loop has its whole setup block pasted twice, so every minion the doppelganger summons gets addFreshEntity called on it a second time. The entity manager rejects the second add because it already knows that UUID, but not before Forge has fired EntityJoinLevelEvent for that entity again, so every mod listening on that event, difficulty scalers and trait appliers among them, sees the same minion join twice and can apply itself twice, and the server logs a warning for each one. With this on the second add is skipped and the minion joins once, which is what the first add already did.")
+                .define("fixDoubleMinionSpawn", true), v -> darkdoppelgangerFixDoubleMinionSpawn = v);
+        gate(builder
+                .comment("Skip the second of two identical entity scans in the spell cast handler. When the doppelganger casts, the handler checks the same spell id against the slow spell twice and runs the same hundred block wide box query for Iron's Spellbooks target area entities behind each check, handing both results to the same consumer, so the second query rescans every entity section that box touches to act on a set the first pass has already dealt with. With this on the second query is not run, which leaves the outcome exactly as it was.")
+                .define("skipDuplicateSpellScan", true), v -> darkdoppelgangerSkipDuplicateSpellScan = v);
+        builder.pop();
+
+        builder.comment("Torchmaster patches.").push("torchmaster");
+        gate(builder
+                .comment("Answer the mega torch and dread lamp spawn block question out of a handle held on the level instead of walking the level's whole capability dispatcher every time it is asked. Torchmaster hooks the spawn finalise event, so every single mob the game is about to place, from natural spawning, from spawners and from structures, goes through it, and the first thing it does is ask the level for its light registry capability, which walks every capability provider any mod has attached to that level, then wraps the answer in a lazy optional map call that allocates a lambda, an Optional and a boxed Boolean before the registry has even looked at a torch. The registry hands itself to the level once per tick from its own cleanup pass, so after the first tick of a dimension the question is one field read and one virtual call. A dimension with no torch or lamp placed in it now answers no without allocating anything at all. The answer is exactly the one the stock lookup produced, and a level whose registry has not introduced itself yet, or whose registry comes from some other mod, still goes down the stock path.")
+                .define("cacheLevelLightRegistry", true), v -> torchmasterCacheLevelLightRegistry = v);
+        gate(builder
+                .comment("Test the distance to a mega torch before looking the entity up in its block list. The registry asks every torch in the dimension in turn whether it blocks this spawn, and each torch checks the block list first: that is a reverse registry lookup to turn the entity type back into an id and then a hash set lookup, paid for every torch in the dimension on every spawn attempt, only to be thrown away by the distance test right after it when the spawn is nowhere near that torch. The distance test is three subtractions and three compares against the configured radius and it is what rules out almost every torch, so it now runs first. Both tests are unchanged and a spawn is blocked in exactly the same cases as before; a spawn that is actually inside a torch's radius pays the distance test twice, which is the cost of not paying the block list lookup for all the torches that are far away.")
+                .define("megaTorchRangeCheckFirst", true), v -> torchmasterMegaTorchRangeCheckFirst = v);
+        builder.pop();
+
+        builder.comment("Cognition patches.").push("cognition");
+        gate(builder
+                .comment("Stop the bibliophage spread running its whole search on the client for nothing. Every infected bookshelf and every agar block ticks on both logical sides, and once a second each of them reads its six neighbours, turns each neighbour block into a fresh item stack and asks the recipe manager for an infecting recipe that matches it, which copies the entire infecting recipe list and allocates a one slot container per recipe per neighbour. The block that would actually be placed at the end of all that refuses to place anything at all when it is handed a client level, so on the client the whole search is built and thrown away every single second for every bibliophage block in render distance. With this on the client returns straight away and the server does exactly what it did before, so a bookshelf wall costs half of what it used to and spreads at the same rate.")
+                .define("skipClientInfection", true), v -> cognitionSkipClientInfection = v);
+        gate(builder
+                .comment("Remember which block each infecting recipe turns into instead of rescanning the recipe list for it. The lookup copies the whole list of infecting recipes on every single call and then walks it, building a throwaway one slot container for every recipe it tests, and it is called once per neighbour block, so a spreading bibliophage setup pays it six times a second per block and almost always to find out that stone or dirt has no recipe at all. The answer only depends on which block is being asked about, so it is now remembered per block, misses included, and thrown away whenever datapacks reload or a world is joined. Adding or changing infecting recipes with a datapack reload still takes effect immediately.")
+                .define("cacheInfectingRecipes", true), v -> cognitionCacheInfectingRecipes = v);
+        gate(builder
+                .comment("Answer the fountain and obelisk player checks off the level's player list instead of a full entity box query. The experience fountain asks the level for every player inside the small box above itself on every tick on both sides just to decide whether to play its on and off sound, and the obelisk asks for every player inside its whole configured radius once a second to see whether anyone has a memory tablet linked to it; both of those walk every entity section the box touches and test every mob, item and arrow in them, while the level already keeps a list of exactly the players. The list is normally one entry, the same spectator filter and the same box test are applied to it, and nothing is allocated at all when nobody is standing there.")
+                .define("leanPlayerScan", true), v -> cognitionLeanPlayerScan = v);
+        gate(builder
+                .comment("Check who owns the item before building its description tooltip. Cognition listens on the item tooltip event, which fires for every item in the game, and before it looks at whether the item is even one of its own it glues .description onto the item's translation key, builds a translatable component out of that, renders it down to a string through the whole language lookup and searches that string, then polls both shift keys straight off the window. All of that is thrown away for every item that is not from Cognition, which is every item in the pack but a handful, and it is paid again on every frame an item tooltip is on screen and once for every item in the game when a recipe viewer builds its tooltip search index. With this on the owning mod is checked first, which is the same check the mod itself does one line later, and everything else is unchanged for Cognition's own items.")
+                .define("skipForeignTooltipScan", true), v -> cognitionSkipForeignTooltipScan = v);
+        builder.pop();
+
+        builder.comment("Opposing Force patches.").push("opposingforce");
+        gate(builder
+                .comment("Remember the stealth total a mob gets from its gear for the rest of the tick instead of rebuilding it for every single visibility question. Opposing Force listens on the living visibility event, which the game fires from inside the targeting test, so it runs once for every candidate entity that every mob looks at while it is picking a target, many times a tick for a busy area. Every one of those calls walked all six equipment slots and asked each stack for its full attribute modifier map, and that ask is not free: on Forge it fires the item attribute modifier event, which allocates the event and runs every listener that Curios, attribute mods and gear mods have hung on it, and for a stack that carries attribute modifiers in its nbt it parses the whole list into a fresh multimap first. Six of those per question, for a number that only changes when the mob swaps gear. The total is now worked out at most once per entity per tick and reused for the rest of that tick, empty slots are skipped, and the visibility answer itself is exactly the one the stock handler produced.")
+                .define("cacheStealthVisibility", true), v -> opposingforceCacheStealthVisibility = v);
+        gate(builder
+                .comment("Stop the Electrified and Gloom Toxin effect ticks running on the client where they cannot do anything. Both effects tick on both logical sides because that is how mob effects work, and both of them end in a call to hurt the entity, which the client refuses outright, so the client half is pure waste: Electrified builds a fresh damage source out of the damage type registry every single tick for every entity carrying it, and Gloom Toxin reads the block light and the sky light at the entity twice through the light engine before throwing the answer away. With this on the client returns immediately and the server does exactly what it did before, so the damage, the timing and the zap sound are unchanged.")
+                .define("skipClientEffectTicks", true), v -> opposingforceSkipClientEffectTicks = v);
+        builder.pop();
+
+        builder.comment("Peyro's Scythe patches.").push("peyroscythe");
+        gate(builder
+                .comment("Stop the four aura spells sweeping for entities and handing out their effects on the client as well as the server. The crimson moon, the mundus, the golden bell and the frost fog all run their entity search and the loop that follows it straight out of the entity tick with no side check at all, so the client repeats the whole thing every single tick for every one of them that is in render distance: the moon and the mundus ask the level for every entity in their bounding box, the bell builds a box the size of its full radius, and the frost fog asks for every living entity in a box of its own radius on every tick with a fresh predicate each time. Everything the loops then do is server business. Adding a mob effect on the client hands the entity a copy the server is about to overwrite anyway, the crimson moon walks and rewrites a list in the entity's persistent data that only the server ever reads back, the bell asks Iron's Spellbooks whether every candidate is friendly fire, and the frost fog writes freeze ticks that the server owns. With this on the client does none of it and the server does exactly what it did before, so a boss fight standing in an aura costs half of what it used to and the effects, the timings and the damage are unchanged.")
+                .define("serverOnlyAuraScans", true), v -> peyroscytheServerOnlyAuraScans = v);
+        gate(builder
+                .comment("Ticks between the crimson moon, the mundus and the golden bell handing their effect to everything standing inside them. All three work out a hit tick of their own, every tenth tick, at the top of the loop and then never look at it, so instead of applying on that beat they reapply to every entity inside the aura on every single tick: a fresh effect instance allocated per entity per tick, an add that bumps the duration back up and therefore counts as a change and sends an effect packet to everyone tracking that entity, and on the crimson moon a walk over the entity's persistent moon frenzy mark list and a write back of it every tick on top. Every one of those effects lasts twenty ticks or more, so applying on the mod's own ten tick beat keeps them up with no gap. This is the only patch here that is not behaviour identical: an entity that walks into an aura now waits up to nine ticks for the effect instead of getting it on the tick it crosses the edge, and an entity that walks out keeps it for up to nine ticks longer. 1 restores the stock every tick behaviour.")
+                .defineInRange("auraEffectApplyInterval", 10, 1, 100), 1, v -> peyroscytheAuraEffectApplyInterval = v);
+        gate(builder
+                .comment("Stop the black flame wings contact damage sweep running on the client. The wings effect ticks on both logical sides every ten ticks and asks the level for every entity touching the wearer before it looks at which side it is on, then for each one it builds a spell damage source and calls the damage helper, which the client refuses outright, but it also parks a full second of invulnerability on the client's own copy of every entity it touched, and that copy is what decides whether the hurt flash and the hurt sound play, so anything brushing past a player with the wings up goes quiet on that player's screen for a second at a time. With this on the sweep and everything behind it are skipped on the client, the server still deals exactly the same damage, and the wing particles, the mana drain and the fall damage reset are untouched.")
+                .define("blackFlameWingsServerOnlyContact", true), v -> peyroscytheBlackFlameWingsServerOnlyContact = v);
+        builder.pop();
+
+        builder.comment("SomakeSpells patches.").push("somakespells");
+        gate(builder
+                .comment("Skip the connection spell tick for entities that are not part of a connection. SomakeSpells listens on the living tick event, which the game fires for every living entity on every single tick, and the first thing its handler does is ask that entity for its connection link data and its pending transfer queue. Neither of those is a capability lookup that can answer no cheaply: each one reaches into the entity's Forge persistent data, allocates a wrapper object and pulls out a compound tag that is almost never there, so a world with a few hundred mobs in it was throwing away four objects per mob per tick to find out that nothing is linked to anything. Links only exist while one of the three connection spells is running on a pair of entities, which is a handful of mobs at most and usually none at all. With this on the handler returns immediately unless the entity actually carries one of the mod's three connection tags, and an entity that does carry one is handled exactly as before. The client side of the tick, which the handler already refused to do anything with, now stops before the persistent data is touched at all.")
+                .define("skipUnlinkedConnectionTick", true), v -> somakespellsSkipUnlinkedConnectionTick = v);
+        gate(builder
+                .comment("Remember the modifier ids the weapon and armor balance handler builds instead of hashing them again every time. The handler listens on the item attribute modifier event, which fires whenever anything asks an item stack what attributes it grants, so it runs on every equipment change, on every tooltip frame and once for every item a recipe viewer indexes, and for a piece of gear the mod rebalances it then builds up to sixteen attribute modifiers in a row. Every one of those needs a uuid, and the mod makes it with the name based uuid helper, which asks the security provider for a fresh MD5 digest and hashes the key string from scratch on every single call. The key is a fixed string per attribute per item, so the answer never changes; it is now worked out once and reused. The uuids themselves are byte for byte the ones the stock helper produced, so nothing about the modifiers or the values on the gear changes.")
+                .define("cacheBalanceUuids", true), v -> somakespellsCacheBalanceUuids = v);
+        builder.pop();
+
+        builder.comment("Biomancy 2 patches.").push("biomancy");
+        gate(builder
+                .comment("Skip Biomancy's mob spawn filter entirely in a world that has none of its shapes in it. Biomancy keeps the volumes that block mob spawning, the primordial mound and anything else that claims an area, in an embedded H2 MVStore database rather than in memory, and it asks that database on the position check event, which the game fires for every single natural spawn attempt: every pack of every group in every eligible chunk around every player, several hundred to a few thousand times a second on a populated server. Every one of those questions rebuilt the path to the database file, allocated two Path objects, a File and a String out of it, allocated the two lambdas the saved data lookup takes, turned the dimension key back into a fresh String, built a query box object and then ran a real R-tree cursor over the store, all to find out that the world contains no shapes at all, which is true of every world where nobody has built a primordial cradle yet. With this on the shape map for the dimension is remembered the first time Biomancy opens it, which is the same live map object the mod itself writes into, and the whole handler is skipped while that map is empty. The moment a cradle or a mound registers a shape the map stops being empty and the check goes back to running exactly as it did, with no delay, because it is the mod's own map being read and not a copy.")
+                .define("skipEmptySpawnQuery", true), v -> biomancySkipEmptySpawnQuery = v);
+        gate(builder
+                .comment("Remember the spatial database handle instead of looking it up again for every query. Biomancy resolves it by asking the server for the world folder, resolving the data directory, resolving the database file name, turning that into a File and then into a String, and handing the result plus two freshly allocated lambdas to the dimension data storage, and it does all of that on every single spawn check and every membrane spread tick. The answer is one object that lives for as long as the server does, so it is now worked out once per server and reused, and it is dropped when Biomancy closes the store on world unload so a second world in the same session gets its own.")
+                .define("cacheSpatialStorage", true), v -> biomancyCacheSpatialStorage = v);
+        gate(builder
+                .comment("Remember the dimension key string the spatial store is indexed by. Biomancy builds it with ResourceLocation.toString on every query, which concatenates the namespace and the path into a brand new String each time, and that string is then used only as a map key. It is now built once per dimension and reused, and the value is character for character the one the stock code produced.")
+                .define("cacheSpatialLevelKey", true), v -> biomancyCacheSpatialLevelKey = v);
+        builder.pop();
+
+        builder.comment("NotEnoughAnimations patches.").push("notenoughanimations");
+        gate(builder
+                .comment("Work the pet petting check's entity raytrace out once per tick instead of once per frame. NotEnoughAnimations asks every one of its animations whether it applies for every player model it sets up, so once per player per frame, and the pet animation's only guard is whether that player is crouching. Crouching is something players do constantly, and the moment one is, the check fires a real raytrace: it builds the eye position, the view vector, the reach point and an inflated bounding box, then asks the level for every entity that box touches and tests each of them, all to find out whether there is a tamed wolf or cat right in front of the player's face. That is a full entity sweep per crouching player per frame, and with a shader pack's shadow pass it is paid again for every extra pass. Every input the raytrace reads, the previous tick position, the rotation, the bounding box and the eye height, only ever changes on a tick boundary, so the answer is identical for every frame inside the same tick; it is now worked out on the first frame of a tick and reused for the rest of it. The hit result handed back is the same object the raytrace produced, so the animation, the pet it picks and the height check behind it are unchanged.")
+                .define("cachePetScan", true), v -> notenoughanimationsCachePetScan = v);
+        gate(builder
+                .comment("Stop the sheathed sword tracker running on the logical server. NotEnoughAnimations is a client only mod, but the mixin that carries its animation data sits on Player rather than on the client player class, so in single player and on a listen server the integrated server's own copy of every player runs it too, and every one of those player ticks calls the render layer's tracker: two held item reads and two lookups into a static HashSet, writing the answer into a field that only the renderer ever reads and that only exists on the client copy of the player. That set is filled once on the render thread the first time the sword layer draws, and read here from the server thread, which is an unsynchronised HashSet touched from two threads for a result nothing uses. With this on the server side of the tick returns immediately, the client side is untouched, and the sheathed sword still shows up exactly as before.")
+                .define("skipServerSwordTracking", true), v -> notenoughanimationsSkipServerSwordTracking = v);
+        builder.pop();
+
+        builder.comment("Lethality patches.").push("lethality");
+        gate(builder
+                .comment("Run the blade mode handler and the Meowrasama handler once per tick instead of twice. Neither of them looks at which half of the tick it is in, and Forge fires the player tick event twice for every player on every tick, once before the player moves and once after, so both handlers do all of their work two times a tick for every player in the world. For the Meowrasama handler that is two held item reads, an nbt read and an effect lookup per player per tick that only ever needed to happen once. For the blade mode handler it is worse: while blade mode is up it asks the level for every living entity in a five block inflated box around the player and hands a fresh slowness instance to every mob it finds, twice per tick, which is a duplicate effect packet to everyone tracking each of those mobs, and while blade mode is down it is four attribute map lookups and two modifier removals per player per tick for a modifier that is almost never there. With this on both handlers run on the end phase only, which is the pass whose result the game actually keeps, and the end of tick state is identical to what the stock code left behind.")
+                .define("skipDuplicateTickPhases", true), v -> lethalitySkipDuplicateTickPhases = v);
+        gate(builder
+                .comment("Keep the broken biome blade's lifesteal flag on the server. The handler runs on both logical sides for every player on every tick and always writes to that player's Forge persistent data: it either sets the lifesteal flag or, far more often, removes a key that is not there, so every player is paying a held item read, an nbt read and a persistent data write twice over for a flag that only the server's damage handler has any use for. The client's own copy of the flag is only ever read by the client half of the lifesteal hook, which heals the client's copy of the player a fraction of a second before the server sends the real health down, so nothing is lost by stopping it. With this on the client side of the handler returns immediately, the server keeps setting and clearing the flag exactly as before, and the healing you actually get is unchanged because the server is the side that does it.")
+                .define("serverOnlyBiomeBladeState", true), v -> lethalityServerOnlyBiomeBladeState = v);
+        gate(builder
+                .comment("Test the bonus weapon drops against the entity type instead of rebuilding its id as a string. Lethality hands out four of its swords from four specific Terramity bosses, and it decides which by listening on the drops event, which the game fires for every single living entity that dies anywhere in the world, then turning that entity's type back into a registry key and calling toString on it, which concatenates the namespace and the path into a brand new String, and comparing that string against four literals one after another. Every mob death in a farm, a spawner room or a mob grinder paid for that string. The four entity types are now looked up once and held, and the handler is skipped outright unless the entity that died is actually one of them, which for everything else in the game is one reference compare. The four bosses drop exactly what they dropped before.")
+                .define("leanBonusDropCheck", true), v -> lethalityLeanBonusDropCheck = v);
+        gate(builder
+                .comment("Skip the charm handler for players who are not wearing any of the three curios it looks for. Lethality listens on the hurt event and, for every hit whose direct source is a player, walks that player's whole curios inventory twice before it knows whether anything is equipped: once through the curios helper's find first call to look for the charged redstone piece, which allocates an Optional per question, and once through its own handler lookup, which allocates an Optional, a lambda and a map view and then reads every slot of every curio type looking for the two backup charms. With a melee weapon that hits several entities at once that is two full inventory walks per entity hit. With this on the answer comes out of the equipped curio set the patch mod already keeps per entity per tick, and the handler is skipped only when none of the three items is worn, so a player who has one equipped gets exactly the stock behaviour, cooldown and all.")
+                .define("skipUnequippedCharmScan", true), v -> lethalitySkipUnequippedCharmScan = v);
+        gate(builder
+                .comment("Stop the backup SOS charms crashing a dedicated server when something asks for their name. Both charms build their display name and their tooltip as animated gradient text, and to pick the animation frame they call Forge's client only executor for the client's tick count and unbox the result straight into an int. On a dedicated server that call returns null, so the unboxing throws a NullPointerException, and the name of an item is asked for on the server in plenty of ordinary places, renaming it in an anvil being the easiest one to hit. The mod's own shared copy of this helper already falls back to a clock derived tick count when the answer is null; the two copies pasted into the charm classes never got that guard. With this on they get the same fallback, so the server answers with a name instead of crashing and the client's animation is untouched.")
+                .define("fixServerSideSosName", true), v -> lethalityFixServerSideSosName = v);
+        builder.pop();
+
+        builder.comment("Caster Curios Bonus patches.").push("castercuriosbonus");
+        gate(builder
+                .comment("Answer the is this accessory worn question out of the equipped curio set the patch mod already keeps per entity per tick. Caster Curios Bonus has one shared helper for this and nine of its twelve trinkets call it: the mana overflow hat alone asks four times, once on cast, once when anything asks a spell's level, once on spell damage and once on spell healing, and the night hunter ring asks it for every single mob that dies to a player anywhere in the world while the void snare necklace asks again for that same mob's drops. Each of those questions resolves the curios capability off the entity, unwraps a lazy optional into a real Optional, maps it through a lambda into a second Optional, boxes the answer into a Boolean, and behind all of that walks every slot of every curio type the player has looking for one item and building a slot result object the moment it finds it. A player fighting with a multi target spell pays that whole walk once per entity hit, per listener. The set of items a player is actually wearing is already worked out once per entity per tick by this mod and thrown away when curios reports an equip, unequip or change, so the answer now comes out of a set lookup and the walk only happens when the cache cannot say, which is exactly the cases where the stock code ran anyway.")
+                .define("cachedCurioLookup", true), v -> castercuriosbonusCachedCurioLookup = v);
+        gate(builder
+                .comment("Stop the mana to health necklace running on the client. Curios ticks a worn trinket on both logical sides, and this one never checks which side it is on, which its sibling the cooldown charm does. So on the client it walks the same path as the server: an attribute lookup for max health, a modifier removal, an attribute lookup for max mana, a full recompute of that attribute's value through every modifier your gear puts on it, a config read, a fresh modifier object and finally a permanent modifier put back on the client's own copy of the player, which the server then overwrites with the real value a moment later anyway. Worse, the counter the necklace uses to only do this every ten ticks is a plain field on the item, and an item exists once for the whole game, so in single player the client thread and the server thread are both incrementing the same counter with no synchronisation and the refresh ends up firing about twice as often as the mod intended. With this on the client side of the tick returns immediately, the server keeps applying the bonus and keeps syncing it down exactly as before, and the health bonus you see is unchanged.")
+                .define("serverOnlyManaToHealth", true), v -> castercuriosbonusServerOnlyManaToHealth = v);
+        gate(builder
+                .comment("Give each wearer their own refresh schedule instead of one counter shared by everyone. Both the cooldown charm and the mana to health necklace only want to redo their attribute maths every twenty and every ten ticks, and both keep the countdown in a field on the item. Items in Minecraft exist exactly once, so that field is not per player, it is per server: with three people wearing the same charm the counter is bumped three times a tick, whoever's tick happens to push it over the line does the work and resets it to zero, and the other two are simply skipped until their turn comes round again. The result is that the refresh rate speeds up as more people wear it while any one player's bonus can go stale for twice as long as it should, and on a server where players join and leave the rotation is not even stable. With this on the countdown is read off the wearer's own tick counter, spread out by entity id so everyone does not land on the same tick, so every wearer gets refreshed on exactly the interval the mod asks for no matter how many other people are wearing one. The item's own counter is left alone and the work done on a refresh is identical.")
+                .define("perPlayerCurioThrottle", true), v -> castercuriosbonusPerPlayerCurioThrottle = v);
+        builder.pop();
+
+        builder.comment("Legendary Spellbooks patches.").push("legendaryspellbooks");
+        gate(builder
+                .comment("Only look for a tornado when one is actually around. Legendary Spellbooks listens on the living tick event so that anything caught in a Legendary Monsters tornado stops taking fall damage, and that listener has no guard on it at all: for every living entity in the world, on every single server tick, it grows that entity's bounding box by two blocks and asks the level for every tornado inside it, which walks each entity section the box touches and tests everything standing in them, and it allocates a fresh bounding box, a fresh entity type test and a fresh result list to do it. A tornado is a boss projectile that exists for a couple of seconds a few times a playthrough, so in an ordinary world that whole search runs hundreds of times a second to be told no, and in a mob farm it turns into every mob asking about every other mob nearby. With this on a tornado stamps the tick it last ticked on, the search is skipped outright while no tornado has ticked in the last tick, and any entity that still carries the in_tornado tag has it taken off on the way past so nothing keeps its fall damage immunity. As a safety net every entity still runs the real search once a second regardless, so if a future version of Legendary Monsters stops the stamp from landing the tag is still picked up within twenty ticks instead of never.")
+                .define("leanTornadoScan", true), v -> legendaryspellbooksLeanTornadoScan = v);
+        gate(builder
+                .comment("Run the flameborn drift particle sweep for your own player only. The handler sits on the player tick event, which the client fires for every player entity it is ticking, and the first thing it does is ask the level for every entity within sixty four blocks of that player, a box a hundred and twenty eight blocks on a side, then walks the result looking for anything mid drift. On a server with other people nearby that is one full sweep per player per tick over almost the same set of entities, and worse, anything drifting inside two of those boxes gets its particles spawned twice a tick, so the effect visibly thickens as more players stand near it. With this on only your own player runs the sweep. Nothing is lost visually because the game throws away particles spawned more than thirty two blocks from the camera anyway, which is half the radius the handler was searching, and in single player the behaviour is identical because there was only ever one player to tick.")
+                .define("localPlayerDriftScan", true), v -> legendaryspellbooksLocalPlayerDriftScan = v);
+        gate(builder
+                .comment("How many ticks between annihilation spell power bonus refreshes. The mod recomputes this bonus off the living tick event for every living entity in the world every two ticks, and every one of those calls resolves three attributes off the entity, each of which allocates a lambda on the way into the attribute map, reads two values back out and looks up the existing modifier, all to arrive at the same number it arrived at a tenth of a second ago. Nothing but a gear change can move it. Raising this to ten ticks cuts four fifths of that work and means a bonus that changes when you swap a piece of gear lands within half a second instead of a tenth. Set it to 2 for the stock rate.")
+                .defineInRange("annihilationBonusInterval", 10, 2, 200), 2, v -> legendaryspellbooksAnnihilationBonusInterval = v);
+        builder.pop();
+
+        builder.comment("Meet Your Fight patches.").push("meetyourfight");
+        gate(builder
+                .comment("Answer the is this accessory worn question out of the equipped curio set the patch mod already keeps per entity per tick. Meet Your Fight has one shared helper for this and its six trinkets all go through it: the ace of iron and the caged heart ask it for every hit any player in the world takes, the slicer's dice and the wilted ideals ask it for every hit any player deals, the tomb planter asks it for every mob that dies to a player anywhere, and the blossoming mind asks again for that same mob's experience drop. Every one of those questions resolves the curios capability off the player, unwraps a lazy optional into a real Optional, maps it through a lambda into a second Optional, boxes the answer into a Boolean, and behind all of that walks every slot of every curio type the player has looking for one item and building a slot result object the moment it finds it. A player swinging a sweeping weapon into a pack of mobs pays two of those whole walks per entity hit and another two for every one of them that dies. The set of items a player is actually wearing is already worked out once per entity per tick by this mod and thrown away when curios reports an equip, unequip or change, so the answer now comes out of a set lookup and the walk only happens when the cache cannot say, which is exactly the cases where the stock code ran anyway.")
+                .define("cachedCurioLookup", true), v -> meetyourfightCachedCurioLookup = v);
+        gate(builder
+                .comment("Stop the spectre's eye running its thirty two block enemy sweep on the client. Curios ticks a worn trinket on both logical sides and this one never checks which side it is on, so once every three seconds the client repeats the whole thing: it grows the wearer's bounding box by the configured range, which is thirty two blocks by default and therefore a box sixty four blocks on a side, walks every entity section that box touches, tests everything standing in them for being a monster, and hands each one a fresh glowing effect instance. None of that lands. Glowing is drawn off the entity flag the server syncs down, not off the client's own effect list, so the client copy of the effect is invisible, it is rolled against a search the server has already done, and it fires the effect added event on the client for every mob in range. With this on the client side of the tick returns before the search, the server keeps applying glowing and syncing it exactly as before, and what you see through walls is unchanged.")
+                .define("serverOnlyGlowSweep", true), v -> meetyourfightServerOnlyGlowSweep = v);
+        builder.pop();
+
+        builder.comment("Bosses of Mass Destruction patches.").push("bmd");
+        gate(builder
+                .comment("Skip the mob ward proximity scan while no mob ward is loaded. Bosses of Mass Destruction hooks the natural spawner so a mob ward blocks spawning around it, and the check it runs there is the most expensive thing in the mod: for every spawn position the game accepts, anywhere in the world, it builds a chunk position, resolves a capability off the level into an Optional, allocates a closure, and then walks a nine by nine block of chunks around that position, allocating a fresh chunk position and a fresh result list for each one of the eighty one, just to learn that not one of them holds a ward. The game asks that question hundreds to thousands of times a second on a loaded server, so on a world with no wards in it this alone is tens of thousands of throwaway objects a second on the tick thread. This patch keeps track of every position the mod itself puts into that cache and every position it takes back out, and returns straight away when there is no ward anywhere, which is the same answer the scan would have arrived at. So the guard cannot go stale if a future version of the mod changes how positions get in, one call in every four thousand runs the real scan anyway and anything it finds is folded back into the tracker, which turns the guard off within a second of a ward actually existing.")
+                .define("leanWardSpawnScan", true), v -> bmdLeanWardSpawnScan = v);
+        gate(builder
+                .comment("Skip the monolith explosion scan while no monolith is loaded. Every explosion in the world, from any mod or any creeper, goes through the mod's hook that asks whether a monolith is standing within sixty four blocks so it can boost the blast, and that question is answered by the same nine by nine chunk walk the mob ward uses, with a fresh chunk position and a fresh result list for each of the eighty one chunks. Monoliths only exist in the Obsidilith arena, so in an ordinary world every single explosion pays for a hundred and sixty odd throwaway objects to be told no. This uses the same position tracker as the ward patch and returns the unmodified blast power straight away while no monolith is loaded, with the same one in four thousand real scan as a safety net.")
+                .define("leanMonolithExplosionScan", true), v -> bmdLeanMonolithExplosionScan = v);
+        gate(builder
+                .comment("Skip the levitation block flight check while no levitation block is loaded. The mod runs this off the player tick event for every player on the server, and it is not cheap: it allocates a list, fills it with nine block positions, streams that into a set of chunk positions through a lambda, then streams the set again and for each chunk resolves the level capability into an Optional and asks it for a list of levitation blocks, allocating a result list every time. That is roughly sixty short lived objects per player per tick, on the tick thread, in a world where the Obsidilith arena that contains those blocks may not even be generated yet. With this on a player who cannot already fly and is nowhere near a tracked levitation block skips the whole thing. Players who can fly, which includes creative and spectator and anyone the block has already granted flight to, always run the stock code, so flight is still taken back correctly when you walk out of the beam. One call in four thousand runs the real check regardless so the tracker cannot drift.")
+                .define("leanLevitationFlightScan", true), v -> bmdLeanLevitationFlightScan = v);
+        gate(builder
+                .comment("Run the mod's player tick handler once a tick instead of twice. Forge fires the player tick event twice per tick, once before the player ticks and once after, and this handler never checks which of the two it is in, so everything behind it runs double: the capability lookup and the closure it allocates for every player every tick, the levitation block flight check, and the movement history the Lich reads to lead its shots. That last one is the visible part, since the history only holds ten samples and at two samples a tick it covers five ticks of movement rather than the ten the mod is written for, which makes the Lich's aim read your position over a shorter window than intended. With this on only the end of the tick runs. Turn it off if you want the stock double firing back.")
+                .define("singlePlayerTickPhase", true), v -> bmdSinglePlayerTickPhase = v);
+        builder.pop();
+
+        builder.comment("Mahou Tsukai patches.").push("mahoutsukai");
+        gate(builder
+                .comment("Skip the borrowed authority tick on the client. Mahou Tsukai hangs fifteen separate effect handlers off the living tick event, so every one of them runs for every living entity in the world on both logical sides, and this is the one that costs something before it checks where it is. It resolves the mod's living mahou capability off the entity first, which means a capability dispatcher walk and a lazy optional unwrap wrapped in a try catch, and only then asks whether it is on the server. Everything the handler actually does is inside that server check, so on the client the whole lookup is thrown away. With this on the client side of the handler returns immediately. The server is untouched.")
+                .define("skipClientAuthorityTick", true), v -> mahoutsukaiSkipClientAuthorityTick = v);
+        gate(builder
+                .comment("Check for the Ripper's invisibility effect before reading the entity's hands instead of after. The same living tick chain runs this for every living entity every tick on both sides, and stock reads the main hand stack, the off hand stack and their items before it ever looks at the effect, even though the whole method does nothing at all unless the effect is present. Nobody in a normal world has it. Turning this off restores the stock ordering.")
+                .define("leanRipperTick", true), v -> mahoutsukaiLeanRipperTick = v);
+        gate(builder
+                .comment("Stop the projector enchantment renderer walking the enchantment list of every armour piece of every entity on screen every frame. It asks whether each of the four armour slots carries the mod's projector enchantment, and the vanilla helper behind that question allocates a fresh empty list tag and does a registry key lookup for every stack that has no nbt at all, which is nearly all of them. With this on the renderer returns early when not one armour slot on the entity carries nbt, which is the same answer the stock scan arrives at. An item that reports enchantments from somewhere other than its own nbt would be skipped, so turn this off if you use armour like that.")
+                .define("leanProjectorEnchantScan", true), v -> mahoutsukaiLeanProjectorEnchantScan = v);
+        gate(builder
+                .comment("Stop other players resetting your mouse sensitivity while you are channelling the mystic staff. The mod drops your sensitivity to a third while the staff beam is charging and puts it back from its player tick handler, but that handler runs for every player entity the client has loaded and never checks which one it is looking at, and the tick counter it is throttled by is only ever advanced on the server, so on a multiplayer client it is stuck at zero and the check passes every single tick. Any second player standing nearby who is not holding a mystic staff therefore snaps your sensitivity back mid aim. With this on the handler only runs for your own player on the client, which is also everything it was ever able to do there. The server side is unchanged.")
+                .define("fixStaffSensitivity", true), v -> mahoutsukaiFixStaffSensitivity = v);
+        gate(builder
+                .comment("Drop logged out players from the insight eyes target map. The mod keeps a static map of players who are currently being shown an insight readout and clears an entry on the first tick the player has no target, which never happens if the player disconnects or dies while looking at something, so that entry pins the whole player object and everything it references for the rest of the session. This removes the player on logout and sweeps any key whose entity has already been discarded.")
+                .define("purgeInsightTargets", true), v -> mahoutsukaiPurgeInsightTargets = v);
+        gate(builder
+                .comment("Build Mahou Tsukai's copy of every client entity once per tick instead of once per frame for its fae and staff renders. Client.")
+                .define("memoAllEntities", true), v -> mahoutsukaiMemoAllEntities = v);
+        builder.pop();
+
+        builder.comment("Primitive Mobs patches.").push("primitivemobs");
+        gate(builder
+                .comment("Do not graft the flee from goblins goal onto every villager in the world. Primitive Mobs listens for any entity joining a level and, for every villager, adds a vanilla avoid goal that hunts for goblins in an eight block box. That goal is not free to ask: the goal selector re-evaluates it for every villager every other tick, and each evaluation walks every entity section that box touches, type checks everything it finds and builds a throwaway list, whether or not a goblin has ever been anywhere near. A trading hall is dozens of those queries every tick forever. Villagers also move off their brain rather than their goal list in this version, so the brain's own walk target overwrites the flee path on the same tick it is set and the goal barely changes what a villager does anyway. Turn this on to skip adding the goal at all, which is the stock behaviour minus the feature. Leave it off and villagerGoblinAvoidInterval keeps the feature and just slows the searching down.")
+                .define("skipVillagerGoblinAvoid", false), v -> primitivemobsSkipVillagerGoblinAvoid = v);
+        gate(builder
+                .comment("Search for goblins around each villager this many goal ticks apart instead of every one. The goal selector asks an idle goal whether it wants to run every other game tick, so stock is one full entity box query per villager per two ticks, and on a normal world every single one of them comes back empty. With this at five a villager that found nothing waits five of those checks before looking again, which is about half a second, so the searching costs a fifth of what it did. A villager can therefore take up to half a second longer to notice a goblin that walks up to it; once it is fleeing nothing is throttled and the goal runs exactly as it always did. Set to 1 for stock behaviour. Note that the goal is handed to the goal selector wrapped, so another mod that goes looking through a villager's goal list for a vanilla avoid goal by type will not find this one; set this to 1 if you use something that does.")
+                .defineInRange("villagerGoblinAvoidInterval", 5, 1, 100), 1, v -> primitivemobsVillagerGoblinAvoidInterval = v);
+        gate(builder
+                .comment("Same throttle for the sheepman's flee from zombified piglins goal. That one searches a twelve block box, which is nearly four times the volume of the villager one, and it runs for every sheepman every other tick in a dimension where the thing it is looking for may not exist at all. The reaction delay and the wrapping caveat are the same as for the villager goal. Set to 1 for stock behaviour.")
+                .defineInRange("sheepmanPiglinAvoidInterval", 5, 1, 100), 1, v -> primitivemobsSheepmanPiglinAvoidInterval = v);
+        builder.pop();
+
+        builder.comment("Ribbits patches.").push("ribbits");
+        gate(builder
+                .comment("Look for crops to water this many goal ticks apart instead of every one. A gardener ribbit asks for the nearest waterable crop by walking a thirty three by eleven by thirty three block box out from its feet and reading the block state at every position in it, which is close to twelve thousand block reads, and the goal selector puts that question to it every other game tick all night long. In a village with no farm anywhere near it every one of those scans comes back empty and it does it again a tenth of a second later. With this at twenty a ribbit that found nothing waits twenty of those checks before looking again, about two seconds, and the scan costs a twentieth of what it did. A crop that appears next to a ribbit is therefore noticed up to two seconds later, which is nothing next to the twenty second watering animation, and once the ribbit is walking to a crop nothing is throttled at all. Set to 1 for stock behaviour.")
+                .defineInRange("waterCropsScanInterval", 20, 1, 200), 1, v -> ribbitsWaterCropsScanInterval = v);
+        gate(builder
+                .comment("Same throttle for the fisherman ribbit's search for water. It is the same twelve thousand block read scan with no cooldown behind it at all, so a fisherman that is standing somewhere without water pays for the whole box every other tick for the entire night. When water is close by the search stops at the first hit and costs almost nothing, so this only bites on the misses, which are the expensive ones. A fisherman can take up to two seconds longer to notice a pond that appears next to it. Set to 1 for stock behaviour.")
+                .defineInRange("fishScanInterval", 20, 1, 200), 1, v -> ribbitsFishScanInterval = v);
+        gate(builder
+                .comment("Reuse the band search for this many calls instead of redoing it every time. Every ribbit that is not already in a band asks the level for every other ribbit inside a hundred and twenty eight by thirty two by hundred and twenty eight block box, and it asks twenty times a second while its music goal is trying to start, purely to copy a band leader off a neighbour. A ribbit that cannot join because the nearby band is already full never stops asking, so a village with more ribbits than band slots runs that sweep forever from dusk to dawn. With this on the list of neighbours is remembered for ten calls and the leader is still read live off those neighbours, so who joins which band does not change; the list is thrown away and rebuilt early if any ribbit in it has been removed. A ribbit that walks into range can take half a second longer to be seen. Set to 1 for stock behaviour.")
+                .defineInRange("bandScanInterval", 10, 1, 200), 1, v -> ribbitsBandScanInterval = v);
+        gate(builder
+                .comment("Stop the server crashing when a player drops the maraca while playing it. The mod keeps a map of players who are performing and looks the audience up out of it without checking that the entry is there. Its own server tick handler drops the entry as soon as the player is no longer holding the maraca, and the player's own tick then ends the use and asks for that same entry a moment later, so dropping the maraca mid tune throws a NullPointerException out of the player tick on the server. With this on the missing entry reads as an empty audience, which is what it means, and the rest of the cleanup runs as normal.")
+                .define("fixPerformerCrash", true), v -> ribbitsFixPerformerCrash = v);
+        builder.pop();
+
+        builder.comment("Hazen 'n Stuff patches.").push("hazennstuff");
+        gate(builder
+                .comment("Remember the model, texture and animation file names of each Hazen 'n Stuff geo model instead of rebuilding them on every frame. Every one of the mod's thirty seven armour, staff and weapon models answers which model file, which texture and which animation file it uses by building a brand new ResourceLocation out of the same two constant strings, and GeckoLib asks all three of those questions again for every piece of the mod's gear that is on screen, every frame, plus once more per glow layer. Nothing about the answer can change at runtime, so a player in a full set with a staff in hand pays for roughly twenty of those objects a frame, each one also re-validating the same namespace and path character by character. With this on the answer is built once per model and handed back afterwards, so the returned value is identical and only the rebuilding goes away. Turn it off for stock behaviour.")
+                .define("cacheGeoResources", true), v -> hazennstuffCacheGeoResources = v);
+        builder.pop();
+
+        builder.comment("Species patches.").push("species");
+        gate(builder
+                .comment("Stop the Species living entity render listener from running a second time after every entity has already been drawn. The mod subscribes its big disguise renderer to the abstract parent of the render living event instead of to the pre variant, and Forge hands a parent listener both the pre event and the post event, so the whole body runs twice for every living entity on screen every frame. The second run is not just wasted work: the post event is not cancellable, and the disguise branch calls set canceled on it, which throws an unsupported operation exception straight out of the entity render dispatcher, so anything wearing a wicked mask with a stored mob id can hard crash the client. With this on the listener returns immediately unless the event really is the pre one, which is the only phase the code was written for, so the crash goes away and the per entity per frame cost of that listener is halved. Turn it off for stock behaviour.")
+                .define("fixDoubleRenderListener", true), v -> speciesFixDoubleRenderListener = v);
+        gate(builder
+                .comment("Stop the Species status effect tick handler from running on the client. The mod injects into the head of the living entity effect tick, which runs for every living entity every tick on both logical sides, and it rolls its own random number there and plays the gut feeling roar directly, so the client rolls once and the server rolls again and broadcasts, and the roar ends up firing about twice as often as the mod's own one in two hundred chance says it should. The other branch in that handler already refuses to do anything unless it is on a server level, so nothing else is lost. With this on the handler is skipped entirely on the client, which removes the duplicated roar and two hash map lookups per living entity per client tick. Turn it off for stock behaviour.")
+                .define("skipClientEffectTick", true), v -> speciesSkipClientEffectTick = v);
+        gate(builder
+                .comment("Let a wicked look for its haunted mob this many ticks apart instead of every tick. A wicked that has a haunted target id saved but has not found the mob object yet asks the level for every mob inside a forty by forty by forty block box, with a filter that allocates two fresh lambdas each time, and it does that twenty times a second on both the client and the server. That search is only there to reconnect the wicked to its victim after a load, so it normally succeeds on the first try, but if the victim died, despawned or is sitting in an unloaded chunk the id never clears and the wicked runs that sweep forever. With this at twenty the reconnect can take up to a second longer and the hopeless case costs a twentieth of what it did, and once the wicked is holding its victim again nothing is throttled at all. Set to 1 for stock behaviour.")
+                .defineInRange("wickedHauntScanInterval", 20, 1, 200), 1, v -> speciesWickedHauntScanInterval = v);
+        gate(builder
+                .comment("Let a limpet look for players to be scared of this many ticks apart instead of every tick. Every limpet that is not already fleeing asks the level for every player inside an eight by eight by eight block box every single tick, allocating a capturing filter and a consumer each time, purely to push its scared timer back up to one hundred ticks. Since the timer only counts down one per tick, refreshing it ten times a second is a hundred times more often than it needs to be. With this at ten a limpet can take up to half a second longer to notice a player walking up to it, and once it is scared it stays scared exactly as long as before. Set to 1 for stock behaviour.")
+                .defineInRange("limpetScareScanInterval", 10, 1, 200), 1, v -> speciesLimpetScareScanInterval = v);
+        builder.pop();
+
+        builder.comment("Cooking for Blockheads patches.").push("cookingforblockheads");
+        gate(builder
+                .comment("Stop the kitchen compat lists from growing every time a world is joined or datapacks are reloaded. Cooking for Blockheads reads its compat json files, the ones that say which items are tools, water, milk, oven fuel, oven recipes, toaster recipes and which blocks connect a kitchen, from a reload listener, and that listener only ever appends: nothing is cleared first. Each world join and each /reload runs it again, so after five joins in one session every tool, water and milk item is in its list five times, every oven and toaster recipe is in its map five times, the kitchen floor is in the connector list five times and the non food list has quintupled. Those lists are walked by hand on the hot paths: every recipe book click scans the tool list per slot for a fridge with a preservation upgrade, the sink offers one slot per water entry, the recipe book overlay walks the non food list per slot per frame, and the food registry rebuild walks it per recipe. With this on an entry that is already registered is skipped and the json non food list is emptied before the files are read again, so a reload leaves the lists exactly as the first load did. Turn it off for stock behaviour.")
+                .define("idempotentCompatReload", true), v -> cookingforblockheadsIdempotentCompatReload = v);
+        gate(builder
+                .comment("Remember what an oven turns an item into instead of searching every smelting recipe again. When the oven screen is open the mod asks the oven for the smelting result of every item in its nine cooking slots every single frame to draw the ghost result, and each of those asks walks the whole list of furnace recipes in the game, testing every ingredient, because the oven has no idea it just answered the same question a frame ago. A hopper pushing into an oven asks the same thing per slot every time it tries. With this on each oven keeps the last sixteen answers and hands them straight back for the same item, and the memory is thrown away whenever recipes reload. Turn it off for stock behaviour.")
+                .define("cacheOvenSmeltingResult", true), v -> cookingforblockheadsCacheOvenSmeltingResult = v);
+        gate(builder
+                .comment("Read the oven's facing from its block state instead of from a field that is only filled in on the server. The oven remembers which way it faces in a field that is set on the first server tick, and only for the plain oven, never for the dyed ones. The client never runs that tick, so on the client every oven claims to face north, and the renderer uses that answer to pick which neighbouring block the door handles borrow their light from. An oven set against a wall facing south therefore lights its handles from inside the wall and they render dark. With this on the facing is read straight from the block state on both sides, which is what the field was trying to mirror. Turn it off for stock behaviour.")
+                .define("ovenFacingFromState", true), v -> cookingforblockheadsOvenFacingFromState = v);
+        gate(builder
+                .comment("Build a list of which items are anywhere in the kitchen once per recipe book refresh, and skip the ingredient searches that cannot succeed. Every click in the cooking table refreshes the whole recipe list on the server, and for every food recipe in the game it searches every kitchen container for every possible item of every ingredient, allocating a fresh predicate per search, with no memory between recipes. Most of those searches are for items that are nowhere in the kitchen at all. With this on the kitchen is walked once per refresh into a set of item types, and a search for an item that is not in that set is answered as not found without touching the containers, which is exactly what the search would have concluded. The set is only used for Cooking for Blockheads' own container types, which find items by walking their slots, plus the fridge whose ice unit is treated as always offering snow and ice; a kitchen containing any other kind of provider runs the stock search. Turn it off for stock behaviour.")
+                .define("indexRecipeBookScan", true), v -> cookingforblockheadsIndexRecipeBookScan = v);
+        builder.pop();
+
+        builder.comment("Integrated Villages patches.").push("integratedvillages");
+        gate(builder
+                .comment("Stop the village workstation picker from leaking and racing. The structure processor that swaps a placeholder block for a random workstation keeps its list of candidate blocks in a field on the processor and appends the full candidate set to it on every single block it processes, never clearing it, so the list grows by a few entries for every workstation placed in every village for the life of the world. Worse, one processor instance is shared by every chunk being generated, and chunks generate on several worker threads at once, so two chunks placing workstations at the same moment append to and read from the same plain ArrayList concurrently, which can throw an index out of bounds out of chunk generation. With this on the pick runs under a lock and the list is emptied before each pick, so every workstation is chosen from exactly the same set the first one was and nothing is left behind. Turn it off for stock behaviour.")
+                .define("isolateWorkstationPicks", true), v -> integratedvillagesIsolateWorkstationPicks = v);
+        builder.pop();
+
+        builder.comment("Deeper and Darker patches.").push("deeperdarker");
+        gate(builder
+                .comment("Look at which block was broken before reading the enchantments off the tool. Deeper and Darker listens to every block break in the game and the very first thing its handler does is ask the held item for its Silk Touch level, which walks the whole enchantment list stored on that item and builds and looks up a fresh ResourceLocation for every entry on it, and only after that does it check whether the broken block is one of the three blocks it actually cares about, which are crystallized amber, the ice lily and the ancient vase. Every other block in the game, and there are tens of thousands of them in a mining trip, pays that scan for nothing, and a vein miner breaking a whole ore body in one tick pays it once per block. With this on the block is checked first and the enchantment scan only happens for those three blocks, which is exactly when its answer was ever used. Turn it off for stock behaviour.")
+                .define("leanBreakEvent", true), v -> deeperdarkerLeanBreakEvent = v);
+        gate(builder
+                .comment("Let the sculk jaw skip the same things when you stand in it that it already skips when you step on it. The jaw has two separate bite paths: the step on path lets creative players, sneaking players and the mod's own sculk mobs walk over it untouched and only bites while the block says it can bite, and a second path that fires for anything standing inside the block has none of those checks at all. So a creative player, a sneaking player or a sculk mob that ends up inside an open jaw gets chewed anyway, which is the opposite of what the mod's own rule says. With this on the inside path uses the same three checks the step on path uses. Turn it off for stock behaviour.")
+                .define("fixSculkJawGuards", true), v -> deeperdarkerFixSculkJawGuards = v);
+        gate(builder
+                .comment("Bite once per sculk jaw instead of once per tick. When the jaw bites it sets itself to biting, which removes its collision box so the victim drops into the block, and it schedules itself to reopen thirty five ticks later. Meanwhile the second bite path fires for everything inside the block on every single tick with no cooldown of its own, so one step on an open jaw is the three damage the bite is written for plus another three damage twenty times a second for the whole thirty five ticks, around a hundred damage from one block, and the same damage source is built again on the client every tick as well. With this on the inside path stays quiet while the jaw is already mid bite, so a jaw does the one bite its step on path deals and then stays shut until it reopens. Turn it off for stock behaviour.")
+                .define("fixSculkJawRepeatBite", true), v -> deeperdarkerFixSculkJawRepeatBite = v);
+        gate(builder
+                .comment("Only write the sonorous staff's charged flag when it changes. The staff rewrites that flag into its own NBT on every tick for every slot it sits in on both logical sides, and it uses the get or create form, so a staff that has never been charged still gets a tag permanently attached and then written to twenty times a second for as long as it is in anyone's inventory, on both sides, forever. The flag is only read to decide whether the staff glows. With this on the flag is compared first and only written when it actually flips, and a staff that is not charged is left with no tag at all, which is the same answer the glow check reads. Turn it off for stock behaviour.")
+                .define("leanStaffChargeTag", true), v -> deeperdarkerLeanStaffChargeTag = v);
+        gate(builder
+                .comment("Reuse one random number generator for the warden heart's heartbeat instead of building a new one every tick. The heart rolls for its ambient thump from its inventory tick, and it builds a brand new random source for that roll, which means a fresh seed uniquifier compare and swap, a nanotime read and an atomic long allocation, per heart, per slot, per tick, on both logical sides, to then almost always decide not to play anything. With this on the roll comes from one generator kept per thread. The thump happens exactly as often as before. Turn it off for stock behaviour.")
+                .define("reuseHeartRandom", true), v -> deeperdarkerReuseHeartRandom = v);
+        builder.pop();
+
+        builder.comment("Goety Hostility patches.").push("goetyhostility");
+        gate(builder
+                .comment("Check whether the entity is a Wildfire before doing the work that only a Wildfire ever uses. Goety Hostility hangs a listener off the living tick event on the client, which runs for every living entity the client has loaded, twenty times a second, and the only thing that listener can ever do is start the Wildfire boss music. Before it gets around to asking whether the entity is even a Wildfire it reads a Goety config value, resolves Goety's mob target capability off the entity twice, unwraps it both times, and asks the entity type whether it carries a boss music tag, so a few hundred cows, zombies and item frames in render distance pay several capability resolutions and a tag lookup each, every tick, to be told they are not the fire boss. With this on the entity type is checked first, off a cached class test, and everything else only happens for an actual Wildfire, which is the only case the body was ever written for. Turn it off for stock behaviour.")
+                .define("leanBossMusicTick", true), v -> goetyhostilityLeanBossMusicTick = v);
+        gate(builder
+                .comment("Skip the Squall Golem's proximity sweep when it already has a target. An activated golem asks the world for every living entity in a twelve block cube around it on every single tick, then line of sight traces from each one back to itself, purely to decide whether to refresh its hundred tick activity timer. The very next line refreshes that timer anyway if the golem has a target, so during an actual fight, which is the only time several golems are awake at once, the whole sweep and every trace in it is thrown away. With this on the sweep is skipped when the golem already has a target and runs exactly as before when it does not, so a golem still wakes up for anyone who walks near it. Turn it off for stock behaviour.")
+                .define("leanGolemProximityScan", true), v -> goetyhostilityLeanGolemProximityScan = v);
+        gate(builder
+                .comment("Stop probing the eight blocks under the Wildfire after the first solid one. The boss checks whether there is a steep drop below it while it is airborne and chasing, and that check reads the block state eight positions straight down without ever stopping, even though one solid block anywhere in that column already settles the answer, and it rebuilds the boss's own block position three times and allocates a fresh block position for every one of those eight reads. With this on the probe stops at the first solid block and reuses one mutable position, which is the same answer with up to seven fewer block state reads and eight fewer allocations per tick while the boss is in the air. Turn it off for stock behaviour.")
+                .define("leanWildfireDropProbe", true), v -> goetyhostilityLeanWildfireDropProbe = v);
+        builder.pop();
+
+        builder.comment("Qliphoth Awakening (FD Bosses) patches.").push("fdbosses");
+        gate(builder
+                .comment("Skip the arena protection sweep while no boss arena is loaded. Qliphoth Awakening listens to every block break, every block placement and every explosion on the server, and the first thing each of those three listeners does is ask the world for every boss spawner entity inside a two hundred block cube centred on the block, which is thirteen by thirteen by thirteen entity sections walked and type tested, before it has looked at anything else. A quarry, a vein miner, an Ultimine swing or a Create drill breaking a few hundred blocks in one tick pays that whole sweep once per block, and the answer is an empty list every single time unless you are standing in one of the mod's arenas. With this on the patch mod keeps a count of how many boss spawner entities are loaded on the server, updated when entities start and stop being tracked, and the three listeners return immediately while that count is zero, which is exactly what they did with the empty list anyway. The moment one boss spawner is loaded the sweep runs unchanged and the arena is protected exactly as before. Turn it off for stock behaviour.")
+                .define("skipArenaProtectionScan", true), v -> fdbossesSkipArenaProtectionScan = v);
+        gate(builder
+                .comment("Skip the Chesed kinetic field collision query while no kinetic field is loaded. The mod injects into the vanilla entity collision routine and, for every player and every thrown ender pearl, builds two bounding boxes and asks the world for every Chesed kinetic field inside a forty block cube, on every movement step, on both logical sides. Kinetic fields only exist during the Chesed fight, so on a normal world that is a few dozen entity section lookups per player per tick per side producing an empty list. With this on the query is skipped while no kinetic field is loaded on that side and runs unchanged as soon as one is, so the fight collides exactly as before. Turn it off for stock behaviour.")
+                .define("skipKineticFieldCollision", true), v -> fdbossesSkipKineticFieldCollision = v);
+        gate(builder
+                .comment("Skip the hellscape sky scan while no boss spawner is loaded on the client. Every client tick between dusk and dawn the mod asks the client world for every Malkuth boss spawner inside a sixty block cube around you, purely to decide whether the red hellscape skybox should fade in. With this on the patch mod keeps a count of the boss spawner entities the client has loaded and hands that query an empty list while the count is zero, which is the same answer the query gave, so the sky still fades out exactly as it did. As soon as any boss spawner is loaded the query runs untouched. Turn it off for stock behaviour.")
+                .define("skipHellscapeSkyScan", true), v -> fdbossesSkipHellscapeSkyScan = v);
+        gate(builder
+                .comment("Only run the Phase Sphere tick for your own player. The mod hooks the vanilla player tick, which fires for every player entity the client knows about, and its client branch is written against one global flag and one global counter that belong to the local player alone. So while you hold the Phase Sphere in multiplayer, every other player you can see also gets no clip and the flying flags forced on client side, and the use timer is advanced once per visible player per tick instead of once per tick, which drains the sphere several times faster the more people are standing near you. With this on the client branch runs for the local player only. The server branch, which is the one that actually stores and syncs the sphere state, is untouched. Turn it off for stock behaviour.")
+                .define("localOnlyPhaseSphereTick", true), v -> fdbossesLocalOnlyPhaseSphereTick = v);
+        builder.pop();
+
+        builder.comment("Creatures and Beasts patches.").push("cnb");
+        gate(builder
+                .comment("Sit out this many goal ticks after a cactem fails to find an elder to follow. Every cactem that is not itself an elder carries a follow goal, and that goal answers the question by asking the world for every cactem inside a sixty five by nine by sixty five block box, ten times a second, for as long as the cactem is alive. It then refuses to follow anything closer than twenty blocks, which is exactly where cactems stand in the villages they spawn in, so in the normal case the sweep runs, finds the elder, decides it is too close, and throws the whole answer away a tenth of a second later, forever. With this on a sweep that does not produce something to walk to is not repeated for this many goal ticks, and the moment it does produce one the throttle clears, so following is unchanged once it starts. A cactem can take up to a second longer to start walking after an elder that has just moved away. Set to 1 for stock behaviour.")
+                .defineInRange("cactemFollowElderScanInterval", 10, 1, 200), 1, v -> cnbCactemFollowElderScanInterval = v);
+        gate(builder
+                .comment("Sit out this many goal ticks after a cactem finds that an elder is already nearby. Every adult non elder cactem carries a goal whose only job is to promote it to elder when no elder is around, and it decides that by asking the world for every cactem inside a sixty five by thirty three by sixty five block box, ten times a second, forever. That box is roughly a hundred and forty thousand blocks of entity sections walked and type tested, and in a village, where an elder is always nearby, the answer is the same every single time. With this on a sweep that finds an elder is not repeated for this many goal ticks. A cactem whose elder has just died can take up to two seconds longer to promote itself. The sweep is never throttled when it comes back empty, so nothing delays the promotion itself. Set to 1 for stock behaviour.")
+                .defineInRange("cactemBecomeElderScanInterval", 20, 1, 200), 1, v -> cnbCactemBecomeElderScanInterval = v);
+        gate(builder
+                .comment("Sit out this many goal ticks after a cactem elder finds nothing to trade for. The trade goal asks the world for every dropped item entity inside a thirty three by seven by thirty three block box ten times a second per elder, and then throws away everything that is not a cactus, which on a normal world is every item or, far more often, an empty list. With this on a search that comes back with nothing to walk to is not repeated for this many goal ticks. A cactus you throw down in front of an elder can take up to a second longer to be noticed, and once the elder is on its way nothing is throttled. Set to 1 for stock behaviour.")
+                .defineInRange("cactemTradeScanInterval", 10, 1, 200), 1, v -> cnbCactemTradeScanInterval = v);
+        gate(builder
+                .comment("Reuse the cactem elder's heal search for this many calls instead of redoing it every time. The heal goal asks the world for every cactem inside a thirty three by nine by thirty three block box to find out whether anyone nearby is below half health, and it asks from three places: the goal's own start check, its continue check, which just calls the start check again, and its tick. That is several sweeps per elder per tick while the goal is running and two per elder every goal tick while it is not. With this on the list of nearby cactems is remembered for this many calls and every health reading is still taken live off those cactems, so who gets healed does not change; the list is thrown away and rebuilt early if any cactem in it has been removed. A cactem that walks into range hurt can take up to a second longer to be seen. Set to 1 for stock behaviour.")
+                .defineInRange("cactemHealScanInterval", 10, 1, 200), 1, v -> cnbCactemHealScanInterval = v);
+        gate(builder
+                .comment("Sit out this many goal ticks after a friendly sporeling finds nothing to convert. Every friendly sporeling carries a goal that asks the world for every dropped item entity inside a thirty three by seven by thirty three block box, ten times a second, for the whole life of the sporeling, and then keeps only rotten flesh and cursed gear, which is almost never on the floor anywhere near it. Sporelings spawn in groups, so a mushroom field or a nether forest runs that sweep dozens of times a second to produce nothing. With this on a search that finds nothing is not repeated for this many goal ticks, and a search that finds something is not throttled at all. An item you drop next to a sporeling can take up to a second longer to be picked up. Set to 1 for stock behaviour.")
+                .defineInRange("sporelingConvertScanInterval", 10, 1, 200), 1, v -> cnbSporelingConvertScanInterval = v);
+        gate(builder
+                .comment("Do not write cactem synced entity data from the render thread. The cactem's GeckoLib animation predicates run once per cactem per frame on the client, and two of them write synced entity data while they are there: the main one rolls a fresh random number and stores a new idle animation index every frame the cactem is walking, and the attack one stores the spear visibility flag every frame the cactem is not throwing. Synced entity data is owned by the server, so neither write ever reaches anyone; they just take the data lock, fire the update callback and mark the entity dirty once per frame per cactem, and the spear flag is not even read anywhere, since the getter behind it returns a hardcoded true. With this on both writes are skipped on the client and left alone on the server, where the idle index is still picked once when the cactem spawns. The only visible difference is that a cactem keeps the idle animation it was given instead of re-rolling it every frame while it walks. Turn it off for stock behaviour.")
+                .define("skipClientAnimDataWrites", true), v -> cnbSkipClientAnimDataWrites = v);
+        builder.pop();
+
+        builder.comment("Mob Grinding Utils patches.").push("mobgrindingutils");
+        gate(builder
+                .comment("Look for an Ender Inhibitor by chunk section instead of reading every block in the box. Mob Grinding Utils listens to every teleport on the server, which on a normal world means every enderman teleport attempt and every chorus fruit, and answers the question \"is an inhibitor nearby\" by walking the entity's bounding box grown by eight blocks in all directions one block at a time, which is about five thousand two hundred block state reads per teleport attempt, each one going back through the world for its chunk. With this on the same box is walked one chunk section at a time and a section whose palette does not contain a lit inhibitor at all is skipped whole, so the usual answer costs a handful of palette scans instead of five thousand reads. The positions that do get read are exactly the ones the mod read, so a teleport is blocked in exactly the same places. Turn it off for stock behaviour.")
+                .define("fastEnderInhibitorScan", true), v -> mobgrindingutilsFastEnderInhibitorScan = v);
+        gate(builder
+                .comment("Only tell clients about a fan when something about it actually changed. Every fan recomputes its blow area on every server tick and then announces a block update whether or not anything moved, and because a fan is a block entity that announcement makes the server resend the fan's entire block entity tag, inventory included, to every player who has that chunk loaded, twenty times a second, forever. A wall of fans in a mob farm is a steady stream of packets that carry the same bytes every time. With this on the announcement is made only when the fan's reach, its blow area or its show area toggle has actually changed, which is also what every other path that changes a fan already does for itself. Turn it off for stock behaviour.")
+                .define("leanFanBroadcast", true), v -> mobgrindingutilsLeanFanBroadcast = v);
+        gate(builder
+                .comment("Build the swelling chicken's model once instead of once per frame. When a chicken has been fed chicken feed the mod draws a second inflated chicken body over it, and it builds that body from scratch inside the render call: it lays out the whole cube mesh, bakes it into a fresh model part tree and wraps it in a new model object, for every fed chicken, on every frame. Nothing about that model depends on the chicken, and nothing in the mod ever moves a part of it. With this on the mesh and the baked part tree are built the first time one is drawn and reused after that, which is what the vanilla entity models do. Turn it off for stock behaviour.")
+                .define("cacheChickenSwellModel", true), v -> mobgrindingutilsCacheChickenSwellModel = v);
+        gate(builder
+                .comment("Do not attach an empty forge data tag to every chicken in the world. The chicken feed handler runs on the living tick for every chicken on the server and the swelling renderer runs for every chicken on screen, and both of them ask the chicken for its persistent data before checking whether it has ever been fed. That call creates and permanently attaches an empty compound to any chicken that does not have one, so every chicken you have ever loaded ends up carrying an empty forge data tag that is written to disk with it from then on. With this on the existing tag is read when there is one and an empty shared tag is used when there is not, which is the same answer without the attachment. Turn it off for stock behaviour.")
+                .define("leanChickenTag", true), v -> mobgrindingutilsLeanChickenTag = v);
+        builder.pop();
+
+        builder.comment("Transmog patches.").push("transmog");
+        gate(builder
+                .comment("Look the transmogged appearance up by the tag it is stored in instead of hashing that tag every time. Transmog keeps the appearance item you picked as a full item stack written into the real item's NBT, and every time anything needs to draw that item it asks the mod to turn that NBT back into an item stack. The mod does cache the result, but it keys the cache on the hash code of the appearance NBT, so every single lookup walks the whole appearance compound, tag by tag, to compute that number, boxes it into an Integer and allocates a lambda, and then does it again for the next lookup. A player wearing transmogged armour pays that for every armour slot on every frame, and the item renderer asks three separate times for every item it draws, so a few people in transmogged gear on screen is thousands of full NBT walks a second. Two smaller problems come with it: the cache is one shared access ordered LinkedHashMap touched from the render thread and the server thread with no locking, which is the kind of map that can corrupt itself or spin forever when two threads read it at once, and because the key is only a hash code, two different appearances that happen to hash the same silently render as each other. With this on the lookup is keyed on the stored NBT compound itself, per thread, so a repeat lookup is a single reference compare with no walking, no boxing and no allocation, nothing is shared across threads, and a hash collision cannot swap two appearances any more. The appearance you see is unchanged. Turn it off for stock behaviour.")
+                .define("identityAppearanceCache", true), v -> transmogIdentityAppearanceCache = v);
+        builder.pop();
+
+        builder.comment("Iron's Spells 'n Spellbooks patches.").push("ironsspellbooks");
+        gate(builder
+                .comment("Answer \"is this curio worn\" out of the shared per tick curio contents cache instead of walking the whole curio inventory every time. The mod's curio items answer that question by asking the curios api for the wearer's inventory, handing it a lambda and letting it walk every slot of every curio type until it finds a match, allocating a lazy optional, a slot context, a slot result and a java optional along the way, and it asks from places that run constantly: the invisibility ring is checked from the entity invisibility hook, which fires for every entity anything asks about on every frame on the client and again from mob targeting on the server, and the summon and spell paths ask again on top of that. The answer only changes when someone actually equips or unequips something. With this on the question is answered from the set of worn items this mod already keeps per entity, which is rebuilt at most once per entity tick and thrown away the moment a curio change, equip or unequip event fires, so a repeat question is one set lookup with no allocation. A curio swapped by something that never fires a curios event can read one tick stale. Turn it off for stock behaviour.")
+                .define("leanCurioEquipCheck", true), v -> ironsspellbooksLeanCurioEquipCheck = v);
+        gate(builder
+                .comment("Throw away the client's copy of other players' spell state when you leave a world. The client keeps a map of every player it has been told is casting, keyed on that player's entity id, and nothing ever removes from it: not logging out, not changing world, not the player leaving. It grows for the whole time the game is open, and because entity ids start again from low numbers on every world or server you join, the next world hands those same ids to completely different players, who then inherit whatever the old occupant of that id was doing. That shows up as players stuck in a casting pose, spin attack fire trails on someone standing still, and entities being drawn through the frustum cull because the stale entry says they are casting, until a real packet happens to overwrite it. With this on the map is emptied when you disconnect and again when you join, so a fresh world starts from nothing. Turn it off for stock behaviour.")
+                .define("clearStaleSyncedData", true), v -> ironsspellbooksClearStaleSyncedData = v);
+        builder.pop();
+
+        builder.comment("Hostile Neural Networks patches.").push("hostilenetworks");
+        gate(builder
+                .comment("Look the stored data model up by the id already written in the item's NBT instead of parsing that id back into a ResourceLocation on every single call. Every question about a data model item goes through one getter that reads the id string out of the stack's NBT and builds a fresh ResourceLocation out of it, namespace and path character validation included, then allocates a lambda to hand to the registry so it can look the holder up. Placebo keeps exactly one holder object per id and never throws it away, so the answer can never change for a given id, but the parse and the lambda are paid again every time, and the callers are everywhere: the loot fabricator asks once per fabricator on every server tick before it looks at anything else, the item renderer asks for every data model on screen on every frame, the deep learner hud asks four times per frame while a learner is held, and the item's own name getter asks again for every tooltip, every inventory slot and every JEI search pass. With this on the holder is remembered against the id string and a repeat question is one map lookup with no parsing and no allocation. The object handed back is the same object the registry would have handed back, so a datapack reload rebinds it exactly as before and a malformed id still fails the same way. Turn it off for stock behaviour.")
+                .define("cacheModelHolder", true), v -> hostilenetworksCacheModelHolder = v);
+        gate(builder
+                .comment("Do not let a broken data model in a deep learner take the server down on the next kill. When a player kills something the mod walks the four slots of every deep learner they are carrying and decides whether that slot should gain data, but the condition it wrote is missing a pair of brackets, so it reads as \"the model resolved and its entity type matches, or the model's subtype list contains the type\". The moment the first half is false the second half still runs, and it calls get on a model holder that was never bound, which throws out of the death event and takes the tick with it. A model whose id is no longer in the registry is exactly that case, which is what happens when an addon or a datapack that added it is changed or removed, and the mod already knows about that well enough to draw those items with a BROKEN name. With this on a slot whose model cannot be resolved is skipped instead of being read, which is what the bracketed version of the condition does. The item is left in the learner untouched and every slot that does resolve upgrades exactly as before. Turn it off for stock behaviour.")
+                .define("skipBrokenModelOnKill", true), v -> hostilenetworksSkipBrokenModelOnKill = v);
+        gate(builder
+                .comment("Answer the cached display entity lookup with a plain map read and skip the per tick sweep when nothing is cached. Every data model item drawn anywhere, an inventory slot, a hotbar, the deep learner screen or a JEI page, asks for the sample mob to draw inside it, and that lookup goes through two nested computeIfAbsent calls, the inner one allocating a fresh three field lambda on every call even though the entity is almost always already there. The same class also runs a four stage stream over the whole cache on every client tick just to advance the age counter on the entities it holds, and it builds that pipeline whether or not it is holding anything, so a player who has never seen a data model pays it every tick forever. With this on a lookup that hits is a straight map read with no allocation, a lookup that misses falls through to the mod's own code untouched, and the tick sweep is skipped only when there is nothing cached to sweep. Turn it off for stock behaviour.")
+                .define("leanEntityCache", true), v -> hostilenetworksLeanEntityCache = v);
+        builder.pop();
+
+        builder.comment("Extra Hostile Neural Networks patches.").push("extrahnn");
+        gate(builder
+                .comment("Stop the Ultimate Simulation Chamber writing its own stack size into the data model's base drop and then handing that exact stack to its output slot. When a run finishes the chamber walks the four models the item stores and, for each one, asks Hostile Neural Networks for that model's base drop and sets the count on it to the chamber's multiplier. Hostile Neural Networks hands back the base drop straight out of the loaded model, not a copy, so that count write lands on the data the whole game reads: the vanilla Simulation Chamber's output, the recipe pages, the tooltips, everything. The stack it just edited is then put into the chamber's own output slot, so the model's base drop and the block's inventory are now one and the same object, and the next time anyone pulls items out of that slot, or a pipe moves them, the model's base drop shrinks with it. A datapack reload puts it back, nothing else does. The prediction drop next to it is fine, because that one is built fresh on every call, and the mod's own Loot Fabricator already copies. With this on the base drop is copied before the count is written, which is what the fabricator does and what the vanilla chamber does, so the block produces exactly the same items and the model it read from is left alone. Turn it off for stock behaviour.")
+                .define("fixSharedBaseDrop", true), v -> extrahnnFixSharedBaseDrop = v);
+        gate(builder
+                .comment("Decode the list of models an Extra Data Model stores once instead of on every question. Every single thing this mod wants to know about one of its four in one data models goes through one reader that opens the stack's NBT, walks the stored id list and, for each entry, builds a fresh ResourceLocation out of the string, namespace and path character validation included, and looks that up in the Hostile Neural Networks registry, then throws the whole list away. The callers are on the frame and the tick path: the item renderer asks once per Extra Data Model on screen on every frame, the item's own name getter asks again for every tooltip, every inventory slot and every JEI search pass, the shift tooltip asks again per frame while it is open, the Ultimate Simulation Chamber and the Simulation Modeling block each rebuild the whole thing once per block per server tick just to read a tier number off it, and the machine slots ask again on every insert check. For the normal four model item that is four ResourceLocations, four registry lookups and two lists per question. The registry hands back the same holder for a given id forever, so nothing about the answer can change unless the id list itself changes. With this on the decoded list is remembered against the id list tag itself, so a repeat question is one identity map read and no allocation at all, and a stack with no id list, a malformed one, or one holding anything other than strings falls through to the mod's own code untouched. The cache is per thread and bounded, and any edit that replaces the stored id list, which is what the Merger Camera does when it builds a model, drops it. A mod that edits an existing id list in place rather than replacing it could read one answer stale. Turn it off for stock behaviour.")
+                .define("cacheStoredModels", true), v -> extrahnnCacheStoredModels = v);
+        gate(builder
+                .comment("Largest number of live mobs the Extra Data Model item renderer will draw inside one item. The renderer draws a real, ticking entity for every model the item stores, and it lays them out in four quadrants, so an item holding the four models a Merger Camera makes is the case it was written for. The creative tab entry is not that case: the mod builds it by adding every data model id in the game to one single stack, so on a pack this size that one icon is over a hundred entities built and rendered on every frame it is visible, in the creative menu, in JEI and in any recipe lookup that shows it, which is enough to drop a client to single digit frames on its own. Everything past the fourth is drawn on top of the third anyway, because the quadrant it picks repeats, so nothing past four was ever really visible. 4 keeps every legitimately built model exactly as it looks now. 0 removes the cap and restores stock behaviour, including the creative tab entry.")
+                .defineInRange("renderedModelCap", 4, 0, 64), 0, v -> extrahnnRenderedModelCap = v);
+        builder.pop();
+
+        builder.comment("L2 Archery patches.").push("l2archery");
+        gate(builder
+                .comment("Remember the upgrade list a bow's NBT spells out instead of parsing it back from scratch on every question, and stop the lookup attaching an empty NBT compound to every bow it is handed. Every single thing this mod wants to know about a bow goes through one static reader: what features it has, whether it takes flux energy, how much energy it holds, how many upgrade slots are left, and what its tooltip says. That reader opens the stack with getOrCreateTag, which permanently glues an empty compound onto any bow that did not have one, including the throwaway display stacks JEI and the creative tabs hand it, and then for every entry in the upgrade list it builds a fresh ResourceLocation out of the stored string, namespace and path character validation included, and looks that up in the registry. The callers are on the frame path: vanilla asks whether an item's durability-style bar should be drawn once per rendered stack per frame, this mod's flux bar decorator asks again and then twice more for the energy numbers, so one bow icon on screen is three or four full parses per frame and an inventory or a JEI page full of them is dozens. The server pays it twice per tick per side for as long as a bow is being drawn. The registry hands back the same upgrade object for a given id forever, so the answer cannot change unless the NBT changes. With this on the decoded list is remembered against the upgrade list tag itself, so a repeat question is one identity map read and a copy of a list that is almost always empty or one element long, a bow with no upgrade tag answers immediately without touching its NBT at all, and anything with malformed or unexpected NBT falls through to the mod's own code untouched. The cache is per thread and bounded. A mod that edits an existing upgrade list tag in place rather than replacing it could read one answer stale. Turn it off for stock behaviour.")
+                .define("cacheBowUpgrades", true), v -> l2archeryCacheBowUpgrades = v);
+        gate(builder
+                .comment("Reuse the arrow texture path instead of building a new one for every arrow on every frame. The arrow renderer works out which texture to draw by asking the item registry for the arrow item's id and then allocating a fresh ResourceLocation out of that id's namespace and a fixed path string, and it does that once per arrow entity per frame, so a volley in flight is a steady stream of short lived objects and two string validations each, all producing the exact same handful of values. With this on the finished path is remembered against the namespace it was built from and handed back unchanged. Turn it off for stock behaviour.")
+                .define("cacheArrowTexture", true), v -> l2archeryCacheArrowTexture = v);
+        gate(builder
+                .comment("Skip rebuilding the whole bow stat model every frame just to find out the field of view should not change. This mod hooks the field of view calculation, which runs on every single frame, and the moment you are holding one of its bows it copies the bow's upgrade list into a new list, parses the bow's entire enchantment tag into a new map, and then wraps the bow config in one extra object per stat carrying upgrade and enchantment, all to read two numbers out of it. For as long as you are not actually drawing the bow the pull progress is zero, which makes the whole calculation collapse to the untouched field of view put through the game's own fov effect scale option, so none of that work can change the answer, and holding a bow without drawing it is the normal case. With this on that case is answered directly and the model is only built while the bow is actually being pulled. One difference: a bow config with a pull time of zero produced a not-a-number field of view before and now produces a sane one. Turn it off for stock behaviour.")
+                .define("skipIdleBowFov", true), v -> l2archerySkipIdleBowFov = v);
+        gate(builder
+                .comment("Rebuild the bow info sidebar text only when the bow or the arrow actually changes. The sidebar that lists damage, punch, pull time, speed and field of view under the hotbar rebuilds its entire contents from scratch on every frame it is visible, and it is visible for a couple of seconds after every switch and continuously while the sidebar hold key is down. Each rebuild parses the bow's upgrades and enchantments into new collections, merges two feature lists, wraps the bow config once per stat source, runs a potion effect aggregator over the result and then allocates a fresh translated and coloured component for every line, a dozen or so objects a line, for text that is character for character identical to the frame before. With this on the finished lines are remembered against a copy of the bow stack and a copy of the arrow stack and handed straight back while both still match, so anything that changes either one, an upgrade applied, an enchantment added, energy spent, a different arrow picked up, drops the cache and rebuilds exactly as before. Turn it off for stock behaviour.")
+                .define("cacheBowInfoText", true), v -> l2archeryCacheBowInfoText = v);
+        builder.pop();
+
+        builder.comment("Blessfulled patches.").push("blessfulled");
+        gate(builder
+                .comment("Stop the GeckoLib hurt overlay layer re-rendering every animated entity a second time forever. Blessfulled adds a render layer to every GeckoLib entity renderer that draws the whole model again in white as the hurt flash, and it decides whether to draw by handing the entity's last damage source to a check that was written for the vanilla renderer path, which null checks that source before it asks. The GeckoLib layer does not, and on the default Hurt Overlay Condition the check reads \"anything that is not disabled is allowed\", so a null source, which is what every entity that has not been hit in the last two seconds has, is read as yes. The result is that every GeckoLib entity on screen pays a full second pass over its baked model, every bone and every quad rebuilt into a second buffer, on every single frame, forever, at an alpha of zero so nothing is ever visible from it. On the Only By Player setting the same missing null check calls getEntity on that null source instead and takes the client down from the render thread. With this on a missing damage source answers no, which is what the vanilla path already did and what the mod plainly meant, so the layer only runs in the window it was written for and the crash on Only By Player is gone. Turn it off for stock behaviour.")
+                .define("fixGeckolibHurtOverlay", true), v -> blessfulledFixGeckolibHurtOverlay = v);
+        gate(builder
+                .comment("Do not draw the hurt overlay while it is fully transparent. Both overlay paths, the vanilla renderer one and the GeckoLib layer one, fade the white flash out with the entity's hurtTime divided by ten, and hurtTime runs for ten ticks after a hit while the last damage source they gate on stays alive for forty, so for thirty ticks after every single hit the entity gets a complete extra model render at an alpha of zero, which the cutout render type discards pixel for pixel anyway. In a fight that is three quarters of a second of doubled geometry per mob per frame producing nothing. With this on the overlay is skipped whenever hurtTime has run out, which draws exactly the same picture, and the ten ticks that are actually visible are untouched. Turn it off for stock behaviour.")
+                .define("skipInvisibleHurtOverlay", true), v -> blessfulledSkipInvisibleHurtOverlay = v);
+        gate(builder
+                .comment("Skip the swing sound helper on swings that could never play one. The helper is called from both the hit and the miss branch of the vanilla attack handler and the first thing it does, before it looks at the side, the config toggle, the charge or the item, is read the held item and build a fresh ten element list of the eight swing sound registry entries. One of the things it then checks is whether the swing was strong enough, and when it was not the method does nothing at all. With this on a weak swing returns straight away, which is the same nothing the mod already did, without the list. Tiny, but it is free. Turn it off for stock behaviour.")
+                .define("skipIdleSwingSound", true), v -> blessfulledSkipIdleSwingSound = v);
+        builder.pop();
+
+        builder.comment("L2 Complements patches.").push("l2complements");
+        gate(builder
+                .comment("Ask the cheap question first when something takes damage. This mod listens to every single damage event in the game and runs up to seven \"is the victim immune to this\" checks through one shared helper, and that helper is not cheap: for each check it walks all six of the victim's equipment slots, and for every enchantment written on every one of those stacks it pulls the id string back out of the NBT and builds a fresh ResourceLocation out of it, namespace and path character validation included, just to compare it against one enchantment. Six of those seven checks are then immediately paired with a much cheaper question that decides the whole thing anyway, things like \"was this actually fire damage\" or \"was there even an attacker\", and the mod asks them in the wrong order, so a mob in enchanted armour pays the full armour walk seven times for every arrow, every tick of burning and every hit it takes, on a pack where hundreds of damage events can land in a single tick, only to be told at the end that the damage type never matched. With this on the cheap damage type question is asked first and the armour walk only happens when it can still change the outcome. The answer for every check is the same one the mod would have reached, because both halves are plain reads with no side effects, only the order changed. Turn it off for stock behaviour.")
+                .define("leanAttackChecks", true), v -> l2complementsLeanAttackChecks = v);
+        gate(builder
+                .comment("Compare the enchantment id as a string instead of rebuilding it into a ResourceLocation for every entry. This mod overrides the maximum durability of every enchanted item in the game so its own armour durability enchantment can multiply it, and the lookup behind that override walks the item's whole enchantment list and, for every entry, parses the stored id string back into a new ResourceLocation with full namespace and path validation before comparing it. Nothing calls that override rarely: vanilla asks for maximum durability once per rendered stack per frame to work out the durability bar width and again for its colour, plus every damage check and every tooltip, so an open inventory of enchanted gear is hundreds of throwaway ResourceLocations a frame to answer a question that is almost always no. With this on the stored id is compared directly against the wanted id as a string, which is exactly the same comparison without the parsing or the allocation, and anything with an id written in the short form the parser would have expanded falls through to the mod's own code untouched. Turn it off for stock behaviour.")
+                .define("leanEnchantmentLookup", true), v -> l2complementsLeanEnchantmentLookup = v);
+        gate(builder
+                .comment("Do not rebuild a tooltip that has nothing from this mod in it. This mod's tooltip handler replaces its own enchantment description lines with longer ones, and to do that it copies every line of the tooltip into a new wrapper object in a new list and parses the item's whole enchantment tag into a new map before it looks at whether any of those lines are even its own. Tooltips are rebuilt from scratch on every frame the item is hovered, and JEI rebuilds them again for its own panels, so every enchanted item anyone looks at pays that copy on every frame to find nothing and throw the copy away. With this on the item's enchantment tags are scanned for an id belonging to this mod first, which is a plain string check with no allocation, and the handler is skipped entirely when there is none. An item that does carry one of this mod's enchantments, and enchanted books that store them, go through the mod's own code exactly as before. Turn it off for stock behaviour.")
+                .define("skipUnrelatedTooltips", true), v -> l2complementsSkipUnrelatedTooltips = v);
+        gate(builder
+                .comment("Make the chain digging guard set safe to read from two threads. This mod keeps a plain HashSet of the players currently in the middle of a chain break so that the blocks it breaks itself do not recurse, and it takes a lock around adding and removing but not around reading. The read happens in its block particle hook, which fires on the client render thread as well as the server thread, so in single player one thread can be walking that set while the other is growing it, which is the case where a HashSet can hand back a wrong answer or spin inside a resize. With this on the set is swapped for a concurrent one when the class loads, so reads never see a half finished write and the lock the mod already takes still works exactly as before. Nothing else changes and nothing gets slower, the concurrent set is lock free for the read side. This one is decided when the enchantment class first loads, which is before configs finish loading, so turning it off only takes effect from the next game start.")
+                .define("fixBreakerSetRace", true), v -> l2complementsFixBreakerSetRace = v);
+        builder.pop();
+
+        builder.comment("Tome of Blood: Rebirth patches.").push("tomeofblood");
+        gate(builder
+                .comment("Stop the Mimic augment reading past the start of the spell. Mimic works by copying whatever glyph sits directly in front of it, and it finds that glyph by taking the index of the part the spell is currently resolving and subtracting one, then reading that slot out of the spell's recipe list without ever checking that the slot exists. When Mimic ends up at index zero, which is what happens when a spell is built with it in the very first position or when something hands the resolver a context that has not advanced yet, the subtraction gives minus one and the list read throws straight out of the middle of spell resolution, which on a server takes the tick down with it and on a client takes the game down. With this on the read is bounds checked first and an out of range index is treated as \"there is no glyph in front of me\", which is the same thing Mimic already does for a glyph in front of it that is not an augment: it applies its own modifiers and nothing else. Every spell where Mimic has a real glyph in front of it behaves exactly as before. Turn it off for stock behaviour.")
+                .define("fixMimicAugmentIndex", true), v -> tomeofbloodFixMimicAugmentIndex = v);
+        gate(builder
+                .comment("Remember the attribute modifier ids the living mage armour builds instead of hashing them again every time. The armour hands out one attribute modifier per living armour upgrade the wearer has trained, and for every one of those it builds the modifier id by taking the upgrade's registry name, turning it into a string, turning that string into bytes and running it through the name based uuid helper, which asks the security provider for a brand new MD5 digest and hashes the whole thing from scratch on every single call. That happens inside the attribute lookup, and the game asks an item for its attributes whenever the stack changes, which for living armour is constantly because the armour writes its own experience into its nbt as you play, and again for every frame a tooltip for it is on screen, and again for every recipe viewer that indexes it. A wearer with fifteen trained upgrades was therefore paying fifteen fresh MD5 digests, fifteen throwaway strings and fifteen throwaway byte arrays for a set of ids that never change. They are now worked out once and reused. The uuids are byte for byte the ones the stock helper produced, so the modifiers and the numbers on the armour are identical. Turn it off for stock behaviour.")
+                .define("cacheLivingUpgradeUuids", true), v -> tomeofbloodCacheLivingUpgradeUuids = v);
+        gate(builder
+                .comment("Drop the leftover startup greeting. The mod still carries the example server starting handler from the mod template, whose entire body is logging the line \"HELLO from server starting\" at info level, so every world load and every server boot writes one more meaningless line into the log that people then have to read past when they are looking for a real problem. With this on the handler does nothing. Nothing else in the mod reads or reacts to it. Turn it off if you want the line back.")
+                .define("silenceServerStartLog", true), v -> tomeofbloodSilenceServerStartLog = v);
+        builder.pop();
+
+        builder.comment("Better Spellcasting patches.").push("betterspellcasting");
+        gate(builder
+                .comment("Forget a queued on hit spell when the swing that queued it never landed. This mod arms an on hit weapon spell the moment you swing and then waits for the next time you damage something to fire it, but nothing ever throws that armed spell away. Swing at the air with an on hit weapon, or swing at something that blocks or that you miss, and the spell sits in the queue forever. The next time you hurt anything at all, by any means, it goes off: an arrow ten minutes later, a spell from your spellbook, a fire you lit, a different weapon entirely, all of them trigger the melee weapon's spell because the queue is keyed on you and not on the attack. It also survives a logout, so you can come back the next day and have the first thing you shoot eat a spell you armed in a previous session, complete with the mana cost and the cooldown. With this on the queued spell only counts if you swung within the window below, which is the same window the mod already uses for its own attack combo, and the stamp lives on the player so a fresh login starts clean. A swing that connects normally still fires exactly as before, because a hit lands in the same tick as the swing that caused it. Turn it off for stock behaviour.")
+                .define("expireQueuedSpell", true), v -> betterspellcastingExpireQueuedSpell = v);
+        gate(builder
+                .comment("How many ticks an armed on hit weapon spell stays valid after the swing, for the patch above. The mod's own attack combo window is forty ticks, which is two seconds, so forty matches it and is already far more than a melee hit ever needs since the hit resolves in the same tick as the swing. Raise it if you run a server where hits land late enough that on hit spells stop firing, lower it if you want the queue dropped sooner. Only read when the patch above is on.")
+                .defineInRange("queuedSpellWindow", 40, 1, 1200), Integer.MAX_VALUE, v -> betterspellcastingQueuedSpellWindow = v);
+        gate(builder
+                .comment("Stop the client telling the server about a melee swing the server already saw. When you hit an entity the client sends the normal vanilla attack packet and the server fires its own attack event from it, which this mod already listens to and which is where it advances your combo and casts your on attack spell, with the real target attached. On top of that the mod also listens to the attack event on the client and sends a second custom packet saying \"I swung\", which arrives after the vanilla one and carries no target at all. The mod then throws it away again through a guard that ignores a second swing in the same tick with the same weapon, so in the normal case it is one extra packet per melee swing per player plus a registry lookup and a weapon attribute lookup on the server for a result that gets discarded. In the cases where the guard does not catch it, it is worse than useless: if the two land on different ticks your combo advances twice for one hit, and if the server rejected the attack for being out of reach the client packet still advances the combo and casts the on attack spell for a hit that never happened. With this on that second packet is not sent and the server's own attack event does all the work, which is what it was already doing. Swinging at the air still sends its packet, because that is the only way the server hears about it. Turn it off for stock behaviour.")
+                .define("skipRedundantSwingPacket", true), v -> betterspellcastingSkipRedundantSwingPacket = v);
+        builder.pop();
+
+        builder.comment("Ars Additions patches.").push("arsadditions");
+        gate(builder
+                .comment("Only run a charm's per tick work for the charm you are actually holding. Every charm item in this mod runs the whole charm routine from Item#inventoryTick, which the game calls once per tick for every single slot of your inventory, and that routine then asks \"which charm of this type is the player using\" through a lookup that only ever looks at your main hand, your off hand and your curio slots. A charm sitting in your backpack can therefore never be the one that is found, so its tick either does nothing at all or, far worse, finds the charm you do have equipped and spends one of that charm's charges. That is the bug: carry three spare night vision charms and the one in your curio slot drains four times as fast as it should, because all four stacks ran the routine and all four of them pointed at the same equipped charm. It is also pure waste, since each of those ticks reads the light level at your feet, reads the block state under you and, whenever one of those cheap checks passes, resolves your curios capability and builds a fresh list of matching curio slots, twenty times a second per spare charm. With this on a charm that is not in one of your hands does nothing on inventory tick, which is exactly what it should already have been doing: held charms are untouched, and equipped charms keep going through the curios tick the mod registers for them. Turn it off for stock behaviour.")
+                .define("skipStowedCharmTick", true), v -> arsadditionsSkipStowedCharmTick = v);
+        gate(builder
+                .comment("Remember that there was no ruined portal under your feet instead of asking the world again every second. This mod runs a server tick handler that, once a second for every player online, asks the structure manager whether the block the player is standing on belongs to a ruined portal, purely so it can hand out one advancement. That question is not cheap: it pulls the player's chunk up to the structure references stage, walks every structure that has ever placed a reference into that chunk, and for each one does a registry id lookup and builds a throwaway Optional to test it against a tag, then reads the piece bounding boxes of the survivors. On a pack with dozens of structure mods that is a real amount of work per player per second, and it keeps happening forever, long after everyone has the advancement. With this on a block position that came back empty is remembered in a small fixed table and answered from there, so a player who is standing still, fighting, building or simply idle pays the lookup once instead of once a second. Only the empty answers are remembered, so a real ruined portal is always found by the mod's own code, and the table is wiped periodically so a structure placed by command is still picked up. Turn it off for stock behaviour.")
+                .define("cacheRuinedPortalScan", true), v -> arsadditionsCacheRuinedPortalScan = v);
+        gate(builder
+                .comment("How far away a magelight lantern still bothers to make its glow particles, in blocks. Every lit magelight lantern spawns ten glow particles every single tick, which is two hundred a second each, and it does that for every lantern loaded on your client no matter how far away it is, building a fresh colour object and a fresh particle definition for each one. A decorated base with twenty of them is four thousand particle spawns a second, almost all of them for lanterns you cannot even make out. With this at thirty two a lantern further away than that skips the burst entirely, which is beyond the range the glow reads as anything but a faint dot. Raise it if you want the glow visible from further out, lower it if you want it cheaper still, or set it to zero to leave the mod alone entirely. Nothing on the server is affected, this code already only runs on the client.")
+                .defineInRange("magelightParticleDistance", 32, 0, 256), 0, v -> arsadditionsMagelightParticleDistance = v);
+        builder.pop();
+
+        builder.comment("Duplicationless patches.").push("duplicationless");
+        gate(builder
+                .comment("Only keep the Duplicationless entity tracker up to date once something has actually asked it a question. Duplicationless is a library: it ships no features of its own, it exists so other mods can ask it which entities are in a given chunk or chunk section. To be able to answer that it wires itself into three of the busiest paths in the game. It wraps the position write on every entity, so every mob, item, arrow and player on both the server and your client runs its chunk and section comparison and three boxed doubles every time anything moves. It wraps the per chunk tick, so every loaded chunk allocates and fires two events on every server tick. It hooks every block state change. All of that feeds one set of maps, and every entity that joins a world, leaves a world, walks across a chunk border or moves across a section border allocates a nine field task object and pushes it onto a queue for those maps, forever, whether or not a single mod in the pack ever reads them. With this on the map bookkeeping is skipped until the first real query arrives for that dimension. The moment one does, the tracker is rebuilt from the world's own live entity list before the answer is handed back, so the answer is the same one the stock code would have given, and from then on that dimension is kept up to date normally. If nothing ever asks, nothing is ever paid. The event firing itself lives inside Duplicationless' own mixins and cannot be reached from here, so that part is unchanged. Turn this off if a mod that reads the tracker is misbehaving.")
+                .define("lazyEntityTracker", true), v -> duplicationlessLazyEntityTracker = v);
+        builder.pop();
+
+        builder.comment("Fluidium patches.").push("fluidium");
+        gate(builder
+                .comment("Answer Fluidium's land claim question once per chunk per tick instead of once per flowing block. Fluidium's whole job is to make flowing water and lava cheaper, and it does that by letting a fluid block skip its update when nobody is anywhere near it. The catch is the very first thing it checks on every single fluid update, before the cheap checks and before the dice roll that decides whether to skip at all, is whether the block sits inside a land claim. With FTB Chunks installed that question is not a flag read: it asks the claim mod for its manager, builds a throwaway chunk position object and a throwaway wrapper around it, then does a map lookup, and it does all of that for every flowing block of every waterfall, every lava lake edge and every draining pool in the world, twenty times a second. A single flowing pool is hundreds of those a tick and they are all asking about the same one or two chunks. With this on the answer for a chunk is remembered for the rest of that game tick in a small fixed table, so the first fluid block in a chunk pays the claim lookup and the rest read the remembered answer. Nothing is remembered across ticks, so claiming or unclaiming land takes effect on the very next tick exactly as it does now, and the table is a fixed size so it can never grow. Turn it off for stock behaviour.")
+                .define("cacheClaimLookups", true), v -> fluidiumCacheClaimLookups = v);
+        gate(builder
+                .comment("Let Fluidium forget about the dimension you just walked out of. Fluidium keeps a list, per dimension, of the chunks that still have a player close enough to matter, and fluids outside that list are the ones allowed to skip updates. That list is only rebuilt for a dimension when something marks the dimension as stale, and the mod marks it when a player logs in, logs out, moves across a chunk border or moves far enough up or down. It also marks it when a player arrives through a portal, but it only ever marks the dimension the player arrived in, never the one they left. So the moment you step through a nether portal the list for the side you came from freezes with your old position still in it, and it stays frozen for as long as nobody else in that dimension moves. Every fluid in those chunks keeps updating at full speed forever, which is exactly the work Fluidium exists to avoid, and the more you portal around the more of these frozen pockets you leave behind. With this on the dimension you left is marked stale too, so it rebuilds on its next tick and, with nobody there any more, empties out and goes back to skipping fluid updates. Nothing else changes: the rebuild is the mod's own code, run one tick later than it already runs for the destination. Turn it off for stock behaviour.")
+                .define("refreshDepartedDimension", true), v -> fluidiumRefreshDepartedDimension = v);
         builder.pop();
     }
 

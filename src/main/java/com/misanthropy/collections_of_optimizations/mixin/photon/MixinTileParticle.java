@@ -4,7 +4,10 @@ import com.lowdragmc.photon.client.gameobject.emitter.IParticleEmitter;
 import com.lowdragmc.photon.client.gameobject.emitter.data.RendererSetting;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleConfig;
 import com.lowdragmc.photon.client.gameobject.particle.TileParticle;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.PhotonScratch;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
@@ -16,23 +19,9 @@ import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = TileParticle.class, remap = false)
 public abstract class MixinTileParticle {
-
-    @Unique
-    private static final ThreadLocal<Vector3f[]> COO$SCRATCH = ThreadLocal.withInitial(
-            () -> new Vector3f[]{new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f()});
-
-    @Unique
-    private static final ThreadLocal<Vector3f> COO$LIGHT_POS = ThreadLocal.withInitial(Vector3f::new);
-
-    @Unique
-    private static final ThreadLocal<Quaternionf> COO$ROTATION = ThreadLocal.withInitial(Quaternionf::new);
 
     @Unique
     private BlockPos coo$lastLightPos;
@@ -97,12 +86,12 @@ public abstract class MixinTileParticle {
     @Shadow
     public abstract int getRealLight(float partialTicks);
 
-    @Inject(method = "getLightColor", at = @At("HEAD"), cancellable = true, require = 0)
-    private void coo$leanLightLookup(CallbackInfoReturnable<Integer> cir) {
+    @WrapMethod(method = "getLightColor", require = 0)
+    private int coo$leanLightLookup(Operation<Integer> original) {
         if (!CoOConfig.photonLeanParticleLight) {
-            return;
+            return original.call();
         }
-        Vector3f pos = COO$LIGHT_POS.get();
+        Vector3f pos = PhotonScratch.get().lightPosition;
         if (this.isRemoved) {
             pos.set(this.localX, this.localY, this.localZ);
         } else {
@@ -121,23 +110,27 @@ public abstract class MixinTileParticle {
             blockPos = new BlockPos(blockX, blockY, blockZ);
             this.coo$lastLightPos = blockPos;
         }
-        cir.setReturnValue(this.emitter.getLightColor(blockPos));
+        return this.emitter.getLightColor(blockPos);
     }
 
-    @Inject(method = "renderInternal", at = @At("HEAD"), cancellable = true, require = 0)
-    private void coo$leanBillboardVertices(VertexConsumer buffer, Camera camera, float partialTicks, CallbackInfo ci) {
+    @WrapMethod(method = "renderInternal", require = 0)
+    private void coo$leanBillboardVertices(VertexConsumer buffer, Camera camera, float partialTicks,
+                                           Operation<Void> original) {
         if (!CoOConfig.photonLeanParticleQuads) {
+            original.call(buffer, camera, partialTicks);
             return;
         }
         RendererSetting.Particle.Mode renderMode = this.config.renderer.getRenderMode();
         if (renderMode == RendererSetting.Particle.Mode.Model) {
+            original.call(buffer, camera, partialTicks);
             return;
         }
 
         TileParticle self = (TileParticle) (Object) this;
-        Vector3f[] scratch = COO$SCRATCH.get();
+        PhotonScratch scratch = PhotonScratch.get();
+        Vector3f[] corners = scratch.corners;
 
-        Vector3f localPos = scratch[4];
+        Vector3f localPos = scratch.position;
         if (this.isRemoved) {
             localPos.set(this.localX, this.localY, this.localZ);
         } else {
@@ -169,7 +162,7 @@ public abstract class MixinTileParticle {
 
         Quaternionf quaternion = renderMode.quaternion.apply(self, camera, partialTicks);
         if (rotX != 0 || rotY != 0 || rotZ != 0) {
-            quaternion = COO$ROTATION.get().set(quaternion).rotateXYZ(rotX, rotY, rotZ);
+            quaternion = scratch.rotation.set(quaternion).rotateXYZ(rotX, rotY, rotZ);
         }
 
         float sX = Mth.lerp(partialTicks, this.sizeXo, this.sizeX);
@@ -178,12 +171,12 @@ public abstract class MixinTileParticle {
 
         Vector3f spaceScale = getSpaceScale();
 
-        scratch[0].set(-1.0F, -1.0F, 0.0F);
-        scratch[1].set(-1.0F, 1.0F, 0.0F);
-        scratch[2].set(1.0F, 1.0F, 0.0F);
-        scratch[3].set(1.0F, -1.0F, 0.0F);
+        corners[0].set(-1.0F, -1.0F, 0.0F);
+        corners[1].set(-1.0F, 1.0F, 0.0F);
+        corners[2].set(1.0F, 1.0F, 0.0F);
+        corners[3].set(1.0F, -1.0F, 0.0F);
         for (int i = 0; i < 4; ++i) {
-            Vector3f vertex = scratch[i];
+            Vector3f vertex = corners[i];
             vertex.mul(sX, sY, sZ);
             quaternion.transform(vertex);
             vertex.mul(spaceScale);
@@ -202,11 +195,9 @@ public abstract class MixinTileParticle {
             v1 = uvs.w();
         }
 
-        buffer.vertex(scratch[0].x(), scratch[0].y(), scratch[0].z()).uv(u1, v1).color(r, g, b, a).uv2(light).endVertex();
-        buffer.vertex(scratch[1].x(), scratch[1].y(), scratch[1].z()).uv(u1, v0).color(r, g, b, a).uv2(light).endVertex();
-        buffer.vertex(scratch[2].x(), scratch[2].y(), scratch[2].z()).uv(u0, v0).color(r, g, b, a).uv2(light).endVertex();
-        buffer.vertex(scratch[3].x(), scratch[3].y(), scratch[3].z()).uv(u0, v1).color(r, g, b, a).uv2(light).endVertex();
-
-        ci.cancel();
+        buffer.vertex(corners[0].x(), corners[0].y(), corners[0].z()).uv(u1, v1).color(r, g, b, a).uv2(light).endVertex();
+        buffer.vertex(corners[1].x(), corners[1].y(), corners[1].z()).uv(u1, v0).color(r, g, b, a).uv2(light).endVertex();
+        buffer.vertex(corners[2].x(), corners[2].y(), corners[2].z()).uv(u0, v0).color(r, g, b, a).uv2(light).endVertex();
+        buffer.vertex(corners[3].x(), corners[3].y(), corners[3].z()).uv(u0, v1).color(r, g, b, a).uv2(light).endVertex();
     }
 }

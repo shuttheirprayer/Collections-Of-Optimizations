@@ -6,6 +6,7 @@ modId = "${mod_id}"
 version = "${mod_version}"
 displayName = "${mod_name}"
 authors = "${mod_authors}"
+credits = "PoseStack, BlockPos.betweenClosed and PalettedContainer patches reimplemented from Lomka by Starlev (LGPL-3.0)"
 
 description = '''${mod_description}'''
 [[dependencies."${mod_id}"]]

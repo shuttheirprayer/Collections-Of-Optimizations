@@ -1,5 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.client.Camera;
 import net.minecraft.world.level.material.FogType;
@@ -9,7 +11,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Camera.class)
 public abstract class MixinCameraFluidFog {
@@ -26,27 +27,17 @@ public abstract class MixinCameraFluidFog {
         this.coo$fluidInCamera = null;
     }
 
-    @Inject(
-            method = "getFluidInCamera()Lnet/minecraft/world/level/material/FogType;",
-            at = @At("HEAD"),
-            cancellable = true,
-            require = 0
-    )
-    private void coo$useFluidMemo(CallbackInfoReturnable<FogType> cir) {
+    @WrapMethod(method = "getFluidInCamera()Lnet/minecraft/world/level/material/FogType;", require = 0)
+    private FogType coo$memoFluid(Operation<FogType> original) {
+        if (!CoOConfig.vanillaMemoCameraFluid) {
+            return original.call();
+        }
         FogType memo = this.coo$fluidInCamera;
-        if (memo != null && CoOConfig.vanillaMemoCameraFluid) {
-            cir.setReturnValue(memo);
+        if (memo != null) {
+            return memo;
         }
-    }
-
-    @Inject(
-            method = "getFluidInCamera()Lnet/minecraft/world/level/material/FogType;",
-            at = @At("RETURN"),
-            require = 0
-    )
-    private void coo$storeFluidMemo(CallbackInfoReturnable<FogType> cir) {
-        if (CoOConfig.vanillaMemoCameraFluid) {
-            this.coo$fluidInCamera = cir.getReturnValue();
-        }
+        FogType value = original.call();
+        this.coo$fluidInCamera = value;
+        return value;
     }
 }

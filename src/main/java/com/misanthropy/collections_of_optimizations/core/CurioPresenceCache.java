@@ -46,48 +46,45 @@ public final class CurioPresenceCache {
     }
 
     public static boolean mayHaveEquipped(LivingEntity entity, Item item) {
-        if (entity == null || item == null) {
+        if (item == null) {
             return true;
         }
-        if (!(entity instanceof CurioPresenceHolder holder)) {
-            return true;
-        }
-
-        long stamp = entity.tickCount;
-        Set<Item> cached = holder.coo$curioPresence();
-        if (cached == null || holder.coo$curioPresenceStamp() != stamp) {
-            cached = build(entity);
-            if (cached == null) {
-                return true;
-            }
-            holder.coo$storeCurioPresence(cached, stamp);
-        }
-        return cached.contains(item);
+        Set<Item> equipped = equippedItems(entity);
+        return equipped == null || equipped.contains(item);
     }
 
     public static Boolean equippedInstanceOf(LivingEntity entity, Class<?> type) {
-        if (entity == null || type == null) {
+        if (type == null) {
             return null;
         }
-        if (!(entity instanceof CurioPresenceHolder holder)) {
+        Set<Item> equipped = equippedItems(entity);
+        if (equipped == null) {
             return null;
         }
-
-        long stamp = entity.tickCount;
-        Set<Item> cached = holder.coo$curioPresence();
-        if (cached == null || holder.coo$curioPresenceStamp() != stamp) {
-            cached = build(entity);
-            if (cached == null) {
-                return null;
-            }
-            holder.coo$storeCurioPresence(cached, stamp);
-        }
-        for (Item item : cached) {
+        for (Item item : equipped) {
             if (type.isInstance(item)) {
                 return Boolean.TRUE;
             }
         }
         return Boolean.FALSE;
+    }
+
+    public static Set<Item> equippedItems(LivingEntity entity) {
+        if (!(entity instanceof CurioPresenceHolder holder)) {
+            return null;
+        }
+
+        long stamp = entity.tickCount;
+        Set<Item> cached = holder.coo$curioPresence();
+        if (cached != null && holder.coo$curioPresenceStamp() == stamp) {
+            return cached;
+        }
+
+        Set<Item> built = build(entity);
+        if (built != null) {
+            holder.coo$storeCurioPresence(built, stamp);
+        }
+        return built;
     }
 
     private static Set<Item> build(LivingEntity entity) {
@@ -98,10 +95,9 @@ public final class CurioPresenceCache {
 
         Set<Item> items = null;
         try {
-
             for (ICurioStacksHandler stacksHandler : handler.getCurios().values()) {
                 IDynamicStackHandler stackHandler = stacksHandler.getStacks();
-                for (int i = 0; i < stackHandler.getSlots(); i++) {
+                for (int i = 0, slots = stackHandler.getSlots(); i < slots; i++) {
                     ItemStack stack = stackHandler.getStackInSlot(i);
                     if (!stack.isEmpty()) {
                         if (items == null) {

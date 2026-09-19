@@ -40,9 +40,12 @@ public abstract class MixinFTBChunksClient {
             at = @At("HEAD"),
             require = 0
     )
-    private void coo$dropMinimapImageMemo(GuiGraphics graphics, float tickDelta, CallbackInfo ci) {
+    private void coo$dropMinimapMemos(GuiGraphics graphics, float tickDelta, CallbackInfo ci) {
         coo$lastImageRegion = null;
         coo$lastRegionImage = null;
+        if (coo$regionMemo != null) {
+            coo$regionMemo.clear();
+        }
     }
 
     @WrapOperation(
@@ -58,8 +61,11 @@ public abstract class MixinFTBChunksClient {
             return original.call(dimension, pos);
         }
 
-        if (coo$regionMemo == null || coo$memoDimension != dimension) {
+        if (coo$regionMemo == null) {
             coo$regionMemo = new HashMap<>();
+        }
+        if (coo$memoDimension != dimension) {
+            coo$regionMemo.clear();
             coo$memoDimension = dimension;
         }
 
@@ -114,18 +120,14 @@ public abstract class MixinFTBChunksClient {
 
         Minecraft mc = Minecraft.getInstance();
 
-        if (!FTBChunksClientConfig.MINIMAP_ENABLED.get()
-                || FTBChunksClientConfig.MINIMAP_VISIBILITY.get() == 0
-                || !FTBChunksWorldConfig.shouldShowMinimap(mc.player)) {
-            ci.cancel();
-            return;
-        }
-
         if (mc.screen != null) {
             return;
         }
 
-        if (mc.options.renderDebug) {
+        if (mc.options.renderDebug
+                || !FTBChunksClientConfig.MINIMAP_ENABLED.get()
+                || FTBChunksClientConfig.MINIMAP_VISIBILITY.get() == 0
+                || !FTBChunksWorldConfig.shouldShowMinimap(mc.player)) {
             ci.cancel();
         }
     }

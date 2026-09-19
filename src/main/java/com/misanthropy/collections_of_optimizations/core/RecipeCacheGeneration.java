@@ -3,9 +3,11 @@ package com.misanthropy.collections_of_optimizations.core;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,6 +30,9 @@ public final class RecipeCacheGeneration {
     public static void register() {
         MinecraftForge.EVENT_BUS.addListener(RecipeCacheGeneration::onAddReloadListener);
         MinecraftForge.EVENT_BUS.addListener(RecipeCacheGeneration::onDatapackSync);
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            RecipeCacheClientHook.register();
+        }
     }
 
     private static void onAddReloadListener(AddReloadListenerEvent event) {

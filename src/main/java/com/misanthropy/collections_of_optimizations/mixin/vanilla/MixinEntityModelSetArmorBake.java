@@ -1,5 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.ArmorModelBake;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -10,31 +12,24 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityModelSet.class)
 public abstract class MixinEntityModelSetArmorBake {
 
-    @Inject(method = "bakeLayer", at = @At("HEAD"), cancellable = true, require = 0)
-    private void coo$reuseArmorBake(ModelLayerLocation layer, CallbackInfoReturnable<ModelPart> cir) {
+    @WrapMethod(method = "bakeLayer", require = 0)
+    private ModelPart coo$reuseArmorBake(ModelLayerLocation layer, Operation<ModelPart> original) {
         if (!CoOConfig.vanillaCacheArmorModelBakes || !ArmorModelBake.active()) {
-            return;
+            return original.call(layer);
         }
         ModelPart cached = ArmorModelBake.get(layer);
         if (cached != null) {
-            cir.setReturnValue(cached);
+            return cached;
         }
-    }
-
-    @Inject(method = "bakeLayer", at = @At("RETURN"), require = 0)
-    private void coo$rememberArmorBake(ModelLayerLocation layer, CallbackInfoReturnable<ModelPart> cir) {
-        if (!CoOConfig.vanillaCacheArmorModelBakes || !ArmorModelBake.active()) {
-            return;
-        }
-        ModelPart baked = cir.getReturnValue();
+        ModelPart baked = original.call(layer);
         if (baked != null && ArmorModelBake.get(layer) == null) {
             ArmorModelBake.put(layer, baked);
         }
+        return baked;
     }
 
     @Inject(method = "onResourceManagerReload", at = @At("RETURN"), require = 0)

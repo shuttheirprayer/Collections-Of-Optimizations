@@ -1,5 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.terrablender;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
@@ -10,9 +12,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
@@ -37,16 +36,10 @@ public abstract class MixinNamespacedRule {
     @Unique
     private SurfaceRules.SurfaceRule coo$cachedRule;
 
-    @Inject(
-            method = "tryApply",
-            at = @At("HEAD"),
-            cancellable = true,
-            remap = true,
-            require = 0
-    )
-    private void coo$cacheNamespaceLookup(int x, int y, int z, CallbackInfoReturnable<BlockState> cir) {
+    @WrapMethod(method = "tryApply", remap = true, require = 0)
+    private BlockState coo$cacheNamespaceLookup(int x, int y, int z, Operation<BlockState> original) {
         if (!CoOConfig.terrablenderCacheNamespaceRule) {
-            return;
+            return original.call(x, y, z);
         }
 
         Holder<Biome> biome = ((SurfaceContextAccessor) (Object) this.context).coo$getBiome().get();
@@ -60,6 +53,6 @@ public abstract class MixinNamespacedRule {
         if (state == null) {
             state = this.baseRule.tryApply(x, y, z);
         }
-        cir.setReturnValue(state);
+        return state;
     }
 }

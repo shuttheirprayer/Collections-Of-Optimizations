@@ -1,6 +1,8 @@
 package com.misanthropy.collections_of_optimizations.mixin.photon;
 
 import com.lowdragmc.photon.client.gameobject.particle.TrailParticle;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import org.joml.Math;
@@ -10,9 +12,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = TrailParticle.TailArray.class, remap = false)
 public abstract class MixinTrailTailArray {
@@ -56,15 +55,13 @@ public abstract class MixinTrailTailArray {
         throw new AssertionError();
     }
 
-    @Inject(method = "renderInternal", at = @At("HEAD"), cancellable = true, require = 0)
+    @WrapMethod(method = "renderInternal", require = 0)
     private void coo$leanTrailVertices(VertexConsumer buffer, float partialTicks, Vector3f cameraPos,
-                                       Vector4f color, int light, CallbackInfo ci) {
-        if (!CoOConfig.photonLeanTrailVertices) {
-            return;
-        }
+                                       Vector4f color, int light, Operation<Void> original) {
         TrailParticle outer = this.this$0;
 
-        if (outer == null || (Object) outer.getTails() != this) {
+        if (!CoOConfig.photonLeanTrailVertices || outer == null || (Object) outer.getTails() != this) {
+            original.call(buffer, partialTicks, cameraPos, color, light);
             return;
         }
 
@@ -210,7 +207,6 @@ public abstract class MixinTrailTailArray {
         if (pushHead) {
             removeLast();
         }
-        ci.cancel();
     }
 
     @Unique

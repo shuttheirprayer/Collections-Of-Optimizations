@@ -1,7 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.oculus;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
-import com.misanthropy.collections_of_optimizations.core.ShadowPass;
+import com.misanthropy.collections_of_optimizations.core.IrisState;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.model.geom.ModelPart;
@@ -32,7 +32,7 @@ public abstract class MixinBannerRenderer {
                                                           int packedOverlay, ModelPart flagPart, Material baseMaterial, boolean isBanner,
                                                           List<Pair<Holder<BannerPattern>, DyeColor>> patterns, boolean glint,
                                                           CallbackInfo ci) {
-        if (CoOConfig.oculusSkipBannerPatternsInShadowPass && ShadowPass.active()) {
+        if (CoOConfig.oculusSkipBannerPatternsInShadowPass && IrisState.shadowPass()) {
             flagPart.render(poseStack, baseMaterial.buffer(bufferSource, RenderType::entitySolid, glint), packedLight, packedOverlay);
             ci.cancel();
         }

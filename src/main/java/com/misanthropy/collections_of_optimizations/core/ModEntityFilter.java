@@ -11,6 +11,8 @@ public final class ModEntityFilter {
     public static final ModEntityFilter CRITTERS_N_CRAWLERS = new ModEntityFilter("net.imasillylittleguy.cnc.entity.");
     public static final ModEntityFilter CNC_CARIBOU = new ModEntityFilter("net.imasillylittleguy.cnc.entity.CaribouEntity");
     public static final ModEntityFilter CNC_WECHUGE = new ModEntityFilter("net.imasillylittleguy.cnc.entity.WechugeEntity");
+    public static final ModEntityFilter COMPANIONS = new ModEntityFilter("dev.xylonity.companions.");
+    public static final ModEntityFilter GOETY_HOSTILITY_WILDFIRE = new ModEntityFilter("com.ratrod.goetyhostility.common.entities.hostile.HostileWildfire");
 
     private final ClassValue<Boolean> cache;
 

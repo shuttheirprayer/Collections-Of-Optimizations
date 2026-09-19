@@ -1,14 +1,13 @@
 package com.misanthropy.collections_of_optimizations.mixin.mowziesmobs;
 
 import com.bobmowzie.mowziesmobs.client.render.MMRenderType;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,39 +21,30 @@ public abstract class MixinMMRenderType {
     @Unique
     private static final Map<ResourceLocation, RenderType> COO$SOLAR_FLARE = new HashMap<>();
 
-    @Inject(method = "getGlowingEffect", at = @At("HEAD"), cancellable = true, require = 0)
-    private static void coo$glowingEffectFromCache(ResourceLocation location, CallbackInfoReturnable<RenderType> cir) {
+    @WrapMethod(method = "getGlowingEffect", require = 0)
+    private static RenderType coo$memoGlowingEffect(ResourceLocation location, Operation<RenderType> original) {
+        return coo$memoRenderType(COO$GLOWING_EFFECT, location, original);
+    }
+
+    @WrapMethod(method = "getSolarFlare", require = 0)
+    private static RenderType coo$memoSolarFlare(ResourceLocation location, Operation<RenderType> original) {
+        return coo$memoRenderType(COO$SOLAR_FLARE, location, original);
+    }
+
+    @Unique
+    private static RenderType coo$memoRenderType(Map<ResourceLocation, RenderType> cache, ResourceLocation location,
+                                                 Operation<RenderType> original) {
         if (!CoOConfig.mowziesmobsCacheEffectRenderTypes) {
-            return;
+            return original.call(location);
         }
-        RenderType cached = COO$GLOWING_EFFECT.get(location);
+        RenderType cached = cache.get(location);
         if (cached != null) {
-            cir.setReturnValue(cached);
+            return cached;
         }
-    }
-
-    @Inject(method = "getGlowingEffect", at = @At("RETURN"), require = 0)
-    private static void coo$rememberGlowingEffect(ResourceLocation location, CallbackInfoReturnable<RenderType> cir) {
-        if (CoOConfig.mowziesmobsCacheEffectRenderTypes && cir.getReturnValue() != null) {
-            COO$GLOWING_EFFECT.put(location, cir.getReturnValue());
+        RenderType resolved = original.call(location);
+        if (resolved != null) {
+            cache.put(location, resolved);
         }
-    }
-
-    @Inject(method = "getSolarFlare", at = @At("HEAD"), cancellable = true, require = 0)
-    private static void coo$solarFlareFromCache(ResourceLocation location, CallbackInfoReturnable<RenderType> cir) {
-        if (!CoOConfig.mowziesmobsCacheEffectRenderTypes) {
-            return;
-        }
-        RenderType cached = COO$SOLAR_FLARE.get(location);
-        if (cached != null) {
-            cir.setReturnValue(cached);
-        }
-    }
-
-    @Inject(method = "getSolarFlare", at = @At("RETURN"), require = 0)
-    private static void coo$rememberSolarFlare(ResourceLocation location, CallbackInfoReturnable<RenderType> cir) {
-        if (CoOConfig.mowziesmobsCacheEffectRenderTypes && cir.getReturnValue() != null) {
-            COO$SOLAR_FLARE.put(location, cir.getReturnValue());
-        }
+        return resolved;
     }
 }
