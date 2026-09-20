@@ -208,6 +208,8 @@
     "vanilla.MixinVecDeltaCodec",
     "vanilla.MixinServerLevelStructureState",
     "vanilla.MixinStructureCheck",
+    "vanilla.StructureTemplateAccessor",
+    "vanilla.MixinStructureTemplateTopAir",
     "vanilla.MixinMovementCheckSlack",
     "vanilla.MixinPalettedContainerUniform",
     "vanilla.MixinBlockPosBetweenClosed",
@@ -371,7 +373,8 @@
     "fluidium.MixinFluidiumActiveChunks",
     "corpse.MixinCorpseEntityIdleScan",
     "corpse.MixinCorpseDeathSweep",
-    "storagedrawers.MixinDrawersCountSyncRadius"
+    "storagedrawers.MixinDrawersCountSyncRadius",
+    "skyarena.MixinAltarSpawnScan"
   ],
   "client": [
     "mahoutsukai.MixinMahouProjectorEnchantRender",

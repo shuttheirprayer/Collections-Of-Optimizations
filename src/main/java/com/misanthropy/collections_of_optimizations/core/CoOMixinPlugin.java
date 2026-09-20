@@ -195,7 +195,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("duplicationless", "duplicationless"),
             Map.entry("fluidium", "fluidium"),
             Map.entry("corpse", "corpse"),
-            Map.entry("storagedrawers", "storagedrawers")
+            Map.entry("storagedrawers", "storagedrawers"),
+            Map.entry("skyarena", "skyarena")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(

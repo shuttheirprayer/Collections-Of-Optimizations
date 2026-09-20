@@ -385,6 +385,7 @@ public final class CoOConfig {
     public static int itemEntityRenderCap = 1;
     public static boolean vanillaMemoGlyphFontSet = true;
     public static boolean vanillaFasterStructureLocation = true;
+    public static boolean vanillaTrimTemplateTopAir = true;
     public static boolean vanillaFixBoatFallDamage = false;
     public static boolean vanillaPredictableItemDrops = false;
     public static boolean vanillaLeanTrackerSectionPos = true;
@@ -630,6 +631,9 @@ public final class CoOConfig {
 
     public static boolean storagedrawersCacheCountLabels = true;
     public static boolean storagedrawersNarrowCountSyncRadius = true;
+    public static boolean skyarenaLeanSpawnScan = true;
+    public static int skyarenaSpawnScanCacheTicks = 20;
+    public static boolean skyarenaPruneAltarPlayerMaps = true;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -1893,6 +1897,9 @@ public final class CoOConfig {
                 .comment("Makes /locate a lot faster, especially for rare structures.")
                 .define("fasterStructureLocation", true), v -> vanillaFasterStructureLocation = v);
         gate(builder
+                .comment("Throw away the empty rows above a structure template when it is read out of a mod or datapack. A structure block saves every block inside the box you drew, air included, and a lot of mods draw that box far taller than the build: Better Village saves all 246 of its village pieces in a box 48 blocks high, so a two block tall dirt path crossroad is stored as a 40 by 48 by 40 block template where 76,550 of the 76,800 entries are air, and across the whole mod 2.7 million of its 3.6 million entries are air rows sitting above the tallest real block. Every one of those entries costs about fifty bytes in memory for as long as the template is cached, which is until the next reload, so a fully loaded set of Better Village templates is around 135 megabytes of nothing, and it is that heap that a memory profiler points at when it says villages are leaking. It costs time too: when a piece is placed the game rebuilds every entry for every chunk the piece overlaps, runs the pool's processors over it and calls setBlock on it, so a wide street piece pays for its 76,000 air entries up to nine times over. With this on, air entries higher than the tallest real block or entity in the template are dropped as the template loads, and only those; the air inside and around the build stays exactly as saved, so rooms and hillside cuts are unchanged. The template's declared size is left alone so structure bounding boxes, jigsaw collisions and beardifier terrain adjustment are identical. The only visible difference is that a tall empty box no longer carves a shaft into a mountainside above the build, which is what a template made with structure voids would do anyway. Structures saved in a world's own generated folder by a structure block are never touched. Turn it off for stock behaviour.")
+                .define("trimTemplateTopAir", true), v -> vanillaTrimTemplateTopAir = v);
+        gate(builder
                 .comment("Stops boats breaking into planks when you ride them off a drop.")
                 .define("fixBoatFallDamage", false), v -> vanillaFixBoatFallDamage = v);
         gate(builder
@@ -2642,6 +2649,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop drawer count updates being broadcast half a kilometre. Every time the amount in a drawer changes on the server, Storage Drawers sends a small count packet so nearby clients can redraw the number on the drawer face, and it sends that packet to every player within five hundred blocks. Five hundred blocks is far outside what any normal server actually keeps loaded for a player: with a view distance of ten chunks a player stops being sent that chunk at about a hundred and sixty blocks, and a client that does not have the chunk does not have the drawer either, so the packet is decoded and thrown away. It matters because the packet goes out on every single change, not once a tick, so one hopper feeding one drawer is a packet a tick, an item pipe or an export bus filling a wall of drawers is hundreds a second, and shift clicking a full inventory into one drawer sends one per inventory slot, all of it multiplied by every player inside that five hundred block sphere whether or not they are anywhere near the room. With this on the radius is cut down to the server's own view distance plus two chunks of slack, generous enough to cover the corners of the square of chunks a player is actually sent, and it can only ever come out smaller than the five hundred the mod asked for, never larger. Everyone who can see the drawer still gets the update on the same tick they do now. Turn it off for stock behaviour.")
                 .define("narrowCountSyncRadius", true), v -> storagedrawersNarrowCountSyncRadius = v);
+        builder.pop();
+
+        builder.comment("Sky Arena patches.").push("skyarena");
+        gate(builder
+                .comment("Work out where Sky Arena is allowed to drop mobs once a second instead of once per stray mob per tick, and work it out with a lot less rubbish. While a battle is running the altar checks every summoned mob every tick, and any mob that has wandered further from the altar than the arena's teleport distance gets pulled back. To pick the spot it pulls the mob to, the altar rebuilds the whole list of legal spawn squares from scratch, and that list is a square sweep of the arena radius: at the default radius of thirty six that is over five thousand columns, and each column asks the world for up to eight separate blocks, so one rebuild is somewhere near forty thousand block lookups and about as many throwaway position objects. It does that once for every mob that is out of bounds, every tick, so a wave that gets scattered by a knockback is several of those per tick, and a single mob that cannot be pulled back at all because the list came out empty pays the full sweep twenty times a second forever, for nothing. With this on the sweep is rewritten to walk the same squares with one reusable position instead of a fresh object per block, and to throw out the squares that are too close to the player before it touches the world at all rather than after eight block lookups, and the finished list is remembered for a short while so the mobs pulled back in the same tick share one sweep. The squares tested, the tests themselves and the list that comes out are exactly the ones the mod's own code produces. The wave start sweep, the one that runs when you actually light the altar, is never answered from memory, so starting a fight always looks at the world as it is right now. Turn it off for stock behaviour.")
+                .define("leanSpawnScan", true), v -> skyarenaLeanSpawnScan = v);
+        gate(builder
+                .comment("How long the altar may reuse the spawn square list it worked out for pulling stray mobs back, in ticks. Zero means it is only reused inside the single tick it was built in, which is the same answer the mod would give because nothing about the world changes between two pulls in one tick. The default of twenty is one second, which is the useful setting: a mob that keeps straying, or an arena where no legal square exists at all, then costs one sweep a second instead of twenty. The trade is that a square that got built over in the last second can still be picked, and the mob lands in a wall and gets pushed out, which is what already happens when two mobs are pulled to the same square in the same tick. Raise it if your arenas never change shape mid fight, drop it to zero if they do. Only used while a battle is running.")
+                .defineInRange("spawnScanCacheTicks", 20, 0, 200), 0, v -> skyarenaSpawnScanCacheTicks = v);
+        gate(builder
+                .comment("Let Sky Arena forget about players who logged out. The altar keeps two lists that live for as long as the game does, one saying which altar each player lit and one saying when each player was last told their difficulty, and both are keyed on the player object itself. Nothing ever takes a player out of the second one, and the first only loses an entry if the altar happens to be loaded and mid fight when that player disconnects. Because a player object is thrown away and rebuilt every time somebody logs out, dies and respawns, or walks through a portal to another dimension, every one of those events leaves a whole dead player behind in these lists, and a dead player drags its inventory and its world along with it. On a server that people join and leave all day that is a steady climb in memory that only a restart clears. With this on the old player is taken out of both lists when it is replaced or when they disconnect, after Sky Arena's own logout handling has already run, so nothing the mod does with those lists changes, and both lists are emptied when the server stops. Turn it off for stock behaviour.")
+                .define("pruneAltarPlayerMaps", true), v -> skyarenaPruneAltarPlayerMaps = v);
         builder.pop();
     }
 
