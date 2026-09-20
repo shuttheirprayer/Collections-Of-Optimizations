@@ -368,7 +368,10 @@
     "adamsarsplus.MixinAapFlameDeityAura",
     "duplicationless.MixinDuplicationlessEntityTracker",
     "fluidium.MixinFluidiumClaimLookup",
-    "fluidium.MixinFluidiumActiveChunks"
+    "fluidium.MixinFluidiumActiveChunks",
+    "corpse.MixinCorpseEntityIdleScan",
+    "corpse.MixinCorpseDeathSweep",
+    "storagedrawers.MixinDrawersCountSyncRadius"
   ],
   "client": [
     "mahoutsukai.MixinMahouProjectorEnchantRender",
@@ -551,7 +554,8 @@
     "l2archery.MixinL2ArcheryBowInfoText",
     "l2complements.MixinL2CTooltipDescriptions",
     "arsadditions.MixinCharmInventoryTick",
-    "arsadditions.MixinArsAdditionsPortalScan"
+    "arsadditions.MixinArsAdditionsPortalScan",
+    "storagedrawers.MixinDrawersCountLabel"
   ],
   "injectors": {
     "defaultRequire": 0

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 import java.util.Random;
 
-@Mixin(MultiNoiseBiomeSource.class)
+@Mixin(value = MultiNoiseBiomeSource.class, priority = 1500)
 public abstract class MixinMultiNoiseBiomeSourceReplacers {
 
     @Unique

@@ -193,7 +193,9 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("arsadditions", "ars_additions"),
             Map.entry("adamsarsplus", "adamsarsplus"),
             Map.entry("duplicationless", "duplicationless"),
-            Map.entry("fluidium", "fluidium")
+            Map.entry("fluidium", "fluidium"),
+            Map.entry("corpse", "corpse"),
+            Map.entry("storagedrawers", "storagedrawers")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(
