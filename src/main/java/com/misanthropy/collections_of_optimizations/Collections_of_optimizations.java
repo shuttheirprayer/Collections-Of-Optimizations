@@ -6,6 +6,7 @@ import com.misanthropy.collections_of_optimizations.core.CameraShakeScanCache;
 import com.misanthropy.collections_of_optimizations.core.CoOEmbeddiumOptions;
 import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
 import com.misanthropy.collections_of_optimizations.core.FdBossesPresence;
+import com.misanthropy.collections_of_optimizations.core.GeomancyGrandmasterTracker;
 import com.misanthropy.collections_of_optimizations.core.GhostPlayerPurge;
 import com.misanthropy.collections_of_optimizations.core.GoetyDelightLogItems;
 import com.misanthropy.collections_of_optimizations.core.LeakProbe;
@@ -58,6 +59,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("crittersandcompanions")) {
             CacRedPandaTracker.register();
+        }
+
+        if (ModList.get().isLoaded("gtbcs_geomancy_plus")) {
+            GeomancyGrandmasterTracker.register();
         }
 
         if (ModList.get().isLoaded("fdbosses")) {

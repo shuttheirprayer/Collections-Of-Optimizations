@@ -320,6 +320,9 @@ public final class CoOConfig {
     public static boolean eeeabsmobsCacheShakeScan = true;
     public static boolean fromtheshadowsCacheShakeScan = true;
     public static boolean gtbcsCacheShakeScan = true;
+
+    public static boolean gtbcsgeomancyGateGrandmasterSpawnScan = true;
+    public static boolean gtbcsgeomancySkipNonCasterCastingTick = true;
     public static boolean legendarymonstersCacheShakeScan = true;
     public static int legendarymonstersBossMusicInterval = 10;
     public static boolean legendarymonstersSkipDeadZoomWork = true;
@@ -634,6 +637,18 @@ public final class CoOConfig {
     public static boolean skyarenaLeanSpawnScan = true;
     public static int skyarenaSpawnScanCacheTicks = 20;
     public static boolean skyarenaPruneAltarPlayerMaps = true;
+
+    public static boolean puffishattributesSkipEmptyModifiers = true;
+
+    public static boolean toomanyglyphsLeanChainSearch = true;
+    public static int toomanyglyphsRayParticleBudget = 1024;
+
+    public static boolean tactBatchCompendiumUnlockSave = true;
+    public static boolean tactClampSubterranodonMeter = true;
+
+    public static boolean dummmmmmySkipUnusedDamageNumbers = true;
+    public static int dummmmmmyScarecrowScanInterval = 10;
+    public static boolean dummmmmmyTolerateUnregisteredDamageTypes = true;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -1735,6 +1750,15 @@ public final class CoOConfig {
                 .define("cacheShakeScan", true), v -> gtbcsCacheShakeScan = v);
         builder.pop();
 
+        builder.comment("GTBC's Geomancy Plus patches.").push("gtbcsgeomancy");
+        gate(builder
+                .comment("Only run the geo grandmaster spacing scan while a geo grandmaster is actually loaded. The spawn rule asks for every grandmaster in a one hundred and twenty nine block cube around the candidate position, and natural spawning asks that rule over and over for every surface chunk in daylight, so a world with no grandmaster in it was still paying a seven hundred section entity walk every time the grandmaster came up in the spawn roll. Result is identical because a world with no grandmaster loaded cannot contain the grandmaster the scan is looking for.")
+                .define("gateGrandmasterSpawnScan", true), v -> gtbcsgeomancyGateGrandmasterSpawnScan = v);
+        gate(builder
+                .comment("Work out whether a ticking entity is a spell casting mob before asking whether it holds the casting lockout effect, not after. The mod's living tick listener reads the effect map of every living entity in the game on both logical sides every tick and then throws the answer away for everything that is not one of Iron's Spellbooks' caster mobs. Result is identical.")
+                .define("skipNonCasterCastingTick", true), v -> gtbcsgeomancySkipNonCasterCastingTick = v);
+        builder.pop();
+
         builder.comment("Legendary Monsters patches.").push("legendarymonsters");
         gate(builder
                 .comment("Run the camera shake and dynamic zoom entity scans once per tick instead of once per frame. Client.")
@@ -1960,7 +1984,7 @@ public final class CoOConfig {
                 .comment("Rotate a pose stack around a single axis with the short form of the multiplication instead of the general quaternion product. Nearly every rotation an entity, item or model part applies is around X, Y or Z alone, and JOML does about three times the arithmetic for those. Same result up to floating point rounding. Client.")
                 .define("axisAlignedRotation", true), v -> vanillaAxisAlignedRotation = v);
         gate(builder
-                .comment("Walk BlockPos.betweenClosed with three counters instead of two integer divisions per position. Same positions in the same order. An inverted range yields nothing instead of looping forever.")
+                .comment("Walk BlockPos.betweenClosed and Cursor3D with three counters instead of two integer divisions per position. Cursor3D is what every entity uses each tick to find the block it stands on, and what mob pathfinding uses for its collision checks. Same positions in the same order. An inverted BlockPos range yields nothing instead of looping forever.")
                 .define("leanBlockPosRange", true), v -> vanillaLeanBlockPosRange = v);
         builder.pop();
 
@@ -2661,6 +2685,42 @@ public final class CoOConfig {
         gate(builder
                 .comment("Let Sky Arena forget about players who logged out. The altar keeps two lists that live for as long as the game does, one saying which altar each player lit and one saying when each player was last told their difficulty, and both are keyed on the player object itself. Nothing ever takes a player out of the second one, and the first only loses an entry if the altar happens to be loaded and mid fight when that player disconnects. Because a player object is thrown away and rebuilt every time somebody logs out, dies and respawns, or walks through a portal to another dimension, every one of those events leaves a whole dead player behind in these lists, and a dead player drags its inventory and its world along with it. On a server that people join and leave all day that is a steady climb in memory that only a restart clears. With this on the old player is taken out of both lists when it is replaced or when they disconnect, after Sky Arena's own logout handling has already run, so nothing the mod does with those lists changes, and both lists are emptied when the server stops. Turn it off for stock behaviour.")
                 .define("pruneAltarPlayerMaps", true), v -> skyarenaPruneAltarPlayerMaps = v);
+        builder.pop();
+
+        builder.comment("Pufferfish's Attributes patches.").push("puffishattributes");
+        gate(builder
+                .comment("Stop Pufferfish's Attributes doing the full modifier walk for an attribute that nobody has modified. Every one of the mod's roughly twenty five hooks builds a little throwaway object, asks the entity for one of its own attributes, wraps that in a second throwaway object, puts it in a list, and then walks that list four separate times, once for flat bonuses, once for percent of base, once for percent of total and once more to clamp, pulling a fresh iterator out of the modifier set each time. It does all of that even when the entity carries no modifier for that attribute at all, which is the normal case for almost every mob in the world. The expensive one is the stealth hook, because it sits on the vanilla check a mob runs against every candidate it can see while looking for a target, so it fires thousands of times a second on a busy server, and the mining speed and damage hooks run every tick you hold a mine button and on every hit landed anywhere. With this on an attribute with no modifiers on it is simply not put in the list, and a modification with an empty list hands the number straight back, which is the same number the mod's own four passes would have produced because an attribute with nothing on it adds nothing, multiplies by nothing and, being one of the mod's own dynamic attributes, clamps to nothing. The moment anything actually grants one of these attributes the mod's own code runs exactly as before. Turn it off for stock behaviour.")
+                .define("skipEmptyModifiers", true), v -> puffishattributesSkipEmptyModifiers = v);
+        builder.pop();
+
+        builder.comment("Too Many Glyphs patches.").push("toomanyglyphs");
+        gate(builder
+                .comment("Measure the Chaining glyph's block search with plain block coordinates instead of building two throwaway vectors for every single block it looks at. When Chaining lands on a block it spreads outwards, and to find the next block to jump to it walks the whole cube of positions around the one it is standing on, then asks how far away each of them is. The distance question is where the waste is: for every candidate it builds a fresh vector for the block it came from and a second fresh vector for the candidate, purely so it can add half a block to both sets of coordinates before subtracting them again, and adding the same half to both sides cannot change the answer. At the default search distance that cube is a hundred and twenty five positions for each block in the chain, and the chain is sixteen blocks long before any augment is added, so one cast is already thousands of dead vectors, and a Pierce augment widens the cube to over a thousand positions per block while an Amplify augment lengthens the chain, which multiplies out into six figures of rubbish in a single cast. The same waste sits in the tiebreaker the search uses to prefer nearer blocks, which builds another two vectors per candidate. With this on both of those are worked out straight from the block coordinates, which is the same subtraction the mod was doing, just without the objects in the middle. The numbers that come out are bit for bit the ones the mod's own code produces, so the blocks the chain picks, the order it picks them in and the shape it ends up with are unchanged. Turn it off for stock behaviour.")
+                .define("leanChainSearch", true), v -> toomanyglyphsLeanChainSearch = v);
+        gate(builder
+                .comment("How many ray particles Too Many Glyphs may ask your client to spawn in a single tick, across every ray drawn that tick. The Ray glyph and the Chaining glyph both draw their beam by spawning a glowing particle every sixteenth of a block along the line, which is two hundred and fifty six particles for a plain sixteen block ray and about a thousand for one stretched out by Amplify augments. Chaining is the real problem, because it sends one of these beams for every link in the chain and they all arrive in the same tick, so a chain that hit sixty four blocks asks for a couple of thousand particles at once, every one of them a fresh object that then has to be ticked and drawn for the rest of its life. That is a visible stutter on a mid range machine and it happens every time the spell is cast, which for an automated caster is several times a second. With this at one thousand and twenty four a single ray is still drawn exactly as the mod draws it, and it is only once a tick has already been handed that many particles that the beams still to come in that same tick are skipped, so what you lose is the tail end of a firework you could not see the individual sparks of anyway. Nothing on the server changes, the spell still hits everything it hit before, this is only the drawing. Raise it if you have the frames to spare, lower it if chaining still hitches. 0 restores the stock unlimited behaviour.")
+                .defineInRange("rayParticleBudget", 1024, 0, 200000), 0, v -> toomanyglyphsRayParticleBudget = v);
+        builder.pop();
+
+        builder.comment("TACT patches.").push("tact");
+        gate(builder
+                .comment("Write the Alex's Caves compendium out once when TACT unlocks it on log in, instead of once for every page it turns. This only does anything if you switched TACT's unlockAllCompendiumInfo on. When you do, TACT walks the six Alex's Caves biomes and, for each one, steps the unlock level up six times, and after every single one of those thirty six steps it hands the whole book back to Citadel to be written into your player data and then broadcast, as a full copy of your Citadel tag, to every player on the server. Thirty five of those thirty six are dead work: the book is kept in memory while the loop runs and only the last write is the one that survives, so the first thirty five produce a tag that is immediately thrown away and a packet that is immediately made stale. On a busy server that is thirty six tag builds and thirty six times however many players are online in packets, every time anybody logs in, at the exact moment the server is already busy sending that player their world. With this on the writes inside the loop are held back and one write is done when the loop is finished, carrying exactly the same book, so what ends up in your player data and what every client ends up being told is identical, it just arrives once. Turn it off for stock behaviour.")
+                .define("batchCompendiumUnlockSave", true), v -> tactBatchCompendiumUnlockSave = v);
+        gate(builder
+                .comment("Keep the Subterranodon's flight meter inside the nought to one range it is drawn in. Alex's Caves clamps it itself, refusing to recharge past full and flooring the drain at zero, but TACT's flight meter speed options do not adjust the drain, they adjust the whole move: TACT takes the number Alex's Caves asked for, works out how far it is from the current one, multiplies that gap by your recharge or usage multiplier, and writes the result. Because the multiplier is applied after the clamp rather than before it, a usage multiplier above one turns a drain that Alex's Caves had already floored at zero into a drain that goes below zero, and a recharge multiplier above one overshoots full, so the meter can sit at a negative value that has to be climbed back out of before the bar even starts filling, and the bar on your screen is drawn from a number that is out of range. It cannot happen at the default multipliers of one, because the gap is then unchanged, so this only bites once you tune them. With this on the value that actually gets stored is held to nought at the bottom and one at the top, which is the same range Alex's Caves keeps its other rideable meters in. Turn it off for stock behaviour.")
+                .define("clampSubterranodonMeter", true), v -> tactClampSubterranodonMeter = v);
+        builder.pop();
+
+        builder.comment("MmmMmmMmmMmm patches.").push("dummmmmmy");
+        gate(builder
+                .comment("Stop MmmMmmMmmMmm building a damage number packet that nobody is ever going to be sent. Every single time anything with health takes damage on the server, and every single time anything with health is healed, the mod is told about it, and the very first thing it does is build the little packet that carries the floating number, complete with a look up of the damage type in the registry, before it goes on to read the setting that decides who, if anyone, should receive it. The setting is called damage_mode and healing_mode and both of them are shipped set to NONE, so on a stock install that packet is built and thrown away every time, and the healing side is the busier of the two because regeneration, food regen, lifesteal and every healing spell in the pack all go through it. The two middle settings, ALL_PLAYERS and LOCAL_PLAYER, have the same shape of waste: they only ever send anything when the hit came from a real player, or when the thing being healed is a real player, and every mob hitting another mob still gets the full packet built for it first and then dropped. With this on the setting is read before the packet instead of after it, and the packet is only built in the cases where the mod would actually have sent it, so what arrives on your screen is exactly what arrived before. It also quietly removes a crash: with damage numbers set to ALL_PLAYERS or LOCAL_PLAYER the mod asks a damage source that it has not checked for null who caused it, which is a null pointer inside the damage routine of whatever was unlucky enough to be hit, and that case is now skipped rather than reached. Turn it off for stock behaviour.")
+                .define("skipUnusedDamageNumbers", true), v -> dummmmmmySkipUnusedDamageNumbers = v);
+        gate(builder
+                .comment("How many ticks MmmMmmMmmMmm must wait before it lets a mob look around for a scarecrow again. When a dummy is wearing a pumpkin it scares animals, and the way the mod arranges that is to hang a flee goal on every single animal in the world the moment it loads in, whether or not a dummy exists anywhere. That goal is asked ten times a second, for every animal, whether it should start, and answering that question means sweeping a box twenty four blocks wide and six blocks tall around the animal and type checking everything inside it. In a pack with a few hundred animals loaded that is a couple of thousand entity sweeps a second spent almost entirely on proving that the dummy somebody built in their base an hour ago is still not nearby. The decoy goal that gets added to monsters when dummy_decoy is switched on is handled the same way. With this at ten the goal is asked once, and if the answer is no it is left alone for the next ten asks, which works out at roughly one sweep a second per animal instead of ten, and a panicking animal keeps fleeing exactly as it did because only the question of whether to start is delayed, never the fleeing itself. The worst case is an animal wandering into range taking up to about a second longer to bolt. Raise it if you have a lot of animals and no scarecrows, lower it if you want snappier scaring. 0 restores the stock every tick behaviour.")
+                .defineInRange("scarecrowScanInterval", 10, 0, 200), 0, v -> dummmmmmyScarecrowScanInterval = v);
+        gate(builder
+                .comment("Stop MmmMmmMmmMmm throwing an error when another mod hands it a damage type it cannot look up. To colour the floating number the mod asks the damage source for its type and then asks the registry for that type's name, and if the registry does not know it the mod does not fall back to anything, it throws an assertion on the spot. That assertion goes off inside the vanilla damage routine, so it does not produce a quiet log line, it tears out of whatever was being hurt and takes the tick with it. It is reachable in a big pack because a damage source is allowed to carry its type inline rather than by name, several mods build theirs that way for one off effects, and datapack or script added types that were not present when the world loaded behave the same. The mod already has a name it uses for damage that has no source at all, and this simply uses that same name for a type it cannot resolve, which the colour lookup on the client already knows how to handle. Numbers for every damage type the registry does know about are unchanged. Turn it off for stock behaviour.")
+                .define("tolerateUnregisteredDamageTypes", true), v -> dummmmmmyTolerateUnregisteredDamageTypes = v);
         builder.pop();
     }
 

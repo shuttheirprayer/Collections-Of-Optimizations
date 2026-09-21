@@ -213,6 +213,7 @@
     "vanilla.MixinMovementCheckSlack",
     "vanilla.MixinPalettedContainerUniform",
     "vanilla.MixinBlockPosBetweenClosed",
+    "vanilla.MixinCursor3DCounting",
     "distanthorizons.MixinDhLodDataBuilder",
     "summonity.MixinPlayerSummonityCache",
     "summonity.MixinMinionHelper",
@@ -374,7 +375,14 @@
     "corpse.MixinCorpseEntityIdleScan",
     "corpse.MixinCorpseDeathSweep",
     "storagedrawers.MixinDrawersCountSyncRadius",
-    "skyarena.MixinAltarSpawnScan"
+    "skyarena.MixinAltarSpawnScan",
+    "puffishattributes.MixinPuffishDynamicModification",
+    "toomanyglyphs.MixinChainingBlockSearch",
+    "tact.MixinTactCompendiumUnlockSaves",
+    "tact.MixinTactSubterranodonMeterClamp",
+    "dummmmmmy.MixinDummyDamageNumberEvents",
+    "dummmmmmy.MixinDummyScarecrowGoals",
+    "dummmmmmy.MixinDummyDamageTypeEncode"
   ],
   "client": [
     "mahoutsukai.MixinMahouProjectorEnchantRender",
@@ -409,6 +417,9 @@
     "dodosmobs.MixinDodosMobsShakeScan",
     "eeeabsmobs.MixinEeeabsMobsShakeScan",
     "fromtheshadows.MixinFromTheShadowsShakeScan",
+    "gtbcsgeomancy.MixinGeomancyEntityTracking",
+    "gtbcsgeomancy.MixinGeomancyGrandmasterSpawn",
+    "gtbcsgeomancy.MixinGeomancyCastingTick",
     "gtbcs.MixinSpellLibShakeScan",
     "legendarymonsters.MixinLegendaryMonstersShakeScan",
     "goety.MixinGoetyShakeScan",
@@ -558,7 +569,8 @@
     "l2complements.MixinL2CTooltipDescriptions",
     "arsadditions.MixinCharmInventoryTick",
     "arsadditions.MixinArsAdditionsPortalScan",
-    "storagedrawers.MixinDrawersCountLabel"
+    "storagedrawers.MixinDrawersCountLabel",
+    "toomanyglyphs.MixinRayEffectParticleBudget"
   ],
   "injectors": {
     "defaultRequire": 0
