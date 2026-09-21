@@ -382,7 +382,20 @@
     "tact.MixinTactSubterranodonMeterClamp",
     "dummmmmmy.MixinDummyDamageNumberEvents",
     "dummmmmmy.MixinDummyScarecrowGoals",
-    "dummmmmmy.MixinDummyDamageTypeEncode"
+    "dummmmmmy.MixinDummyDamageTypeEncode",
+    "refinedmod.MixinRefinedWaveTerrain",
+    "refinedmod.MixinRefinedHuntersMarkBonus",
+    "refinedmod.MixinStormBladeOrphan",
+    "refinedmod.MixinHuntersMarkMap",
+    "farmersdelight.MixinFdBasketBlockEntity",
+    "farmersdelight.MixinFdStoveBlockEntity",
+    "farmersdelight.MixinFdCommonEvents",
+    "sophisticatedbackpacks.MixinSbpEntityBackpackAdditions",
+    "undergarden.MixinUgRotspawnRepelScan",
+    "undergarden.MixinUgScintlingGooTrail",
+    "undergarden.MixinUgMuncherGriefing",
+    "undergarden.MixinUgMasticatorSpeedSync",
+    "undergarden.MixinUgForgottenToolRegistryKeys"
   ],
   "client": [
     "mahoutsukai.MixinMahouProjectorEnchantRender",
@@ -570,7 +583,9 @@
     "arsadditions.MixinCharmInventoryTick",
     "arsadditions.MixinArsAdditionsPortalScan",
     "storagedrawers.MixinDrawersCountLabel",
-    "toomanyglyphs.MixinRayEffectParticleBudget"
+    "toomanyglyphs.MixinRayEffectParticleBudget",
+    "farmersdelight.MixinFdNourishmentOverlay",
+    "farmersdelight.MixinFdComfortOverlay"
   ],
   "injectors": {
     "defaultRequire": 0

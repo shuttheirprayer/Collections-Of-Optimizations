@@ -201,7 +201,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("puffishattributes", "puffish_attributes"),
             Map.entry("toomanyglyphs", "toomanyglyphs"),
             Map.entry("tact", "tact"),
-            Map.entry("dummmmmmy", "dummmmmmy")
+            Map.entry("dummmmmmy", "dummmmmmy"),
+            Map.entry("refinedmod", "refined_mod"),
+            Map.entry("farmersdelight", "farmersdelight"),
+            Map.entry("sophisticatedbackpacks", "sophisticatedbackpacks"),
+            Map.entry("undergarden", "undergarden")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(

@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Reimplemented from Lomka 0.5.4 by Starlev (LGPL-3.0). */
+// Credits: Lomka
 @Mixin(Cursor3D.class)
 public abstract class MixinCursor3DCounting {
 
@@ -30,7 +30,6 @@ public abstract class MixinCursor3DCounting {
             cir.setReturnValue(false);
             return;
         }
-        // x, y, z are already 0 for the first position; every later one is a carry chain.
         if (this.index++ != 0 && ++this.x == this.width) {
             this.x = 0;
             if (++this.y == this.height) {
