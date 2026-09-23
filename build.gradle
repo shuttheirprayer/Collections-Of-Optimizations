@@ -306,6 +306,11 @@ dependencies {
     compileOnly files('libs-compile/sophisticatedcore-1.20.1-1.5.1.2335.jar')
     compileOnly files('libs-compile/sophisticatedbackpacks-1.20.1-3.26.3.2157.jar')
     compileOnly files('libs-compile/goety_cataclysm-1.20-1.7.0.jar')
+    compileOnly files('libs-compile/l2backpack-2.6.0.jar')
+    compileOnly files('libs-compile/lionfishapi-2.8.jar')
+    compileOnly files('libs-compile/modular-routers-12.1.1+mc1.20.1.jar')
+    compileOnly files('libs-compile/Powah-5.0.11.jar')
+    compileOnly files('libs-compile/tact-1.5.3+1.20.1.jar')
 
     implementation fg.deobf(fileTree(dir: 'libs', include: ['*.jar']))
 }
