@@ -9,6 +9,7 @@ import com.misanthropy.collections_of_optimizations.core.FdBossesPresence;
 import com.misanthropy.collections_of_optimizations.core.GeomancyGrandmasterTracker;
 import com.misanthropy.collections_of_optimizations.core.GhostPlayerPurge;
 import com.misanthropy.collections_of_optimizations.core.GoetyDelightLogItems;
+import com.misanthropy.collections_of_optimizations.core.L2LibraryTrackedEffects;
 import com.misanthropy.collections_of_optimizations.core.LeakProbe;
 import com.misanthropy.collections_of_optimizations.core.MahouInsightTargetPurge;
 import com.misanthropy.collections_of_optimizations.core.CurioPresenceCache;
@@ -75,6 +76,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("skyarena")) {
             SkyArenaAltarMapPurge.register();
+        }
+
+        if (ModList.get().isLoaded("l2library")) {
+            L2LibraryTrackedEffects.register();
         }
 
         if (FMLEnvironment.dist == Dist.CLIENT && ModList.get().isLoaded("embeddium")) {

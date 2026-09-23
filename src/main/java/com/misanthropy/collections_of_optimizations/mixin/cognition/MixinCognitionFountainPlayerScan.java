@@ -3,7 +3,7 @@ package com.misanthropy.collections_of_optimizations.mixin.cognition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
-import com.misanthropy.collections_of_optimizations.core.CognitionPlayerScan;
+import com.misanthropy.collections_of_optimizations.core.PlayerBoxScan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -29,6 +29,6 @@ public abstract class MixinCognitionFountainPlayerScan {
         if (!CoOConfig.cognitionLeanPlayerScan || type != Player.class || level == null || box == null) {
             return original.call(level, type, box);
         }
-        return CognitionPlayerScan.playersIn(level, box);
+        return PlayerBoxScan.playersIn(level, box);
     }
 }

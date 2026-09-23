@@ -1,6 +1,8 @@
 package com.misanthropy.collections_of_optimizations.mixin.soulsweapons;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.soulsweaponry.entitydata.DespawnTimerData;
@@ -26,6 +28,7 @@ public abstract class MixinDespawnTimerData {
             cir.setReturnValue(0);
             return;
         }
-        cir.setReturnValue(entity.getPersistentData().getInt(DespawnTimerData.DESPAWN_ID));
+        CompoundTag data = ((EntityPersistentDataAccessor) entity).coo$persistentData();
+        cir.setReturnValue(data == null ? 0 : data.getInt(DespawnTimerData.DESPAWN_ID));
     }
 }

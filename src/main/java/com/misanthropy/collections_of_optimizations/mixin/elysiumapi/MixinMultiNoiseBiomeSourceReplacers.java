@@ -71,21 +71,16 @@ public abstract class MixinMultiNoiseBiomeSourceReplacers {
         if (current == null) {
             return null;
         }
-        Random random = new Random();
         for (ElysiumBiomeHelper.BiomeReplacer replacer : this.coo$replacers) {
-            if (replacer.replaceBiomes().contains(current)) {
-                random.setSeed(coo$seed(x / replacer.size(), z / replacer.size(), worldSeed) ^ replacer.uniqueId().hashCode());
-                if (random.nextDouble() < replacer.rarity()) {
-                    return Elysium.registryAccess.registryOrThrow(Registries.BIOME).getHolderOrThrow(replacer.withBiome());
-                }
+            if (replacer.replaceBiomes().contains(current)
+                    && new Random(coo$seed(x / replacer.size(), z / replacer.size(), worldSeed) ^ replacer.uniqueId().hashCode()).nextDouble() < replacer.rarity()) {
+                return Elysium.registryAccess.registryOrThrow(Registries.BIOME).getHolderOrThrow(replacer.withBiome());
             }
         }
         for (BiomeReplacerDataDriven replacer : this.coo$dataDrivenReplacers) {
-            if (replacer.replaceBiomes().contains(current)) {
-                random.setSeed(coo$seed(x / replacer.size(), z / replacer.size(), worldSeed) ^ replacer.uniqueId().hashCode());
-                if (random.nextDouble() < replacer.rarity()) {
-                    return replacer.withBiome();
-                }
+            if (replacer.replaceBiomes().contains(current)
+                    && new Random(coo$seed(x / replacer.size(), z / replacer.size(), worldSeed) ^ replacer.uniqueId().hashCode()).nextDouble() < replacer.rarity()) {
+                return replacer.withBiome();
             }
         }
         return current;

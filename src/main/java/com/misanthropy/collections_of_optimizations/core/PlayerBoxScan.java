@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final class CognitionPlayerScan {
+public final class PlayerBoxScan {
 
-    private CognitionPlayerScan() {
+    private PlayerBoxScan() {
     }
 
     public static List<Player> playersIn(Level level, AABB box) {

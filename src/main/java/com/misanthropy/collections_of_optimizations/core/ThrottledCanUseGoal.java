@@ -14,10 +14,6 @@ public final class ThrottledCanUseGoal extends Goal {
         setFlags(delegate.getFlags());
     }
 
-    public Goal getDelegate() {
-        return delegate;
-    }
-
     @Override
     public boolean canUse() {
         if (cooldown > 0) {

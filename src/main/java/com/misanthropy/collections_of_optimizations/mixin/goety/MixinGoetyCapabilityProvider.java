@@ -29,8 +29,8 @@ public abstract class MixinGoetyCapabilityProvider {
             return original.call(capability, side);
         }
         LazyOptional<?> cached = this.coo$cachedOptional;
-        if (cached != null && this.coo$cachedCapability == capability) {
-            return (LazyOptional<T>) cached;
+        if (cached != null) {
+            return this.coo$cachedCapability == capability ? (LazyOptional<T>) cached : LazyOptional.empty();
         }
         LazyOptional<T> resolved = original.call(capability, side);
         if (cached == null && resolved != null && resolved.isPresent()) {

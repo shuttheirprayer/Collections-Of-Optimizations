@@ -179,15 +179,20 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("integratedvillages", "integrated_villages"),
             Map.entry("deeperdarker", "deeperdarker"),
             Map.entry("goetyhostility", "goetyhostility"),
+            Map.entry("goetycataclysm", "goety_cataclysm"),
             Map.entry("fdbosses", "fdbosses"),
             Map.entry("mutantmonsters", "mutantmonsters"),
             Map.entry("cnb", "cnb"),
             Map.entry("mobgrindingutils", "mob_grinding_utils"),
+            Map.entry("modularrouters", "modularrouters"),
             Map.entry("transmog", "transmog"),
             Map.entry("ironsspellbooks", "irons_spellbooks"),
             Map.entry("hostilenetworks", "hostilenetworks"),
             Map.entry("extrahnn", "extrahnn"),
+            Map.entry("sanguinenetworks", "sanguine_networks"),
             Map.entry("l2archery", "l2archery"),
+            Map.entry("l2library", "l2library"),
+            Map.entry("l2backpack", "l2backpack"),
             Map.entry("blessfulled", "blessfulled"),
             Map.entry("tomeofblood", "tomeofblood"),
             Map.entry("betterspellcasting", "better_spellcasting"),
@@ -205,7 +210,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("refinedmod", "refined_mod"),
             Map.entry("farmersdelight", "farmersdelight"),
             Map.entry("sophisticatedbackpacks", "sophisticatedbackpacks"),
-            Map.entry("undergarden", "undergarden")
+            Map.entry("undergarden", "undergarden"),
+            Map.entry("netherexp", "netherexp"),
+            Map.entry("powah", "powah"),
+            Map.entry("arsnspells", "ars_n_spells"),
+            Map.entry("lionfishapi", "lionfishapi")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(

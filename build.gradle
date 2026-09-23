@@ -1,3 +1,4 @@
+import net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace
 import java.util.zip.ZipFile
 
 buildscript {
@@ -189,6 +190,7 @@ dependencies {
     implementation 'io.netty:netty-codec:4.1.125.Final'
     implementation 'com.google.guava:guava:33.0.0-jre'
 
+    compileOnly files('libs-compile/netherexp-2.3.5-apionly.jar')
     compileOnly files('libs-compile/armageddon-3.0.05.jar')
     compileOnly files('libs-compile/CerbonsApi-Forge-1.20.1-1.0.0.jar')
     compileOnly files('libs-compile/adamsarsplus-1.20.1-5.0.3.jar')
@@ -303,6 +305,7 @@ dependencies {
     compileOnly files('libs-compile/toomanyglyphs-1.20.1-2.3.2.12345.jar')
     compileOnly files('libs-compile/sophisticatedcore-1.20.1-1.5.1.2335.jar')
     compileOnly files('libs-compile/sophisticatedbackpacks-1.20.1-3.26.3.2157.jar')
+    compileOnly files('libs-compile/goety_cataclysm-1.20-1.7.0.jar')
 
     implementation fg.deobf(fileTree(dir: 'libs', include: ['*.jar']))
 }
@@ -343,7 +346,7 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-tasks.withType(net.minecraftforge.gradle.userdev.tasks.RenameJarInPlace).configureEach {
+tasks.withType(RenameJarInPlace).configureEach {
     useArgsFile()
 }
 

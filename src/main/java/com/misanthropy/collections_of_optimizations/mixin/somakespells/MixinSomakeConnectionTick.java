@@ -1,6 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.somakespells;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
@@ -30,7 +31,11 @@ public abstract class MixinSomakeConnectionTick {
             ci.cancel();
             return;
         }
-        CompoundTag data = entity.getPersistentData();
+        CompoundTag data = ((EntityPersistentDataAccessor) entity).coo$persistentData();
+        if (data == null) {
+            ci.cancel();
+            return;
+        }
         if (data.contains("SomakeConnectionLink", Tag.TAG_COMPOUND)
                 || data.contains("SomakeConnectionTransferQueue", Tag.TAG_COMPOUND)) {
             return;

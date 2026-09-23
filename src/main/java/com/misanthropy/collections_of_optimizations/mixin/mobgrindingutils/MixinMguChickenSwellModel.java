@@ -3,14 +3,20 @@ package com.misanthropy.collections_of_optimizations.mixin.mobgrindingutils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
-import com.misanthropy.collections_of_optimizations.core.MguChickenSwellModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(targets = "mob_grinding_utils.events.RenderChickenSwell", remap = false)
 public abstract class MixinMguChickenSwellModel {
+
+    @Unique
+    private static LayerDefinition coo$swellLayer;
+
+    @Unique
+    private static ModelPart coo$swellRoot;
 
     @WrapOperation(
             method = "renderChickenSwell",
@@ -24,10 +30,10 @@ public abstract class MixinMguChickenSwellModel {
         if (!CoOConfig.mobgrindingutilsCacheChickenSwellModel) {
             return original.call();
         }
-        LayerDefinition cached = MguChickenSwellModel.getLayer();
+        LayerDefinition cached = coo$swellLayer;
         if (cached == null) {
             cached = original.call();
-            MguChickenSwellModel.setLayer(cached);
+            coo$swellLayer = cached;
         }
         return cached;
     }
@@ -45,10 +51,10 @@ public abstract class MixinMguChickenSwellModel {
         if (!CoOConfig.mobgrindingutilsCacheChickenSwellModel) {
             return original.call(definition);
         }
-        ModelPart cached = MguChickenSwellModel.getRoot();
+        ModelPart cached = coo$swellRoot;
         if (cached == null) {
             cached = original.call(definition);
-            MguChickenSwellModel.setRoot(cached);
+            coo$swellRoot = cached;
         }
         return cached;
     }
