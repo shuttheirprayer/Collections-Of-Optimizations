@@ -203,6 +203,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("corpse", "corpse"),
             Map.entry("storagedrawers", "storagedrawers"),
             Map.entry("skyarena", "skyarena"),
+            Map.entry("simplyswordsoverhaul", "simply_swords_overhaul"),
             Map.entry("puffishattributes", "puffish_attributes"),
             Map.entry("toomanyglyphs", "toomanyglyphs"),
             Map.entry("tact", "tact"),
@@ -214,7 +215,16 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("netherexp", "netherexp"),
             Map.entry("powah", "powah"),
             Map.entry("arsnspells", "ars_n_spells"),
-            Map.entry("lionfishapi", "lionfishapi")
+            Map.entry("lionfishapi", "lionfishapi"),
+            Map.entry("tomeofwonders", "tome_of_wonders"),
+            Map.entry("bowenchants", "bowenchants"),
+            Map.entry("createaddition", "createaddition"),
+            Map.entry("snuffles", "snuffles"),
+            Map.entry("mekaweapons", "mekaweapons"),
+            Map.entry("dungeonsdelight", "dungeonsdelight"),
+            Map.entry("chimes", "chimes"),
+            Map.entry("sliceanddice", "sliceanddice"),
+            Map.entry("projectiledamage", "projectile_damage")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(

@@ -18,6 +18,7 @@ import com.misanthropy.collections_of_optimizations.core.IafDenRegistry;
 import com.misanthropy.collections_of_optimizations.core.MapTintCache;
 import com.misanthropy.collections_of_optimizations.core.RecipeCacheGeneration;
 import com.misanthropy.collections_of_optimizations.core.SkyArenaAltarMapPurge;
+import com.misanthropy.collections_of_optimizations.core.SsoDashGuard;
 import com.misanthropy.collections_of_optimizations.core.SummonityMinionCache;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
@@ -76,6 +77,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("skyarena")) {
             SkyArenaAltarMapPurge.register();
+        }
+
+        if (ModList.get().isLoaded("simply_swords_overhaul")) {
+            SsoDashGuard.register();
         }
 
         if (ModList.get().isLoaded("l2library")) {
