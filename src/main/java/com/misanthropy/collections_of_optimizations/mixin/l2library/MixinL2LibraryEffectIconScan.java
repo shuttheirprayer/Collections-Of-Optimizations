@@ -2,7 +2,6 @@ package com.misanthropy.collections_of_optimizations.mixin.l2library;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import dev.xkmc.l2library.base.effects.ClientEffectCap;
-import dev.xkmc.l2library.init.L2LibraryConfig;
 import dev.xkmc.l2library.init.events.ClientEffectRenderEvents;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,11 +23,6 @@ public abstract class MixinL2LibraryEffectIconScan {
             return;
         }
         if (entity == null) {
-            ci.cancel();
-            return;
-        }
-
-        if (L2LibraryConfig.CLIENT_SPEC.isLoaded() && !L2LibraryConfig.CLIENT.renderOverlayIcons.get()) {
             ci.cancel();
             return;
         }

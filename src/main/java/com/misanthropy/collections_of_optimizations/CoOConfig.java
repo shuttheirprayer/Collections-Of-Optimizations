@@ -48,6 +48,9 @@ public final class CoOConfig {
     public static boolean endinglibraryLeanCameraCapLookup = true;
 
     public static boolean bettercombatCacheWeaponAttributes = true;
+    public static boolean bettercombatOffhandOnlyTwoHandedCheck = true;
+
+    public static boolean citadelFastModelRender = true;
 
     public static boolean cofhCacheTranslucentRenderers = true;
 
@@ -233,6 +236,7 @@ public final class CoOConfig {
     public static boolean bossesriseNarrowCinematicScan = true;
     public static boolean bossesriseLeanVfxScan = true;
     public static boolean soulsweaponsLeanDespawnTimer = true;
+    public static boolean soulsweaponsCacheModPresence = true;
     public static boolean konweaponSkipItemAnimationCopies = true;
     public static boolean immersiveaircraftBatchOverlay = true;
     public static boolean ftbchunksSkipHiddenMinimapWork = true;
@@ -410,6 +414,7 @@ public final class CoOConfig {
     public static boolean vanillaLeanBlockPosRange = true;
     public static boolean createsolarMemoGogglesLookup = true;
     public static int xaeroworldmapUploadHeadroomMicros = 1000;
+    public static boolean xaeroworldmapOpenReflectedFields = true;
     public static boolean xaeroworldmapOrphanUploadPbo = true;
     public static boolean xaeroworldmapIdleMapFrameWait = true;
     public static int xaeroworldmapMapFrameSpinTail = 200;
@@ -877,6 +882,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Cache WeaponRegistry#getAttributes per item. Stock does a registry reverse lookup plus a map get on every Player#getItemBySlot call, twice.")
                 .define("cacheWeaponAttributes", true), v -> bettercombatCacheWeaponAttributes = v);
+        gate(builder
+                .comment("Run Better Combat's two-handed offhand check only when the offhand slot is asked for. Stock runs two weapon lookups on every Player#getItemBySlot call for every slot, and the branch flip when a weapon is held keeps the JIT deoptimising it.")
+                .define("offhandOnlyTwoHandedCheck", true), v -> bettercombatOffhandOnlyTwoHandedCheck = v);
+        builder.pop();
+
+        builder.comment("Citadel patches.").push("citadel");
+        gate(builder
+                .comment("Draw Citadel model boxes (Alex's Mobs, Alex's Caves and every other Citadel model) through Embeddium's bulk vertex writer, the same path Embeddium gives vanilla models. Stock allocates a vector per quad and per vertex and pushes every vertex through the per-vertex BufferBuilder path, which is several times slower and much slower again with a shader pack.")
+                .define("fastModelRender", true), v -> citadelFastModelRender = v);
         builder.pop();
 
         builder.comment("CoFH Core patches.").push("cofh");
@@ -922,6 +936,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Discard the old contents of a region texture's pixel buffer before mapping it for writing. Stock maps a buffer the driver may still be reading last frame's texture upload out of, which blocks the render thread until the GPU catches up.")
                 .define("orphanUploadPbo", true), v -> xaeroworldmapOrphanUploadPbo = v);
+        gate(builder
+                .comment("Open Xaero's World Map reflected fields once instead of paying the access check on every read. Stock reads the per-chunk clean flag through an unopened Field for every chunk it writes, and toggles setAccessible on and off around every scheduled task queue read.")
+                .define("openReflectedFields", true), v -> xaeroworldmapOpenReflectedFields = v);
         builder.pop();
 
         builder.comment("GeckoLib patches.").push("geckolib");
@@ -1453,6 +1470,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Read the mod's despawn timer without writing to every entity that does not have one.")
                 .define("leanDespawnTimer", true), v -> soulsweaponsLeanDespawnTimer = v);
+        gate(builder
+                .comment("Remember which mods are installed instead of asking the loader again on every call. Soulslike Weaponry asks whether Better Combat or Epic Fight is installed from inside its Player#getItemBySlot hook, so it runs for every equipment lookup on every player.")
+                .define("cacheModPresence", true), v -> soulsweaponsCacheModPresence = v);
         builder.pop();
 
         builder.comment("Kind of Nice Weapon patches.").push("konweapon");

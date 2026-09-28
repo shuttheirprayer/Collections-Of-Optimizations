@@ -47,6 +47,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("tooltipoverhaul", "tooltipoverhaul"),
             Map.entry("cablefacades", "cable_facades"),
             Map.entry("oculus", "oculus"),
+            Map.entry("citadel", "citadel"),
+            Map.entry("asyncparticles", "asyncparticles"),
             Map.entry("naturesaura", "naturesaura"),
             Map.entry("xaerominimap", "xaerominimap"),
             Map.entry("w2w2", "w2w2"),
@@ -292,6 +294,10 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("meetyourfight.MixinMyfSpectresEye", new String[]{"curios"}),
 
             Map.entry("copycats.MixinBlockRendererColorContext", new String[]{"embeddium"}),
+
+            Map.entry("citadel.MixinAdvancedModelBoxFastRender", new String[]{"embeddium"}),
+
+            Map.entry("citadel.MixinBasicModelPartFastRender", new String[]{"embeddium"}),
 
             Map.entry("ironsspellbooks.MixinIsbCurioEquipCheck", new String[]{"curios"})
     );
