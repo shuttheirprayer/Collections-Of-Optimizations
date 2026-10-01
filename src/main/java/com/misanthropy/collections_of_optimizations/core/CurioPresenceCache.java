@@ -39,7 +39,7 @@ public final class CurioPresenceCache {
         invalidate(event.getEntity());
     }
 
-    private static void invalidate(LivingEntity entity) {
+    public static void invalidate(LivingEntity entity) {
         if (entity instanceof CurioPresenceHolder holder) {
             holder.coo$invalidateCurioPresence();
         }

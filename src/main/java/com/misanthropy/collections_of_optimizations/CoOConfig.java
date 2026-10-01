@@ -71,6 +71,7 @@ public final class CoOConfig {
 
     public static boolean saintsdragonsSkipRedundantBoneTracking = true;
     public static boolean saintsdragonsCacheShakeScan = true;
+    public static boolean saintsdragonsCacheSkyfallScan = true;
     public static boolean saintsdragonsDrawHudOncePerFrame = true;
 
     public static boolean immediatelyfastSingleBufferLookup = true;
@@ -95,10 +96,14 @@ public final class CoOConfig {
     public static boolean mowziesmobsReuseKnownLeader = true;
     public static boolean mahoutsukaiMemoAllEntities = true;
     public static boolean geckolibReuseBoneQueues = true;
+    public static boolean geckolibPrimitiveEasing = true;
     public static int fancymenuInternetProbeSeconds = 600;
     public static boolean vanillaMemoBiomeFogColour = true;
     public static boolean vanillaMemoSkyColourPerTick = true;
     public static boolean vanillaSkipEmptyBeardifier = true;
+    public static boolean vanillaReuseNoiseChunkDensityGraph = true;
+    public static boolean vanillaShareSurfaceEstimates = true;
+    public static boolean vanillaPaceFramesBeforeSwap = false;
 
 
     public static boolean oculusSkipSignTextInShadowPass = true;
@@ -148,6 +153,9 @@ public final class CoOConfig {
     public static boolean brutalityFixDoubleTickCounters = true;
     public static int brutalityProximityScanInterval = 4;
     public static boolean brutalityFastArmorSetCheck = true;
+    public static boolean brutalitySealTypeNoThrow = true;
+    public static boolean brutalitySkipUnwatchedEffectSync = true;
+    public static boolean brutalitySkipIdleBlightScan = true;
 
     public static boolean mutantmonstersLeanSpawnLimitScan = true;
     public static boolean mutantmonstersSkipEmptyShoulderLookup = true;
@@ -372,10 +380,14 @@ public final class CoOConfig {
     public static boolean alexsmobsSkipCreeperAvoidGoals = true;
     public static int alexsmobsSpiderFlyScanInterval = 10;
     public static boolean alexsmobsReleaseLevelMaps = true;
+    public static boolean alexsmobsCrowScanPrecheck = true;
 
     public static boolean alexscavesMemoRareBiomeQuads = true;
     public static boolean alexscavesMemoClimateSample = true;
     public static boolean alexscavesCacheShakeScan = true;
+    public static boolean alexscavesSingleMagnetQuery = true;
+
+    public static boolean architecturyDirectEventDispatch = true;
 
     public static boolean adastraMemoPlanetDefaults = true;
 
@@ -951,6 +963,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Reuse each animation controller's bone keyframe queues between frames instead of allocating a fresh set for every bone on every frame. Client.")
                 .define("reuseBoneQueues", true), v -> geckolibReuseBoneQueues = v);
+        gate(builder
+                .comment("Evaluate GeckoLib's own easing curves on primitive doubles instead of boxing a Double into and out of every curve call. Every animated bone runs this on every frame. Easing functions from other mods keep the boxed call.")
+                .define("primitiveEasing", true), v -> geckolibPrimitiveEasing = v);
         builder.pop();
 
         builder.comment("Saint's Dragons patches.").push("saintsdragons");
@@ -960,6 +975,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Look for screen shaking dragons once per tick instead of once per frame.")
                 .define("cacheShakeScan", true), v -> saintsdragonsCacheShakeScan = v);
+        gate(builder
+                .comment("Look for Ignivorus skyfall dragons once per tick instead of walking every loaded entity several times per frame. Client.")
+                .define("cacheSkyfallScan", true), v -> saintsdragonsCacheSkyfallScan = v);
         gate(builder
                 .comment("Draw the dragon riding HUD (breath meters, ride health bar, melee mode toast) once per frame instead of once after every HUD overlay. Client.")
                 .define("drawHudOncePerFrame", true), v -> saintsdragonsDrawHudOncePerFrame = v);
@@ -1173,6 +1191,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Answer 'is this entity wearing a full Noir set' from the chest slot before walking the armour iterator. The renderer asks it twice per living entity per frame and the mob visibility event asks it again for every entity a mob can see, and almost every answer is no.")
                 .define("fastArmorSetCheck", true), v -> brutalityFastArmorSetCheck = v);
+        gate(builder
+                .comment("Read the seal type capability without throwing. Brutality saves it as boosterType but loads seal_type, so every entity load and every capability sync threw and caught an IllegalArgumentException to land on NONE. The result is still NONE.")
+                .define("sealTypeNoThrow", true), v -> brutalitySealTypeNoThrow = v);
+        gate(builder
+                .comment("Skip the capability sync packet Brutality broadcasts to every player whenever any mob gains, loses or runs out of any effect, when the mob is not a player and no player has its chunk loaded.")
+                .define("skipUnwatchedEffectSync", true), v -> brutalitySkipUnwatchedEffectSync = v);
+        gate(builder
+                .comment("Skip the 50 block miracle blight particle scan, run twice every client tick, while no entity anywhere is miracle blighted. Client.")
+                .define("skipIdleBlightScan", true), v -> brutalitySkipIdleBlightScan = v);
         builder.pop();
 
         builder.comment("Mutant Monsters patches.").push("mutantmonsters");
@@ -1987,6 +2014,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Release the level keyed maps Alex's Mobs never clears, when a server stops.")
                 .define("releaseLevelMaps", true), v -> alexsmobsReleaseLevelMaps = v);
+        gate(builder
+                .comment("Skip the crow crop-circling and pumpkin-avoid block scans (up to 67k block reads each) when no chunk section in range can hold a matching block.")
+                .define("crowScanPrecheck", true), v -> alexsmobsCrowScanPrecheck = v);
         builder.pop();
 
         builder.comment("Alex's Caves patches.").push("alexscaves");
@@ -1999,6 +2029,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Look for screen shaking mobs once per tick instead of once per frame.")
                 .define("cacheShakeScan", true), v -> alexscavesCacheShakeScan = v);
+        gate(builder
+                .comment("Find nearby attracting and repelling magnets with one point of interest search instead of two for every magnetic entity on every tick. Server.")
+                .define("singleMagnetQuery", true), v -> alexscavesSingleMagnetQuery = v);
+        builder.pop();
+
+        builder.comment("Architectury API patches.").push("architectury");
+        gate(builder
+                .comment("Call Architectury event listeners through reflection directly instead of building a new MethodHandle for every listener on every event. Tick, entity and player events all go through this.")
+                .define("directEventDispatch", true), v -> architecturyDirectEventDispatch = v);
         builder.pop();
 
         builder.comment("Ad Astra patches.").push("adastra");
@@ -2089,6 +2128,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Give NoiseChunk the empty beardifier marker when the chunk has no structure pieces or junctions to adapt terrain to, including the enhanced lists YUNG's API, Moog's Structure Lib and Integrated API keep. Beardifier.compute is called per noise cell and four mods inject into it, boxing a Double per call, so most chunks paid for structures they do not have. Server.")
                 .define("skipEmptyBeardifier", true), v -> vanillaSkipEmptyBeardifier = v);
+        gate(builder
+                .comment("Map each shared piece of the terrain density graph once per NoiseChunk instead of once per reference, and reuse the final density graph instead of rebuilding and rehashing it a second time. Every generated chunk and every structure height query builds a NoiseChunk. The resulting graph is the same one vanilla builds. Skipped for world generators whose density graph has little shared structure, where the bookkeeping would cost more than it saves. Server.")
+                .define("reuseNoiseChunkDensityGraph", true), v -> vanillaReuseNoiseChunkDensityGraph = v);
+        gate(builder
+                .comment("Share the preliminary surface height of a column between NoiseChunks of the same world generator instead of rescanning it in every NoiseChunk. Only used where the result cannot depend on the NoiseChunk: no terrain blending, and only density function types whose output is known to depend on position alone. Server.")
+                .define("shareSurfaceEstimates", true), v -> vanillaShareSurfaceEstimates = v);
+        gate(builder
+                .comment("Run the FPS limiter just before the frame is presented instead of just after, so the time spent waiting absorbs uneven frame work and frames are presented at a steadier rhythm. Only acts while an FPS cap is set and VSync is off. Changes frame timing, so it is off by default. Client.")
+                .define("paceFramesBeforeSwap", false), v -> vanillaPaceFramesBeforeSwap = v);
         fastBiomeBlendValue = gate(builder
                 .comment("Blend biome colours from a cached, incrementally summed grid instead of resampling the biome under every block in the blend square. Vanilla resamples the full square for every block, which is up to 225 biome lookups per block at the default blend radius. Output is identical.")
                 .define("fastBiomeBlend", true), v -> vanillaFastBiomeBlend = v);

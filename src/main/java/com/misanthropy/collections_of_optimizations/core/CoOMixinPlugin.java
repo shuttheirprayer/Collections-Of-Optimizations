@@ -81,6 +81,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("macabre", "macabre"),
             Map.entry("alexsmobs", "alexsmobs"),
             Map.entry("alexscaves", "alexscaves"),
+            Map.entry("architectury", "architectury"),
             Map.entry("adastra", "ad_astra"),
             Map.entry("zeta", "zeta"),
             Map.entry("quark", "quark"),

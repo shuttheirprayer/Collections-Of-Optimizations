@@ -5,6 +5,8 @@ import net.minecraftforge.fml.loading.LoadingModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.soulsweaponry.util.WeaponUtil;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -17,6 +19,27 @@ public abstract class MixinWeaponUtilModPresence {
 
     @Unique
     private static final ConcurrentHashMap<String, Optional<ModFileInfo>> coo$modFiles = new ConcurrentHashMap<>();
+
+    @Unique
+    private static byte coo$fightMod;
+
+    @Shadow(remap = false)
+    public static boolean isModLoaded(String modId) {
+        throw new AssertionError();
+    }
+
+    @Overwrite(remap = false)
+    public static boolean isFightModLoaded() {
+        if (!CoOConfig.soulsweaponsCacheModPresence) {
+            return isModLoaded("bettercombat") || isModLoaded("epicfight");
+        }
+        byte state = coo$fightMod;
+        if (state == 0) {
+            state = isModLoaded("bettercombat") || isModLoaded("epicfight") ? (byte) 1 : (byte) 2;
+            coo$fightMod = state;
+        }
+        return state == 1;
+    }
 
     @Redirect(
             method = "isModLoaded",
