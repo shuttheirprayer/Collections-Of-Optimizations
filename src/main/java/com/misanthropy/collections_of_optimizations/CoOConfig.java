@@ -245,6 +245,7 @@ public final class CoOConfig {
     public static boolean bossesriseLeanVfxScan = true;
     public static boolean soulsweaponsLeanDespawnTimer = true;
     public static boolean soulsweaponsCacheModPresence = true;
+    public static boolean soulsweaponsSkipIdlePostureMax = true;
     public static boolean konweaponSkipItemAnimationCopies = true;
     public static boolean immersiveaircraftBatchOverlay = true;
     public static boolean ftbchunksSkipHiddenMinimapWork = true;
@@ -329,6 +330,33 @@ public final class CoOConfig {
     public static boolean goetyCacheShakeScan = true;
 
     public static boolean cataclysmCacheShakeScan = true;
+    public static boolean cataclysmSkipIdleAnimate = true;
+    public static boolean cataclysmReuseLayerPose = true;
+    public static boolean cataclysmLeanPoseReset = true;
+    public static boolean cataclysmCacheCicleTexture = true;
+    public static boolean cataclysmCacheTentacleLight = true;
+    public static boolean cataclysmPruneLightningRenders = true;
+    public static boolean cataclysmScanOnlyOnDamageTicks = true;
+    public static boolean cataclysmSkipClientBeamEntityScan = true;
+    public static boolean cataclysmSkipEmpScanWithoutEmp = true;
+    public static boolean cataclysmTentacleDistanceBeforeSight = true;
+    public static boolean cataclysmUnsyncedMissileFuse = true;
+    public static boolean cataclysmSandstormSoundCleanup = true;
+    public static boolean cataclysmCacheCapabilities = true;
+    public static boolean cataclysmShareItemRenderer = true;
+    public static boolean cataclysmBossMusicOnChange = true;
+    public static boolean cataclysmFastStructureCheck = true;
+    public static boolean cataclysmBasaltPrecheck = true;
+    public static boolean cataclysmSkipIdleArmPoseEvent = true;
+    public static boolean cataclysmQuietTentacleLoad = true;
+    public static boolean cataclysmLazyMonstrousHelmScan = true;
+    public static boolean cataclysmLeanDeeplingSwimRefresh = true;
+    public static boolean cataclysmDeeplingRideCheckFirst = true;
+    public static boolean cataclysmSwimCheckFirst = true;
+    public static boolean cataclysmLeanMonstrosityBlockBreaking = true;
+    public static boolean cataclysmLeanRiftBlockBreaking = true;
+    public static boolean cataclysmSkipServerLegSolver = true;
+    public static boolean cataclysmCacheHomeDimension = true;
     public static boolean dodosmobsCacheShakeScan = true;
     public static boolean eeeabsmobsCacheShakeScan = true;
     public static boolean fromtheshadowsCacheShakeScan = true;
@@ -414,6 +442,7 @@ public final class CoOConfig {
     public static boolean vanillaLeanTrackerDelta = true;
     public static boolean vanillaCacheBiomeQuartLookups = true;
     public static boolean vanillaMemoCameraFluid = true;
+    public static boolean vanillaIndexModFiles = true;
     public static boolean vanillaMemoSkyColour = true;
     public static boolean vanillaPurgeGhostPlayers = true;
     public static boolean vanillaFastBiomeBlend = true;
@@ -737,6 +766,11 @@ public final class CoOConfig {
     public static boolean lionfishapiLeanFluidCollision = true;
     public static boolean lionfishapiSkipIdleFluidRenderEvent = true;
     public static boolean lionfishapiCacheModelDescendants = true;
+    public static boolean lionfishapiFastModelRender = true;
+    public static boolean lionfishapiReuseBoxRotations = true;
+    public static boolean lionfishapiCacheModelParts = true;
+    public static boolean lionfishapiLeanModelAnimator = true;
+    public static boolean lionfishapiLeanKeyframeAnimation = true;
 
     public static boolean tomeofwondersSafeSquillSchoolWorldgen = true;
     public static boolean tomeofwondersServerOnlyWhirligigPower = true;
@@ -1500,6 +1534,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember which mods are installed instead of asking the loader again on every call. Soulslike Weaponry asks whether Better Combat or Epic Fight is installed from inside its Player#getItemBySlot hook, so it runs for every equipment lookup on every player.")
                 .define("cacheModPresence", true), v -> soulsweaponsCacheModPresence = v);
+        gate(builder
+                .comment("Skip the max posture calculation for mobs with no posture damage. Soulslike Weaponry works out every mob's max posture from its scaled hitbox every tick, but a mob at 0 posture can never break.")
+                .define("skipIdlePostureMax", true), v -> soulsweaponsSkipIdlePostureMax = v);
         builder.pop();
 
         builder.comment("Kind of Nice Weapon patches.").push("konweapon");
@@ -1881,6 +1918,87 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the camera shake entity scan once per tick instead of once per frame. Client.")
                 .define("cacheShakeScan", true), v -> cataclysmCacheShakeScan = v);
+        gate(builder
+                .comment("Skip the keyframe pass of Ignis, the Leviathan, the Ancient Remnant, the Ender Guardian and the Amethyst Crab while they are not attacking. Their animation code is so large that Java never compiles it, so every frame it walks through hundreds of attack keyframes one by one just to find out that none of them is playing. With this on, when the boss is between attacks it still resets its pose exactly as before and then stops, because every one of those keyframe steps does nothing without an attack playing. Idle movement, head turning and breathing are done elsewhere and are not touched. Client. Turn it off for stock behaviour.")
+                .define("skipIdleAnimate", true), v -> cataclysmSkipIdleAnimate = v);
+        gate(builder
+                .comment("Stop the Ignis and Ignited Revenant shield layers, and the Harbinger's powered shield, working out the whole boss pose a second time each frame. Ignis and the Revenant keep a second copy of their model just for the shield and ran the full animation on it again with the same inputs, and the Harbinger re-ran its animation on its own model. With this on the shield copy takes the pose the main model already worked out, and the Harbinger keeps the pose it already has, so the shields sit and move exactly as before. Client. Turn it off for stock behaviour.")
+                .define("reuseLayerPose", true), v -> cataclysmReuseLayerPose = v);
+        gate(builder
+                .comment("Reset the pose of Scylla, the Maledictus, the Netherite Monstrosity, the Aptrgangr, the Draugrs and the other newer Cataclysm models with a plain loop. Each of them rebuilt a chain of Java streams over every part of the model, every frame, only to put each part back to its starting pose. With this on the same parts are reset the same way by walking the model directly. Client. Turn it off for stock behaviour.")
+                .define("leanPoseReset", true), v -> cataclysmLeanPoseReset = v);
+        gate(builder
+                .comment("Stop the Maledictus' hand circles creating their texture name twice every frame. With this on one shared name is used, which finds the same render type. Client. Turn it off for stock behaviour.")
+                .define("cacheCicleTexture", true), v -> cataclysmCacheCicleTexture = v);
+        gate(builder
+                .comment("Look up the light under the Leviathan's tongue and the Tidal Claws tentacle once per block instead of once per segment. Both are drawn as up to 128 short segments, each reading the light of the block it is in, and most of them sit in the same few blocks. With this on a block's light is read once per draw and reused for the other segments in it, so the tongue and tentacle are lit exactly the same. Client. Turn it off for stock behaviour.")
+                .define("cacheTentacleLight", true), v -> cataclysmCacheTentacleLight = v);
+        gate(builder
+                .comment("Fix a memory leak in Cataclysm's lightning effects. The Boltstrike, the death laser beam, the Maledictus hand lightning and Scylla's anchor and eye sparks remember a lightning effect for every entity they ever drew, and that memory holds on to the entity itself, so every bolt and beam from every fight stays in memory, and after you change worlds it keeps the whole old world loaded too. With this on, before drawing, the effects of entities that are gone or in another world are forgotten. Nothing that is still on screen changes. The one difference is a boss or bolt that leaves your view distance and comes back: stock would also keep drawing the leftover lightning of its earlier visit next to the new one. Client. Turn it off for stock behaviour.")
+                .define("pruneLightningRenders", true), v -> cataclysmPruneLightningRenders = v);
+        gate(builder
+                .comment("Only search for victims on the ticks where Cataclysm's area attacks can actually hurt something. The Sandstorm, Ignis's Flame Strike, the Ashen Breath, the Earthquake shockwave, the Phantom Halberd and the Void Rune each search the area around them every tick (the Sandstorm and Flame Strike on your client too), then skip every mob they found unless it is one of their damage ticks, which is every 3rd, 5th or 10th tick. With this on the search is skipped on the ticks where nothing could be hit, so they hit the same mobs on the same ticks for the same damage. Both sides. Turn it off for stock behaviour.")
+                .define("scanOnlyOnDamageTicks", true), v -> cataclysmScanOnlyOnDamageTicks = v);
+        gate(builder
+                .comment("Stop the Harbinger's and Prowler's death laser and the baby Leviathan's mini abyss blast searching for mobs along the beam on your client. Every tick the beam is on, your client did the same mob search as the server and threw the list away, because only the server deals the damage. With this on your client still traces the beam against blocks, so the beam and its impact sparks look exactly the same. Client. Turn it off for stock behaviour.")
+                .define("skipClientBeamEntityScan", true), v -> cataclysmSkipClientBeamEntityScan = v);
+        gate(builder
+                .comment("Stop the death laser reading 216 blocks around its impact point every tick looking for an EMP block when there is none nearby. With this on it first checks the list of block types each 16x16x16 piece of the world holds, and only reads the blocks one by one when an EMP block could be there, so EMPs are switched off exactly as before. Server. Turn it off for stock behaviour.")
+                .define("skipEmpScanWithoutEmp", true), v -> cataclysmSkipEmpScanWithoutEmp = v);
+        gate(builder
+                .comment("Make the Tidal Claws tentacle compare distances before tracing a line of sight when it picks its next target to chain to. It traced a line to every candidate, even ones further away than the best target already found, which can never be picked. With this on those are skipped without the trace, so the tentacle picks the same target. Server. Turn it off for stock behaviour.")
+                .define("tentacleDistanceBeforeSight", true), v -> cataclysmTentacleDistanceBeforeSight = v);
+        gate(builder
+                .comment("Stop every Wither Homing Missile sending an update packet to every nearby player every tick. The missile counts down its fuse in data that is synced to clients, so each tick of the countdown went out over the network, but nothing on the client ever looks at the fuse. With this on the server keeps counting down the same way and saves it the same way, it just does not send it. Server. Turn it off for stock behaviour.")
+                .define("unsyncedMissileFuse", true), v -> cataclysmUnsyncedMissileFuse = v);
+        gate(builder
+                .comment("Fix a small memory leak from the Ancient Remnant's sandstorms. Your client keeps each sandstorm's wind sound in a list and only removes it when the storm runs out of time by itself, so a storm that vanishes early (the boss died, or you walked away) stayed in that list along with the storm and the whole world it was in, even after you left that world. With this on the entry is removed when the storm is removed. The sound already stops at that moment, so nothing you hear changes. Client. Turn it off for stock behaviour.")
+                .define("sandstormSoundCleanup", true), v -> cataclysmSandstormSoundCleanup = v);
+        gate(builder
+                .comment("Stop every living thing in the game paying for Cataclysm's ability checks every tick. Cataclysm runs a tick handler on every mob, animal, villager and player, on both the server and your client, that looks up three of its abilities (the Tidal Claws hook, the shield charge and the Soul Render rush) and asks for each one twice, which walks the entity's whole list of attached mod data six times per entity per tick, even though those abilities are idle more than 99.9% of the time. With this on each entity remembers where its Cataclysm data lives the first time it is asked for, and every later lookup is a single field read. The same data object comes back, so every ability behaves exactly as before, and dead or removed entities still get nothing. Turn it off for stock behaviour.")
+                .define("cacheCapabilities", true), v -> cataclysmCacheCapabilities = v);
+        gate(builder
+                .comment("Stop Cataclysm building a whole new item renderer every time one of its 3D items is drawn. Shields, gauntlets, spears, bows, altars and the other modelled items each made a fresh renderer per draw, which creates seven block entities (firing seven Forge capability events), re-bakes three skull models and builds eight texture names, every frame, for your hotbar, your hand, other players' hands, item frames, dropped items and every slot of an open inventory or JEI. With this on one renderer is made and reused, and it re-bakes its skulls when resource packs reload just like before, so the items look exactly the same. Client.")
+                .define("shareItemRenderer", true), v -> cataclysmShareItemRenderer = v);
+        gate(builder
+                .comment("Stop every Cataclysm boss sending a stop the music packet to everyone near it twenty times a second. Each boss with a theme sends either play or stop to all players within tracking range every single tick, even while it is asleep in its arena, so an idle boss floods nearby clients with stop messages that do nothing after the first one. With this on the stop message is sent once each time the music should end and repeats are skipped, which changes nothing a client hears because a client only reacts to stop for the boss it is currently playing, and only a play message can make a boss that. Play messages still go out every tick during the fight exactly as before. Server.")
+                .define("bossMusicOnChange", true), v -> cataclysmBossMusicOnChange = v);
+        gate(builder
+                .comment("Make Cataclysm's no ores, lakes, geodes, lichen, magma or basalt inside my structures check cheap when there is no Cataclysm structure nearby. Cataclysm checks every ore vein, glow lichen, sculk vein, lake, geode and delta that world generation places, hundreds per chunk, and every check built throwaway lists for each of its structures even though the chunk almost never has a reference to them. With this on a chunk with no reference to the structure answers no structure straight away, which is the answer the full check gives, and chunks that do have one go through the original check. World generation.")
+                .define("fastStructureCheck", true), v -> cataclysmFastStructureCheck = v);
+        gate(builder
+                .comment("Let vanilla reject a basalt column spot before Cataclysm's structure check runs. In basalt deltas the column feature probes thousands of spots per chunk, and Cataclysm checks for its Nether structures on every probe before vanilla's own one block test, even though its check can only ever turn the answer into no. With this on vanilla's test runs first and a spot it rejects is rejected right away. Spots vanilla accepts still go through Cataclysm's check, so columns generate exactly as before. World generation.")
+                .define("basaltPrecheck", true), v -> cataclysmBasaltPrecheck = v);
+        gate(builder
+                .comment("Stop Cataclysm firing an arm pose event twice per frame for every player, zombie, skeleton and other humanoid on screen. The event exists so that holding two Annihilators or two Immolators, or two Obliterators from Travel Optics, can raise both arms while using them, and every listener in the pack only acts when the entity is using an item with something in its offhand. With this on the event is only built and sent in that case, so those poses look exactly the same. Client.")
+                .define("skipIdleArmPoseEvent", true), v -> cataclysmSkipIdleArmPoseEvent = v);
+        gate(builder
+                .comment("Stop an exception being thrown and caught every time any living entity is loaded. Cataclysm's Tidal Claws data reads a saved tentacle id that is almost never there, and reading a missing id throws an error that is then quietly swallowed, on every chunk load, login and dimension change for every mob in it. With this on the read is skipped when the id is not saved, and everything else loads exactly as before. Turn it off for stock behaviour.")
+                .define("quietTentacleLoad", true), v -> cataclysmQuietTentacleLoad = v);
+        gate(builder
+                .comment("Only search for nearby mobs when the Monstrous Helm can actually knock them back. While you wear the helm it searched a box around you every tick and then threw the result away unless you were at half health or less and the ability was off cooldown. With this on the search only happens in that case, so the knockback hits exactly the same mobs. Both sides.")
+                .define("lazyMonstrousHelmScan", true), v -> cataclysmLazyMonstrousHelmScan = v);
+        gate(builder
+                .comment("Stop Deeplings re-checking their swimming size every tick when nothing changed. Every Deepling, Angler, Brute, Priest and Warlock tested a collision box around itself and then rebuilt its hitbox and posted a size event every single tick, on both sides, even while it stayed swimming or stayed walking. With this on that work only happens when the swim state still has to flip or the stored size no longer matches, so Deeplings switch between swimming and walking at exactly the same moments. Both sides. Turn it off for stock behaviour.")
+                .define("leanDeeplingSwimRefresh", true), v -> cataclysmLeanDeeplingSwimRefresh = v);
+        gate(builder
+                .comment("Let Deeplings skip their search for a Coralssus to ride when they cannot ride anyway. Each Deepling's ride goal searched a 30 block box for Coralssus several times a second before checking that it was not already riding and not drying out, which is almost always the case. With this on those two checks come first, so they mount exactly the same Coralssus. Server. Turn it off for stock behaviour.")
+                .define("deeplingRideCheckFirst", true), v -> cataclysmDeeplingRideCheckFirst = v);
+        gate(builder
+                .comment("Let the Coral Golem and Coralssus skip a collision test whose answer cannot matter. Every tick they tested a collision box and only then looked at whether they were already in the swim state they were about to set. With this on the swim state is looked at first, so they switch between swimming and walking at exactly the same moments. Both sides. Turn it off for stock behaviour.")
+                .define("swimCheckFirst", true), v -> cataclysmSwimCheckFirst = v);
+        gate(builder
+                .comment("Make the Netherite Monstrosity's walking block breaking cheaper. While it walks, both the current and the old Monstrosity scan every block around their body every tick it is allowed to break things, creating new positions and looking up a block entity at every spot, even air. With this on the scan reuses one position and only looks up a block entity where the original actually uses it, so the same blocks break and drop the same way. Server. Turn it off for stock behaviour.")
+                .define("leanMonstrosityBlockBreaking", true), v -> cataclysmLeanMonstrosityBlockBreaking = v);
+        gate(builder
+                .comment("Make the Leviathan's Dimensional Rift block breaking much cheaper. A rift scans a 31 by 31 by 31 cube, almost 30000 blocks, every tick for its whole 15 second life, reading two blocks, a block entity and creating two positions at every spot. With this on empty air chunk sections are skipped outright, each block is read once instead of twice, and the block entity is only looked up where it decides anything, so exactly the same blocks are torn out in the same order with the same random rolls. Server. Turn it off for stock behaviour.")
+                .define("leanRiftBlockBreaking", true), v -> cataclysmLeanRiftBlockBreaking = v);
+        gate(builder
+                .comment("Stop the Ancient Remnant and the Clawdian working out where their feet should land on the server. Their leg solver probes the blocks under each leg every tick so the model can plant its feet, and it ran on the server too, where nothing ever reads the result. With this on it only runs on the client, so the feet look exactly the same. Server. Turn it off for stock behaviour.")
+                .define("skipServerLegSolver", true), v -> cataclysmSkipServerLegSolver = v);
+        gate(builder
+                .comment("Remember which dimension a Cataclysm boss calls home. Every tick an idle boss checks whether it should walk home, and every time it re-parses its saved dimension name and looks the dimension key up again. With this on the parsed name is kept until the saved name changes, so bosses return home exactly as before. Server. Turn it off for stock behaviour.")
+                .define("cacheHomeDimension", true), v -> cataclysmCacheHomeDimension = v);
         builder.pop();
 
         builder.comment("Dodo's Mobs patches.").push("dodosmobs");
@@ -2116,6 +2234,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Work out what fluid the camera is in once per camera position instead of once per caller.")
                 .define("memoCameraFluid", true), v -> vanillaMemoCameraFluid = v);
+        gate(builder
+                .comment("Index each mod jar's assets and data once so a lookup for a file the jar does not have is answered without touching the jar. Every model, blockstate and texture lookup asks every mod sharing a namespace, and each miss inside a jar throws three exceptions.")
+                .define("indexModFiles", true), v -> vanillaIndexModFiles = v);
         gate(builder
                 .comment("Work out the sky colour once per camera position per frame. Fog setup, the sky renderer and shader uniform packs each ask for it separately and every call samples 27 biomes.")
                 .define("memoSkyColour", true), v -> vanillaMemoSkyColour = v);
@@ -3112,6 +3233,21 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember which model part has which name instead of searching for it over and over. Models built on Lionfish API, which includes a good part of L_Ender's Cataclysm, play their keyframe animations by looking every animated bone up by name, every frame, for every one of those mobs on screen. The lookup builds a brand new list of every part of the model, streams through it and compares names until it finds a match, so a boss with eighty parts and forty animated bones does a few thousand string compares and forty throwaway lists per frame just to find parts that never change. The library even declares a field for caching this and then never uses it. With this on each model keeps its own small name to part table, filled the first time a name is asked for, and hands back the same part the search would have found, the first one with that name. Client side only. Turn it off for stock behaviour if an addon model ever swaps its parts out after it is built.")
                 .define("cacheModelDescendants", true), v -> lionfishapiCacheModelDescendants = v);
+        gate(builder
+                .comment("Draw Lionfish API model boxes (L_Ender's Cataclysm bosses, mobs and 3D items) through Embeddium's bulk vertex writer, the same path the Citadel option uses. Stock creates a new vector for every face and every corner of every box and pushes each corner through the slow one vertex at a time path, every frame. With this on each box's corners are worked out once and then written in bulk with the same math, so the result is the same vertices. The only possible difference is that a corner landing exactly on zero may be written as plus zero instead of minus zero, which is the same point. Client. Turn it off for stock behaviour.")
+                .define("fastModelRender", true), v -> lionfishapiFastModelRender = v);
+        gate(builder
+                .comment("Reuse one rotation object when Lionfish API turns a model box, instead of creating up to three new ones per box per frame. The rotation is filled with exactly the same values, so boxes turn exactly the same. Client. Turn it off for stock behaviour.")
+                .define("reuseBoxRotations", true), v -> lionfishapiReuseBoxRotations = v);
+        gate(builder
+                .comment("Remember the list of parts of each Cataclysm model instead of building a new list every frame to reset the model's pose. Every Cataclysm model always lists the same fixed parts in the same order, so the reset is exactly the same. Models from other mods built on Lionfish API are left alone. Client. Turn it off for stock behaviour.")
+                .define("cacheModelParts", true), v -> lionfishapiCacheModelParts = v);
+        gate(builder
+                .comment("Make Lionfish API's attack animation steps reuse their bookkeeping. Every step of an attack animation copied one table of part movements into another and threw away and recreated a movement object for every animated part, every frame, for every boss mid attack. With this on the two tables are swapped instead of copied and the movement objects are cleared and reused, so each part moves by exactly the same amounts. Client. Turn it off for stock behaviour.")
+                .define("leanModelAnimator", true), v -> lionfishapiLeanModelAnimator = v);
+        gate(builder
+                .comment("Play Lionfish API keyframe animations (Coralssus, Wadjet and other newer Cataclysm models) with plain loops instead of building a pair of throwaway functions per animated bone per frame. Same keyframe search, same math, same order, so the animation is exactly the same. Client. Turn it off for stock behaviour.")
+                .define("leanKeyframeAnimation", true), v -> lionfishapiLeanKeyframeAnimation = v);
         builder.pop();
 
         builder.comment("Tome of Wonders patches.").push("tomeofwonders");

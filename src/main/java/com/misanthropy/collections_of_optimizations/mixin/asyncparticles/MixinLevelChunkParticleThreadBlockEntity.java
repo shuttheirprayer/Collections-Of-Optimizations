@@ -1,6 +1,8 @@
 package com.misanthropy.collections_of_optimizations.mixin.asyncparticles;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import forge.fun.qu_an.minecraft.asyncparticles.client.config.MixinConfigHelper;
 import forge.fun.qu_an.minecraft.asyncparticles.client.core.Diagnostic;
 import forge.fun.qu_an.minecraft.asyncparticles.client.util.ThreadUtil;
@@ -16,7 +18,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
@@ -33,12 +34,12 @@ public abstract class MixinLevelChunkParticleThreadBlockEntity {
         return this.level.isClientSide && ThreadUtil.isOnParticleThread();
     }
 
-    @Redirect(
+    @WrapOperation(
             method = "getBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/chunk/LevelChunk$EntityCreationType;)Lnet/minecraft/world/level/block/entity/BlockEntity;",
             at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0)
     )
-    private Object coo$keepPendingOnParticleThread(Map<?, ?> pending, Object pos) {
-        return coo$particleThreadRead() ? null : pending.remove(pos);
+    private Object coo$keepPendingOnParticleThread(Map<?, ?> pending, Object pos, Operation<Object> original) {
+        return coo$particleThreadRead() ? null : original.call(pending, pos);
     }
 
     @ModifyExpressionValue(

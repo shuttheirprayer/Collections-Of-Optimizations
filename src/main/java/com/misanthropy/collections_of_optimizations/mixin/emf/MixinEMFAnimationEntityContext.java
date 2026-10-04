@@ -4,14 +4,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
+import traben.entity_model_features.models.animation.math.EMFMath;
 
 import java.util.Map;
 
-@Pseudo
-@Mixin(targets = "traben.entity_model_features.models.animation.EMFAnimationEntityContext",
-        remap = false)
+@Mixin(value = EMFMath.class, remap = false)
 public abstract class MixinEMFAnimationEntityContext {
 
     @WrapOperation(

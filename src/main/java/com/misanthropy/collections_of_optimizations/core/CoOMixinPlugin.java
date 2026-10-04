@@ -236,6 +236,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "iafdragonfix", 2
     );
 
+    private static final Map<String, String> GROUP_EXACT_VERSION = Map.of(
+            "cataclysm", "3.16",
+            "lionfishapi", "2.8"
+    );
+
     private static final Map<String, String[]> GROUP_CONFLICTS = Map.of(
             "geckolib", new String[]{"gbf", "geckolib_animation_optimizer"},
 
@@ -309,6 +314,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, Boolean> LOADED_CACHE = new HashMap<>();
     private static final Map<String, Integer> MAJOR_CACHE = new HashMap<>();
+    private static final Map<String, String> VERSION_CACHE = new HashMap<>();
 
     @Override
     public void onLoad(String mixinPackage) {
@@ -358,6 +364,14 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
                             "iceandfire".equals(modId)
                                     ? " (Ice and Fire: Community Edition is not supported - use the original Ice and Fire mod to enable these optimizations)"
                                     : "");
+                }
+                return false;
+            }
+            String exact = GROUP_EXACT_VERSION.get(group);
+            if (modId != null && exact != null && !exact.equals(modVersion(modId))) {
+                if (WARNED_GROUPS.add(group)) {
+                    LOGGER.warn("Disabling '{}' optimizations: they were verified against '{}' {} but {} is installed",
+                            group, modId, exact, modVersion(modId));
                 }
                 return false;
             }
@@ -427,28 +441,37 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             return cached;
         }
         int major = Integer.MAX_VALUE;
+        String version = modVersion(modId);
+        int end = 0;
+        while (end < version.length() && Character.isDigit(version.charAt(end))) {
+            end++;
+        }
+        if (end > 0) {
+            major = Integer.parseInt(version.substring(0, Math.min(end, 9)));
+        }
+        MAJOR_CACHE.put(modId, major);
+        return major;
+    }
+
+    private static synchronized String modVersion(String modId) {
+        String cached = VERSION_CACHE.get(modId);
+        if (cached != null) {
+            return cached;
+        }
+        String version = "";
         try {
             ModFileInfo modFile = LoadingModList.get().getModFileById(modId);
             if (modFile != null) {
                 for (IModInfo mod : modFile.getMods()) {
-                    if (!mod.getModId().equals(modId)) {
-                        continue;
+                    if (mod.getModId().equals(modId)) {
+                        version = mod.getVersion().toString();
+                        break;
                     }
-                    String version = mod.getVersion().toString();
-                    int end = 0;
-                    while (end < version.length() && Character.isDigit(version.charAt(end))) {
-                        end++;
-                    }
-                    if (end > 0) {
-                        major = Integer.parseInt(version.substring(0, Math.min(end, 9)));
-                    }
-                    break;
                 }
             }
-        } catch (Throwable throwable) {
-            major = Integer.MAX_VALUE;
+        } catch (Throwable ignored) {
         }
-        MAJOR_CACHE.put(modId, major);
-        return major;
+        VERSION_CACHE.put(modId, version);
+        return version;
     }
 }
