@@ -3,6 +3,8 @@ package com.misanthropy.collections_of_optimizations.core;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 
 public final class ArsAdditionsPortalScanCache {
 
@@ -16,6 +18,10 @@ public final class ArsAdditionsPortalScanCache {
     private static int lookups;
 
     private ArsAdditionsPortalScanCache() {
+    }
+
+    public static void register() {
+        MinecraftForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> clear());
     }
 
     private static int slot(long packed) {

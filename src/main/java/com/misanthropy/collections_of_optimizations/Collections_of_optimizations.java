@@ -5,6 +5,7 @@ import com.misanthropy.collections_of_optimizations.core.CacRedPandaTracker;
 import com.misanthropy.collections_of_optimizations.core.CameraShakeScanCache;
 import com.misanthropy.collections_of_optimizations.core.CoOEmbeddiumOptions;
 import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
+import com.misanthropy.collections_of_optimizations.core.ArsAdditionsPortalScanCache;
 import com.misanthropy.collections_of_optimizations.core.FdBossesPresence;
 import com.misanthropy.collections_of_optimizations.core.GeomancyGrandmasterTracker;
 import com.misanthropy.collections_of_optimizations.core.GhostPlayerPurge;
@@ -65,6 +66,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("gtbcs_geomancy_plus")) {
             GeomancyGrandmasterTracker.register();
+        }
+
+        if (ModList.get().isLoaded("ars_additions")) {
+            ArsAdditionsPortalScanCache.register();
         }
 
         if (ModList.get().isLoaded("fdbosses")) {

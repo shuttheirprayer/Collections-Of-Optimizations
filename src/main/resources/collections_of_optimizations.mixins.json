@@ -588,7 +588,6 @@
     "arsnouveau.MixinSkyTextureHandler",
     "geckolib.MixinBakedGeoModel",
     "emf.MixinEMFAnimationEntityContext",
-    "emf.MixinBlockEntityTypeName",
     "emf.MixinNBTMethod",
     "shouldersurfing.MixinCrosshairRenderer",
     "shouldersurfing.MixinDynamicOffsets",

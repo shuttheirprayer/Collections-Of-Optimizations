@@ -87,7 +87,6 @@ public final class CoOConfig {
 
     public static boolean emfDropZeroAngerEntries = true;
     public static boolean emfCacheNbtPerTick = true;
-    public static boolean emfCacheBlockEntityTypeName = true;
 
     public static boolean shouldersurfingSkipIdleCrosshairPick = true;
     public static double shouldersurfingCameraSweepStep = 0.125;
@@ -1063,9 +1062,6 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember each nbt() animation result per entity for one client tick instead of serialising the whole entity to NBT and regex matching it on every frame. Equipment or inventory changes show up at most one tick later. Client.")
                 .define("cacheNbtPerTick", true), v -> emfCacheNbtPerTick = v);
-        gate(builder
-                .comment("Remember BlockEntityType.toString() per type. EMF keys every block entity render on that string, and the vanilla type has no toString, so each render built a fresh class name plus hex hash. Client.")
-                .define("cacheBlockEntityTypeName", true), v -> emfCacheBlockEntityTypeName = v);
         builder.pop();
 
         builder.comment("Shoulder Surfing Reloaded patches.").push("shouldersurfing");
