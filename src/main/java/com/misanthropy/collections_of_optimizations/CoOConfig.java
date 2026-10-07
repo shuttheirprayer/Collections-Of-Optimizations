@@ -320,7 +320,6 @@ public final class CoOConfig {
     public static boolean goetyCacheCapabilityOptional = true;
     public static boolean goetySkipCapabilityFallback = true;
     public static boolean goetyCacheBrewEffects = true;
-    public static boolean goetyMemoAttributeModifiers = true;
     public static boolean goetyFastEmptyAllyCheck = true;
     public static boolean goetyFastCurioItemMiss = true;
     public static boolean goetyMemoCurioFilter = true;
@@ -1887,9 +1886,6 @@ public final class CoOConfig {
         gate(builder
                 .comment("Share one BrewEffects table between the Patchouli brewing page processors instead of walking every item and entity type in the registry for each page. Rebuilt after five seconds. Client.")
                 .define("cacheBrewEffects", true), v -> goetyCacheBrewEffects = v);
-        gate(builder
-                .comment("Memoise the constant attribute modifiers Goety rebuilds every tick.")
-                .define("memoAttributeModifiers", true), v -> goetyMemoAttributeModifiers = v);
         gate(builder
                 .comment("Answer SEHelper#isAlly without resolving anything when the player has no allies.")
                 .define("fastEmptyAllyCheck", true), v -> goetyFastEmptyAllyCheck = v);

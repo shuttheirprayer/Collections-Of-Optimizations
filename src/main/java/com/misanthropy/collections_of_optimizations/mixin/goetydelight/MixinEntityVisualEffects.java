@@ -13,20 +13,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinEntityVisualEffects {
 
     @Inject(
-            method = "add(Lnet/minecraft/resources/ResourceLocation;ILnet/minecraft/nbt/CompoundTag;)V",
+            method = "add(Lnet/minecraft/resources/ResourceLocation;ILnet/minecraft/nbt/CompoundTag;J)V",
             at = @At("RETURN"),
-            require = 0
+            require = 1
     )
-    private void coo$armOnAdd(ResourceLocation id, int durationTicks, CompoundTag data, CallbackInfo ci) {
+    private void coo$armOnAdd(ResourceLocation id, int durationTicks, CompoundTag data, long gameTime, CallbackInfo ci) {
         VisualEffectLatch.arm();
     }
 
     @Inject(
-            method = "deserializeNBT(Lnet/minecraft/nbt/CompoundTag;)V",
+            method = "deserializeNBT(Lnet/minecraft/nbt/CompoundTag;J)V",
             at = @At("RETURN"),
-            require = 0
+            require = 1
     )
-    private void coo$armOnDeserialize(CompoundTag tag, CallbackInfo ci) {
+    private void coo$armOnDeserialize(CompoundTag tag, long gameTime, CallbackInfo ci) {
         VisualEffectLatch.arm();
     }
 }
