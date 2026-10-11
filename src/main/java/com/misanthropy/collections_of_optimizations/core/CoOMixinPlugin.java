@@ -5,10 +5,16 @@ import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.fml.loading.LoadingModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,8 +27,14 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     private static final Set<String> WARNED_GROUPS = new HashSet<>();
 
     private static final String MIXIN_PACKAGE = "com.misanthropy.collections_of_optimizations.mixin.";
+    private static final String ELYSIUM_SOUND_CACHE_MIXIN = MIXIN_PACKAGE + "elysiumapi.MixinBlockSoundTransformerCache";
+    private static final String ELYSIUM_BLOCK_MIXIN = "net.jadenxgamer.elysium_api.impl.mixin.block.BlockMixin";
+    private static final String ELYSIUM_HANDLER_DESC = "(Lnet/minecraft/world/level/block/state/BlockState;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;)V";
+    private static final String ELYSIUM_DISPATCH_OWNER = "com/misanthropy/collections_of_optimizations/core/ElysiumSoundTransformers";
+    private static final String MIXIN_MERGED_DESC = "Lorg/spongepowered/asm/mixin/transformer/meta/MixinMerged;";
 
     private static final Map<String, String> GROUP_TO_MODID = Map.ofEntries(
+            Map.entry("radium", "radium"),
             Map.entry("curios", "curios"),
             Map.entry("oddaccessories", "oddaccessories"),
             Map.entry("artifacts", "artifacts"),
@@ -63,6 +75,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("konweapon", "weapon"),
             Map.entry("immersiveaircraft", "immersive_aircraft"),
             Map.entry("ftbchunks", "ftbchunks"),
+            Map.entry("jei", "jei"),
             Map.entry("ftbxmodcompat", "ftbxmodcompat"),
             Map.entry("structurify", "structurify"),
             Map.entry("bloodmagic", "bloodmagic"),
@@ -70,13 +83,14 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("patchouli", "patchouli"),
             Map.entry("placebo", "placebo"),
             Map.entry("punchy", "punchy"),
+            Map.entry("embeddium", "embeddium"),
+            Map.entry("alltheleaks", "alltheleaks"),
             Map.entry("l2hostility", "l2hostility"),
             Map.entry("l2complements", "l2complements"),
             Map.entry("integratedapi", "integrated_api"),
             Map.entry("elysiumapi", "elysium_api"),
             Map.entry("cerbonsapi", "cerbons_api"),
             Map.entry("echelon", "tiered"),
-            Map.entry("enigmaticdice", "enigmaticdice"),
             Map.entry("balm", "balm"),
             Map.entry("macabre", "macabre"),
             Map.entry("alexsmobs", "alexsmobs"),
@@ -109,6 +123,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("fancymenu", "fancymenu"),
             Map.entry("ironslib", "irons_lib"),
             Map.entry("bettercombat", "bettercombat"),
+            Map.entry("doespotatotick", "doespotatotick"),
             Map.entry("cofh", "cofh_core"),
             Map.entry("xaerolib", "xaerolib"),
             Map.entry("create", "create"),
@@ -160,6 +175,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("neobackports", "neobackports"),
             Map.entry("faunify", "faunify"),
             Map.entry("textanimator", "textanimator"),
+            Map.entry("itemfilters", "itemfilters"),
             Map.entry("darkdoppelganger", "darkdoppelganger"),
             Map.entry("torchmaster", "torchmaster"),
             Map.entry("cognition", "experienceobelisk"),
@@ -227,7 +243,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("dungeonsdelight", "dungeonsdelight"),
             Map.entry("chimes", "chimes"),
             Map.entry("sliceanddice", "sliceanddice"),
-            Map.entry("projectiledamage", "projectile_damage")
+            Map.entry("projectiledamage", "projectile_damage"),
+            Map.entry("fallentraits", "fallen_traits")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(
@@ -237,32 +254,59 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     );
 
     private static final Map<String, String> GROUP_EXACT_VERSION = Map.of(
+            "radium", "0.14.3+git.e141a47",
             "cataclysm", "3.16",
             "lionfishapi", "2.8"
     );
 
+    private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
+            "create.MixinContraptionCollisionUnion", new String[]{"create", "6.0.8"},
+            "geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"},
+            "subtleeffects.MixinBubbleParticleTint", new String[]{"subtle_effects", "1.15.0"},
+            "subtleeffects.MixinChestTickerDryChest", new String[]{"subtle_effects", "1.15.0"},
+            "subtleeffects.MixinClientLevelDisplayTick", new String[]{"subtle_effects", "1.15.0"},
+            "subtleeffects.MixinEntityTickerManagerRange", new String[]{"subtle_effects", "1.15.0"},
+            "subtleeffects.MixinEntityTickerRange", new String[]{"subtle_effects", "1.15.0"},
+            "subtleeffects.MixinLavaFluidSparks", new String[]{"subtle_effects", "1.15.0"},
+            "subtleeffects.MixinWaterFluidSteam", new String[]{"subtle_effects", "1.15.0"}
+    );
+
     private static final Map<String, String[]> GROUP_CONFLICTS = Map.of(
-            "geckolib", new String[]{"gbf", "geckolib_animation_optimizer"},
+            "geckolib", new String[]{"gbf"},
 
             "iafdragonfix", new String[]{"iafdragonfix"}
     );
 
-    private static final Map<String, String[]> MIXIN_CONFLICTS = Map.of(
+    private static final Map<String, String[]> MIXIN_CONFLICTS = Map.ofEntries(
+            Map.entry("vanilla.MixinBeardifierReach", new String[]{"generator_accelerator"}),
+            Map.entry("vanilla.MixinLevelDryRaycast", new String[]{"valkyrienskies"}),
+            Map.entry("terrablender.MixinNamespacedSourceLazy", new String[]{"c2me"}),
 
-            "vanilla.MixinStructureCheck", new String[]{"modernfix"},
-            "vanilla.MixinServerLevelStructureState", new String[]{"modernfix"},
+            Map.entry("vanilla.MixinStructureCheck", new String[]{"modernfix"}),
+            Map.entry("vanilla.MixinServerLevelStructureState", new String[]{"modernfix"}),
 
-            "vanilla.MixinItemEntityRenderer", new String[]{"flerovium"},
+            Map.entry("vanilla.MixinItemEntityRenderer", new String[]{"flerovium"}),
 
-            "vanilla.MixinChunkMapEntityTracker", new String[]{"vmp", "hariplayer"},
+            Map.entry("geckolib.MixinAnimationProcessorPoseHold", new String[]{"geckolib_animation_optimizer"}),
 
-            "vanilla.MixinClientLevelBiomeBlend", new String[]{"betterbiomeblend", "betterbiomereblend"},
+            Map.entry("vanilla.MixinChunkMapEntityTracker", new String[]{"vmp", "hariplayer"}),
 
-            // Lomka @Overwrites these three methods; injecting into a merged method at equal priority is a hard error.
-            "vanilla.MixinPoseStackAxisRotation", new String[]{"lomka"},
-            "vanilla.MixinBlockPosBetweenClosed", new String[]{"lomka"},
-            "vanilla.MixinPalettedContainerUniform", new String[]{"lomka"}
+            Map.entry("vanilla.MixinClientLevelBiomeBlend", new String[]{"betterbiomeblend", "betterbiomereblend"}),
+
+            Map.entry("vanilla.MixinPoseStackAxisRotation", new String[]{"lomka"}),
+            Map.entry("vanilla.MixinBlockPosBetweenClosed", new String[]{"lomka"}),
+            Map.entry("vanilla.MixinPalettedContainerUniform", new String[]{"lomka"})
     );
+
+    private static final Map<String, Set<String>> INCOMPATIBLE_MODS = Map.of(
+            "soulsweaponryperformancefix", Set.of("soulsweapons.MixinWeaponUtilModPresence"),
+            "ftbchunksperformancefix", Set.of("ftbchunks.MixinFTBChunksClient", "ftbchunks.MixinMapRegionImageGen",
+                    "ftbchunks.MixinRenderMapImageTask"),
+            "papi", Set.of("jei.MixinRecipeTransferManager"),
+            "bons_and_furious", BonsAndFuriousOverlap.MIXINS
+    );
+
+    private static final String[] TAKES_EVERYTHING = {"tickweave"};
 
     private static final Map<String, String[]> MIXIN_REQUIRES = Map.ofEntries(
             Map.entry("elysiumapi.MixinElysiumTerrablenderHelper", new String[]{"terrablender"}),
@@ -305,11 +349,14 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
             Map.entry("citadel.MixinBasicModelPartFastRender", new String[]{"embeddium"}),
 
-            Map.entry("ironsspellbooks.MixinIsbCurioEquipCheck", new String[]{"curios"})
+            Map.entry("ironsspellbooks.MixinIsbCurioEquipCheck", new String[]{"curios"}),
+
+            Map.entry("l2hostility.MixinCurioCompatHasItem", new String[]{"curios"})
     );
 
     private static final Map<String, String[]> MIXIN_ANY_OF = Map.of(
-            "elysiumapi.MixinClimateSampler", new String[]{"elysium_api", "alexscaves"}
+            "elysiumapi.MixinClimateSampler", new String[]{"elysium_api", "alexscaves"},
+            "vanilla.MixinParticleEngineTextBatch", new String[]{"dummmmmmy", "blessfulled"}
     );
 
     private static final Map<String, Boolean> LOADED_CACHE = new HashMap<>();
@@ -339,6 +386,22 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             return true;
         }
         String group = remainder.substring(0, separator);
+        for (String modId : TAKES_EVERYTHING) {
+            if (isModPresent(modId)) {
+                if (WARNED_GROUPS.add("incompatible:" + modId)) {
+                    LOGGER.warn("Disabling every Collections of Optimizations patch: '{}' runs entity ticks on worker threads and its own mixins are mandatory, so none of these patches can be applied safely next to it", modId);
+                }
+                return false;
+            }
+        }
+        for (Map.Entry<String, Set<String>> incompatible : INCOMPATIBLE_MODS.entrySet()) {
+            if (incompatible.getValue().contains(remainder) && isModPresent(incompatible.getKey())) {
+                if (WARNED_GROUPS.add("incompatible:" + incompatible.getKey())) {
+                    LOGGER.warn("Disabling the Collections of Optimizations patches that overlap '{}', it patches the same code", incompatible.getKey());
+                }
+                return false;
+            }
+        }
         String[] anyOf = MIXIN_ANY_OF.get(remainder);
         if (anyOf != null) {
             boolean found = false;
@@ -392,6 +455,10 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
                 }
             }
         }
+        String[] pinned = MIXIN_EXACT_VERSION.get(remainder);
+        if (pinned != null && !pinned[1].equals(modVersion(pinned[0]))) {
+            return false;
+        }
         String[] required = MIXIN_REQUIRES.get(remainder);
         if (required != null) {
             for (String dependency : required) {
@@ -418,6 +485,64 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+        if (ELYSIUM_SOUND_CACHE_MIXIN.equals(mixinClassName)) {
+            rewireElysiumSoundHandler(targetClass);
+        }
+    }
+
+    private static void rewireElysiumSoundHandler(ClassNode target) {
+        String handler = null;
+        for (MethodNode method : target.methods) {
+            if ((method.access & Opcodes.ACC_STATIC) == 0 && ELYSIUM_HANDLER_DESC.equals(method.desc)
+                    && mergedFrom(method, ELYSIUM_BLOCK_MIXIN)) {
+                handler = method.name;
+                method.access = (method.access & ~(Opcodes.ACC_PRIVATE | Opcodes.ACC_PROTECTED)) | Opcodes.ACC_PUBLIC;
+                break;
+            }
+        }
+        if (handler == null) {
+            LOGGER.info("Collections of Optimizations: Elysium sound handler not found in {}, cache stays off", target.name);
+            return;
+        }
+        List<MethodInsnNode> calls = new ArrayList<>();
+        for (MethodNode method : target.methods) {
+            for (AbstractInsnNode insn : method.instructions) {
+                if (insn instanceof MethodInsnNode call && call.owner.equals(target.name) && call.name.equals(handler)
+                        && call.desc.equals(ELYSIUM_HANDLER_DESC)
+                        && (call.getOpcode() == Opcodes.INVOKEVIRTUAL || call.getOpcode() == Opcodes.INVOKESPECIAL)) {
+                    calls.add(call);
+                }
+            }
+        }
+        for (MethodNode method : target.methods) {
+            for (MethodInsnNode call : calls) {
+                if (method.instructions.contains(call)) {
+                    method.instructions.set(call, new MethodInsnNode(Opcodes.INVOKESTATIC, ELYSIUM_DISPATCH_OWNER, "dispatch",
+                            "(L" + target.name + ";" + ELYSIUM_HANDLER_DESC.substring(1), false));
+                }
+            }
+        }
+        LOGGER.info("Collections of Optimizations: routed {} Elysium sound handler call(s) through the cache", calls.size());
+    }
+
+    private static boolean mergedFrom(MethodNode method, String mixin) {
+        return mergedFrom(method.visibleAnnotations, mixin) || mergedFrom(method.invisibleAnnotations, mixin);
+    }
+
+    private static boolean mergedFrom(List<AnnotationNode> annotations, String mixin) {
+        if (annotations == null) {
+            return false;
+        }
+        for (AnnotationNode annotation : annotations) {
+            if (MIXIN_MERGED_DESC.equals(annotation.desc) && annotation.values != null) {
+                for (int i = 0; i + 1 < annotation.values.size(); i += 2) {
+                    if ("mixin".equals(annotation.values.get(i)) && mixin.equals(annotation.values.get(i + 1))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private static synchronized boolean isModPresent(String modId) {

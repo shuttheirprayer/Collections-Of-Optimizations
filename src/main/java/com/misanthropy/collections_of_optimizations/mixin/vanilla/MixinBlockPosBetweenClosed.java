@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
-/** Reimplemented from Lomka 0.5.4 by Starlev (LGPL-3.0). */
 @Mixin(BlockPos.class)
 public abstract class MixinBlockPosBetweenClosed {
 

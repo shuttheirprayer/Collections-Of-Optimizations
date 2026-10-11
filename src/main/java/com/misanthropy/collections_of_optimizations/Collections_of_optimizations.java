@@ -3,6 +3,7 @@ package com.misanthropy.collections_of_optimizations;
 import com.misanthropy.collections_of_optimizations.core.ArsElementalCurioBagKey;
 import com.misanthropy.collections_of_optimizations.core.CacRedPandaTracker;
 import com.misanthropy.collections_of_optimizations.core.CameraShakeScanCache;
+import com.misanthropy.collections_of_optimizations.core.ElysiumSoundTransformers;
 import com.misanthropy.collections_of_optimizations.core.CoOEmbeddiumOptions;
 import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
 import com.misanthropy.collections_of_optimizations.core.ArsAdditionsPortalScanCache;
@@ -17,8 +18,10 @@ import com.misanthropy.collections_of_optimizations.core.CurioPresenceCache;
 import com.misanthropy.collections_of_optimizations.core.CuriosSlotCache;
 import com.misanthropy.collections_of_optimizations.core.IafDenRegistry;
 import com.misanthropy.collections_of_optimizations.core.MapTintCache;
+import com.misanthropy.collections_of_optimizations.core.NbtFastLoad;
 import com.misanthropy.collections_of_optimizations.core.RecipeCacheGeneration;
 import com.misanthropy.collections_of_optimizations.core.SkyArenaAltarMapPurge;
+import com.misanthropy.collections_of_optimizations.core.StalePlayerMaps;
 import com.misanthropy.collections_of_optimizations.core.SsoDashGuard;
 import com.misanthropy.collections_of_optimizations.core.SummonityMinionCache;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,6 +40,7 @@ public class Collections_of_optimizations {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CoOConfig.SPEC, MODID + "-common.toml");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CoOConfig::onLoad);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(CoOConfig::onReload);
+        NbtFastLoad.logState();
 
         if (ModList.get().isLoaded("bloodmagic") || ModList.get().isLoaded("celestial_core")
                 || ModList.get().isLoaded("experienceobelisk") || ModList.get().isLoaded("cookingforblockheads")) {
@@ -49,6 +53,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("supplementaries")) {
             MapTintCache.register();
+        }
+
+        if (ModList.get().isLoaded("elysium_api")) {
+            ElysiumSoundTransformers.register();
         }
 
         if (ModList.get().isLoaded("curios")) {
@@ -83,6 +91,8 @@ public class Collections_of_optimizations {
         if (ModList.get().isLoaded("skyarena")) {
             SkyArenaAltarMapPurge.register();
         }
+
+        StalePlayerMaps.register();
 
         if (ModList.get().isLoaded("simply_swords_overhaul")) {
             SsoDashGuard.register();

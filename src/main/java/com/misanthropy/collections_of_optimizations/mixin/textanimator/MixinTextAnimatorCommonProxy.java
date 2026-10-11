@@ -9,7 +9,9 @@ import com.misanthropy.collections_of_optimizations.core.TextAnimatorTagFilter;
 import net.minecraft.network.chat.Style;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import snownee.textanimator.duck.TAStyle;
+import snownee.textanimator.effect.Effect;
 import snownee.textanimator.util.CommonProxy;
 
 @Mixin(value = CommonProxy.class, remap = false)
@@ -46,5 +48,20 @@ public abstract class MixinTextAnimatorCommonProxy {
             return TextAnimatorTagFilter.NO_TAG;
         }
         return original.call(content, separator);
+    }
+
+    @Redirect(
+            method = "iterateFormatted",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lsnownee/textanimator/effect/Effect;create([Ljava/lang/String;Z)Lsnownee/textanimator/effect/Effect;"
+            ),
+            require = 0
+    )
+    private static Effect coo$parseParamsWithoutExceptions(String[] split, boolean allowTypewriter) {
+        if (!CoOConfig.textanimatorParseParamsWithoutExceptions) {
+            return Effect.create(split, allowTypewriter);
+        }
+        return TextAnimatorTagFilter.createEffect(split, allowTypewriter);
     }
 }

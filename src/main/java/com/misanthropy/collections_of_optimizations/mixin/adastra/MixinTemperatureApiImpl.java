@@ -1,42 +1,31 @@
 package com.misanthropy.collections_of_optimizations.mixin.adastra;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.PlanetDefaultsMemo;
 import earth.terrarium.adastra.common.systems.TemperatureApiImpl;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Map;
 
 @Mixin(value = TemperatureApiImpl.class, remap = false)
 public abstract class MixinTemperatureApiImpl {
 
-    @Inject(
-            method = "getTemperature(Lnet/minecraft/resources/ResourceKey;)S",
-            at = @At("HEAD"),
-            cancellable = true,
-            require = 0
-    )
-    private void coo$serveMemoisedDimensionTemperature(ResourceKey<Level> dimension, CallbackInfoReturnable<Short> cir) {
-        if (!CoOConfig.adastraMemoPlanetDefaults) {
-            return;
+    @WrapMethod(method = "getTemperature(Lnet/minecraft/resources/ResourceKey;)S", require = 0)
+    private short coo$memoDimensionTemperature(ResourceKey<Level> dimension, Operation<Short> original) {
+        if (!CoOConfig.adastraMemoPlanetDefaults || dimension == null) {
+            return original.call(dimension);
         }
-        Short hit = PlanetDefaultsMemo.lookupTemperature(dimension);
+        Map<ResourceKey<Level>, Short> memo = PlanetDefaultsMemo.temperature();
+        Short hit = memo.get(dimension);
         if (hit != null) {
-            cir.setReturnValue(hit);
+            return hit;
         }
-    }
-
-    @Inject(
-            method = "getTemperature(Lnet/minecraft/resources/ResourceKey;)S",
-            at = @At("RETURN"),
-            require = 0
-    )
-    private void coo$storeDimensionTemperature(ResourceKey<Level> dimension, CallbackInfoReturnable<Short> cir) {
-        if (CoOConfig.adastraMemoPlanetDefaults) {
-            PlanetDefaultsMemo.storeTemperature(dimension, cir.getReturnValueS());
-        }
+        short value = original.call(dimension);
+        memo.put(dimension, value);
+        return value;
     }
 }

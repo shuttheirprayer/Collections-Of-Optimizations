@@ -10,13 +10,6 @@ import net.minecraft.world.level.LevelAccessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-/**
- * Dynamic Trees issue #1150: the world gen rot cascade recurses into same-block neighbours after every
- * successful {@code Species.rot}, but never checks that the branch was actually removed. A WorldGenRegion
- * refuses writes outside its one chunk write radius while still serving reads, so two adjacent stuck
- * branches past that border rot "successfully" into each other until the stack overflows.
- * Treating a branch that is still there as not rotted stops the walk at the write border.
- */
 @Mixin(value = {BasicBranchBlock.class, BasicRootsBlock.class}, remap = false)
 public abstract class MixinDTBoundedRapidRot {
 

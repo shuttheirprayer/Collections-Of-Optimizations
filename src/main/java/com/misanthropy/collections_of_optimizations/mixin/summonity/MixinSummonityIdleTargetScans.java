@@ -4,7 +4,10 @@ import com.fevzi.summonity.entity.SummonedCopperGolemEntity;
 import com.fevzi.summonity.entity.SummonedCrystalWispEntity;
 import com.fevzi.summonity.entity.SummonedGnomeEntity;
 import com.fevzi.summonity.entity.SummonedImpEntity;
+import com.fevzi.summonity.entity.SummonedMagicMirrorEntity;
+import com.fevzi.summonity.entity.SummonedMiniatureSunEntity;
 import com.fevzi.summonity.entity.SummonedParrotEntity;
+import com.fevzi.summonity.entity.SummonedPrismaticLanternEntity;
 import com.fevzi.summonity.entity.SummonedSanguineBatEntity;
 import com.fevzi.summonity.entity.SummonedSculkMiteEntity;
 import com.fevzi.summonity.entity.SummonedSimpleTurretEntity;
@@ -33,7 +36,10 @@ import java.util.function.Predicate;
                 SummonedCrystalWispEntity.class,
                 SummonedGnomeEntity.class,
                 SummonedImpEntity.class,
+                SummonedMagicMirrorEntity.class,
+                SummonedMiniatureSunEntity.class,
                 SummonedParrotEntity.class,
+                SummonedPrismaticLanternEntity.class,
                 SummonedSanguineBatEntity.class,
                 SummonedSculkMiteEntity.class,
                 SummonedSimpleTurretEntity.class,

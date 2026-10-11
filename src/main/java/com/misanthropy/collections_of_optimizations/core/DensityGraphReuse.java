@@ -30,12 +30,14 @@ public final class DensityGraphReuse {
 
     private static final String VANILLA = "net.minecraft.world.level.levelgen.DensityFunctions$";
     private static final String LARION = "com.misanthropy.linggango.larionforgeport.density_function_types.";
+    private static final String LITHOFORM = "com.misanthropy.lithoform.density_function_types.";
 
     private static final Set<String> REBUILD = Set.of(
             VANILLA + "Ap2", VANILLA + "BlendDensity", VANILLA + "RangeChoice", VANILLA + "ShiftedNoise",
             VANILLA + "WeirdScaledSampler", VANILLA + "Spline", VANILLA + "Noise", VANILLA + "Shift",
             VANILLA + "ShiftA", VANILLA + "ShiftB",
-            LARION + "Division", LARION + "Signum", LARION + "Sine", LARION + "Sqrt");
+            LARION + "Division", LARION + "Signum", LARION + "Sine", LARION + "Sqrt",
+            LITHOFORM + "Division", LITHOFORM + "Signum", LITHOFORM + "Sine", LITHOFORM + "Sqrt");
 
     private static final Set<String> READS_Y = Set.of(
             VANILLA + "YClampedGradient", VANILLA + "Shift", VANILLA + "WeirdScaledSampler",
@@ -43,12 +45,14 @@ public final class DensityGraphReuse {
 
     private static final Set<String> FLAT = Set.of(
             VANILLA + "Constant", VANILLA + "BlendAlpha", VANILLA + "BlendOffset", VANILLA + "EndIslandDensityFunction",
-            VANILLA + "ShiftA", VANILLA + "ShiftB", LARION + "XCoord", LARION + "ZCoord");
+            VANILLA + "ShiftA", VANILLA + "ShiftB", LARION + "XCoord", LARION + "ZCoord",
+            LITHOFORM + "XCoord", LITHOFORM + "ZCoord");
 
     private static final Set<String> TRANSPARENT = Set.of(
             VANILLA + "Ap2", VANILLA + "MulOrAdd", VANILLA + "Mapped", VANILLA + "Clamp", VANILLA + "RangeChoice",
             VANILLA + "BlendDensity", VANILLA + "Spline", VANILLA + "HolderHolder", VANILLA + "Marker",
-            LARION + "Division", LARION + "Signum", LARION + "Sine", LARION + "Sqrt");
+            LARION + "Division", LARION + "Signum", LARION + "Sine", LARION + "Sqrt",
+            LITHOFORM + "Division", LITHOFORM + "Signum", LITHOFORM + "Sine", LITHOFORM + "Sqrt");
 
     private static final ClassValue<Kind> KIND = new ClassValue<>() {
         @Override

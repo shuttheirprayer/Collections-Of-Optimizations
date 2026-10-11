@@ -23,7 +23,7 @@ public abstract class MixinBasaltBarreraExtension {
                                                            WorldGenRegion region,
                                                            ChunkGenerator generator,
                                                            CallbackInfo ci) {
-        if (CoOConfig.biomeswevegoneSkipForeignChunkTerrain && !BwgTerrainChunkFilter.hasBasaltBarrera(chunk)) {
+        if (CoOConfig.biomeswevegoneSkipForeignChunkTerrain && !BwgTerrainChunkFilter.hasBasaltBarrera(region, chunk)) {
             ci.cancel();
         }
     }

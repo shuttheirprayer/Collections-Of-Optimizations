@@ -31,11 +31,11 @@ public abstract class MixinDdMonsterEffectSwap {
             return;
         }
         MobEffectInstance old = living.getEffect(normal);
-        if (old == null) {
+        if (old == null || old.isInfiniteDuration() || old.getDuration() <= 0) {
             return;
         }
         int duration = old.getDuration();
-        living.removeEffect(normal);
+        ((MixinDdEffectDurationAccessor) old).coo$ddSetDuration(0);
         living.addEffect(new MobEffectInstance((MobEffect) (Object) this, duration, 0));
     }
 }

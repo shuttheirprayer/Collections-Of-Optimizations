@@ -41,6 +41,7 @@ public final class RenderThreadLocal<T> extends ThreadLocal<T> {
         if (RenderSystem.isOnRenderThread()) {
             this.renderValue = null;
             this.renderValueSet = false;
+            this.delegate.remove();
             return;
         }
         this.delegate.remove();

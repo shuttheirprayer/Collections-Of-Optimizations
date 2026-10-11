@@ -2,9 +2,11 @@ package com.misanthropy.collections_of_optimizations.core;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.OnDatapackSyncEvent;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 import top.theillusivec4.curios.api.event.CurioEquipEvent;
@@ -18,6 +20,10 @@ import java.util.Set;
 
 public final class CurioPresenceCache {
 
+    private static final Set<Item> NO_INVENTORY = Collections.unmodifiableSet(new ReferenceOpenHashSet<>(0));
+
+    private static volatile long slotsEpoch;
+
     private CurioPresenceCache() {
     }
 
@@ -25,6 +31,13 @@ public final class CurioPresenceCache {
         MinecraftForge.EVENT_BUS.addListener(CurioPresenceCache::onCurioChanged);
         MinecraftForge.EVENT_BUS.addListener(CurioPresenceCache::onCurioEquip);
         MinecraftForge.EVENT_BUS.addListener(CurioPresenceCache::onCurioUnequip);
+        MinecraftForge.EVENT_BUS.addListener(CurioPresenceCache::onDatapackSync);
+    }
+
+    private static void onDatapackSync(OnDatapackSyncEvent event) {
+        if (event.getPlayer() == null) {
+            slotsEpoch++;
+        }
     }
 
     private static void onCurioChanged(CurioChangeEvent event) {
@@ -75,14 +88,19 @@ public final class CurioPresenceCache {
         }
 
         long stamp = entity.tickCount;
+        long noInventoryStamp = -1L - slotsEpoch;
         Set<Item> cached = holder.coo$curioPresence();
-        if (cached != null && holder.coo$curioPresenceStamp() == stamp) {
-            return cached;
+        if (cached != null) {
+            long cachedStamp = holder.coo$curioPresenceStamp();
+            if (cachedStamp == stamp || cached == NO_INVENTORY && cachedStamp == noInventoryStamp) {
+                return cached;
+            }
         }
 
         Set<Item> built = build(entity);
         if (built != null) {
-            holder.coo$storeCurioPresence(built, stamp);
+            boolean lasting = built == NO_INVENTORY && !(entity instanceof Player) && !entity.level().isClientSide;
+            holder.coo$storeCurioPresence(built, lasting ? noInventoryStamp : stamp);
         }
         return built;
     }
@@ -90,7 +108,7 @@ public final class CurioPresenceCache {
     private static Set<Item> build(LivingEntity entity) {
         ICuriosItemHandler handler = CuriosApi.getCuriosInventory(entity).orElse(null);
         if (handler == null) {
-            return null;
+            return NO_INVENTORY;
         }
 
         Set<Item> items = null;

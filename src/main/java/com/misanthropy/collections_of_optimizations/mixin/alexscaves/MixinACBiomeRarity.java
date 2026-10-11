@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.alexscaves;
 
+import com.github.alexmodguy.alexscaves.AlexsCaves;
 import com.github.alexmodguy.alexscaves.server.level.biome.ACBiomeRarity;
 import com.github.alexmodguy.alexscaves.server.misc.VoronoiGenerator;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
@@ -24,7 +25,7 @@ public abstract class MixinACBiomeRarity {
         if (!CoOConfig.alexscavesMemoRareBiomeQuads) {
             return;
         }
-        VoronoiGenerator.VoronoiInfo hit = CaveBiomeQuadCache.get().lookup(worldSeed, x, z);
+        VoronoiGenerator.VoronoiInfo hit = CaveBiomeQuadCache.get().lookup(worldSeed, AlexsCaves.COMMON_CONFIG.caveBiomeWidthRandomness.get(), x, z);
         if (hit != null) {
             cir.setReturnValue(hit == CaveBiomeQuadCache.ABSENT ? null : hit);
         }
@@ -40,7 +41,7 @@ public abstract class MixinACBiomeRarity {
         if (!CoOConfig.alexscavesMemoRareBiomeQuads) {
             return;
         }
-        CaveBiomeQuadCache.get().store(worldSeed, x, z, cir.getReturnValue());
+        CaveBiomeQuadCache.get().store(worldSeed, AlexsCaves.COMMON_CONFIG.caveBiomeWidthRandomness.get(), x, z, cir.getReturnValue());
     }
 
     @Inject(
@@ -50,6 +51,5 @@ public abstract class MixinACBiomeRarity {
     )
     private static void coo$invalidateOnInit(CallbackInfo ci) {
         CaveBiomeQuadCache.invalidate();
-        CaveBiomeQuadCache.armConfigInvalidation();
     }
 }

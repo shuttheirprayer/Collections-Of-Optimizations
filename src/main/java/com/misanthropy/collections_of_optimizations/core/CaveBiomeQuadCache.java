@@ -2,8 +2,6 @@ package com.misanthropy.collections_of_optimizations.core;
 
 import com.github.alexmodguy.alexscaves.server.misc.VoronoiGenerator;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public final class CaveBiomeQuadCache {
 
@@ -16,11 +14,10 @@ public final class CaveBiomeQuadCache {
 
     private static volatile int generation;
 
-    private static boolean configListenerRegistered;
-
     private final Long2ObjectOpenHashMap<VoronoiGenerator.VoronoiInfo> entries = new Long2ObjectOpenHashMap<>();
 
     private long seed;
+    private double widthRandomness;
     private int seenGeneration = -1;
 
     private CaveBiomeQuadCache() {
@@ -34,32 +31,27 @@ public final class CaveBiomeQuadCache {
         generation++;
     }
 
-    public static synchronized void armConfigInvalidation() {
-        if (!configListenerRegistered) {
-            configListenerRegistered = true;
-            MinecraftForge.EVENT_BUS.addListener((ModConfigEvent.Reloading event) -> invalidate());
-        }
-    }
-
-    public VoronoiGenerator.VoronoiInfo lookup(long worldSeed, int x, int z) {
-        reset(worldSeed);
+    public VoronoiGenerator.VoronoiInfo lookup(long worldSeed, double widthRandomness, int x, int z) {
+        reset(worldSeed, widthRandomness);
         return this.entries.get(key(x, z));
     }
 
-    public void store(long worldSeed, int x, int z, VoronoiGenerator.VoronoiInfo value) {
-        reset(worldSeed);
+    public void store(long worldSeed, double widthRandomness, int x, int z, VoronoiGenerator.VoronoiInfo value) {
+        reset(worldSeed, widthRandomness);
         if (this.entries.size() >= LIMIT) {
             this.entries.clear();
         }
         this.entries.put(key(x, z), value == null ? ABSENT : value);
     }
 
-    private void reset(long worldSeed) {
+    private void reset(long worldSeed, double widthRandomness) {
         int current = generation;
-        if (this.seenGeneration != current || this.seed != worldSeed) {
+        if (this.seenGeneration != current || this.seed != worldSeed
+                || Double.doubleToRawLongBits(this.widthRandomness) != Double.doubleToRawLongBits(widthRandomness)) {
             this.entries.clear();
             this.seenGeneration = current;
             this.seed = worldSeed;
+            this.widthRandomness = widthRandomness;
         }
     }
 

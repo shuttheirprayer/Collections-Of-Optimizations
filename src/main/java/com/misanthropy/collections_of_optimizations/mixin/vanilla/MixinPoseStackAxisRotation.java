@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-/** Reimplemented from Lomka 0.5.4 by Starlev (LGPL-3.0). */
 @Mixin(PoseStack.class)
 public abstract class MixinPoseStackAxisRotation {
 

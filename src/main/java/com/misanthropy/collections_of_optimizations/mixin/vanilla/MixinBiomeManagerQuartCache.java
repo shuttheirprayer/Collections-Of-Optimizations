@@ -1,7 +1,5 @@
 package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -12,6 +10,8 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Arrays;
 
@@ -28,15 +28,17 @@ public abstract class MixinBiomeManagerQuartCache {
     private int coo$quartStamp;
 
     @SuppressWarnings("unchecked")
-    @WrapMethod(method = "getNoiseBiomeAtQuart(III)Lnet/minecraft/core/Holder;", require = 0)
-    private Holder<Biome> coo$cacheQuartLookup(int x, int y, int z, Operation<Holder<Biome>> original) {
+    @Redirect(method = "getNoiseBiomeAtQuart(III)Lnet/minecraft/core/Holder;",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/BiomeManager$NoiseBiomeSource;getNoiseBiome(III)Lnet/minecraft/core/Holder;"),
+            require = 0)
+    private Holder<Biome> coo$cacheQuartLookup(BiomeManager.NoiseBiomeSource source, int x, int y, int z) {
         if (!CoOConfig.vanillaCacheBiomeQuartLookups || !RenderSystem.isOnRenderThread()) {
-            return original.call(x, y, z);
+            return source.getNoiseBiome(x, y, z);
         }
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
-            return original.call(x, y, z);
+            return source.getNoiseBiome(x, y, z);
         }
 
         int now = player.tickCount;
@@ -60,7 +62,7 @@ public abstract class MixinBiomeManagerQuartCache {
             }
         }
 
-        Holder<Biome> value = original.call(x, y, z);
+        Holder<Biome> value = source.getNoiseBiome(x, y, z);
         this.coo$quartKeys[slot] = key;
         values[slot] = value;
         return value;

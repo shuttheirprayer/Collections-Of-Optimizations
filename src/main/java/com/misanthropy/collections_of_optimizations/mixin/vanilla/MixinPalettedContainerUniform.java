@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/** Reimplemented from Lomka 0.5.4 by Starlev (LGPL-3.0). */
 @Mixin(PalettedContainer.class)
 public abstract class MixinPalettedContainerUniform<T> {
 

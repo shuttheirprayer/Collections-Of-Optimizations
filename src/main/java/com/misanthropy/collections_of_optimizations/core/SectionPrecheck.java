@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,7 +24,9 @@ public final class SectionPrecheck {
         BlockState air = Blocks.AIR.defaultBlockState();
         for (int chunkX = minX >> 4; chunkX <= maxX >> 4; chunkX++) {
             for (int chunkZ = minZ >> 4; chunkZ <= maxZ >> 4; chunkZ++) {
-                ChunkAccess chunk = level.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
+                ChunkAccess chunk = level instanceof ServerLevel server
+                        ? server.getChunkSource().getChunkNow(chunkX, chunkZ)
+                        : level.getChunk(chunkX, chunkZ, ChunkStatus.FULL, false);
                 if (chunk == null) {
                     return true;
                 }

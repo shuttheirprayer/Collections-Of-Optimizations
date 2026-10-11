@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(value = PlaceboEventFactory.class, remap = false)
@@ -25,7 +26,7 @@ public class MixinPlaceboEventFactory {
     @Inject(method = "getEnchantmentLevel", at = @At("HEAD"), cancellable = true, remap = false, require = 0)
     private static void coo$skipBulkWhenUnheard(Map<Enchantment, Integer> enchantments, IForgeItemStack stack, CallbackInfoReturnable<Map<Enchantment, Integer>> cir) {
         if (CoOConfig.placeboSkipEmptyEnchantmentEvent && !PlaceboEnchantEventProbe.hasListeners()) {
-            cir.setReturnValue(enchantments);
+            cir.setReturnValue(new HashMap<>(enchantments));
         }
     }
 }

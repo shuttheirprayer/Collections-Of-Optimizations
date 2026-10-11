@@ -4,10 +4,14 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 
+import java.lang.ref.WeakReference;
 import java.util.function.Predicate;
 
 public final class BwgTerrainChunkFilter {
@@ -22,15 +26,40 @@ public final class BwgTerrainChunkFilter {
 
     private static final Predicate<Holder<Biome>> IS_BASALT_BARRERA = holder -> holder.is(BASALT_BARRERA);
 
+    private static final ThreadLocal<WeakReference<WorldGenRegion>> SURFACE_REGION = new ThreadLocal<>();
+
     private BwgTerrainChunkFilter() {
     }
 
-    public static boolean hasCragGardens(ChunkAccess chunk) {
-        return contains(chunk, IS_CRAG_GARDENS);
+    public static void rememberSurfaceRegion(WorldGenRegion region) {
+        SURFACE_REGION.set(new WeakReference<>(region));
     }
 
-    public static boolean hasBasaltBarrera(ChunkAccess chunk) {
-        return contains(chunk, IS_BASALT_BARRERA);
+    public static boolean hasCragGardens(ChunkAccess chunk) {
+        WeakReference<WorldGenRegion> region = SURFACE_REGION.get();
+        return near(region == null ? null : region.get(), chunk, IS_CRAG_GARDENS);
+    }
+
+    public static boolean hasBasaltBarrera(WorldGenRegion region, ChunkAccess chunk) {
+        return near(region, chunk, IS_BASALT_BARRERA);
+    }
+
+    private static boolean near(WorldGenRegion region, ChunkAccess chunk, Predicate<Holder<Biome>> predicate) {
+        ChunkPos pos = chunk.getPos();
+        if (region == null || !pos.equals(region.getCenter()) || region.getChunk(pos.x, pos.z, ChunkStatus.EMPTY, false) != chunk) {
+            return true;
+        }
+        for (int dz = -1; dz <= 1; dz++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                ChunkAccess neighbour = dx == 0 && dz == 0
+                        ? chunk
+                        : region.getChunk(pos.x + dx, pos.z + dz, ChunkStatus.BIOMES, false);
+                if (neighbour == null || contains(neighbour, predicate)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean contains(ChunkAccess chunk, Predicate<Holder<Biome>> predicate) {
