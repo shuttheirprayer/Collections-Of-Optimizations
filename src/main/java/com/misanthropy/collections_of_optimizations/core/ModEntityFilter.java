@@ -1,5 +1,7 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 public final class ModEntityFilter {
 
     public static final ModEntityFilter TERRAMITY = new ModEntityFilter("net.mcreator.terramity.entity.");
@@ -14,23 +16,32 @@ public final class ModEntityFilter {
     public static final ModEntityFilter COMPANIONS = new ModEntityFilter("dev.xylonity.companions.");
     public static final ModEntityFilter GOETY_HOSTILITY_WILDFIRE = new ModEntityFilter("com.ratrod.goetyhostility.common.entities.hostile.HostileWildfire");
 
-    private final ClassValue<Boolean> cache;
+    private final ConcurrentHashMap<Class<?>, Boolean> cache = new ConcurrentHashMap<>();
+    private final String packagePrefix;
 
     private ModEntityFilter(String packagePrefix) {
-        this.cache = new ClassValue<>() {
-            @Override
-            protected Boolean computeValue(Class<?> type) {
-                for (Class<?> current = type; current != null; current = current.getSuperclass()) {
-                    if (current.getName().startsWith(packagePrefix)) {
-                        return Boolean.TRUE;
-                    }
-                }
-                return Boolean.FALSE;
-            }
-        };
+        this.packagePrefix = packagePrefix;
     }
 
     public boolean matches(Object entity) {
-        return entity != null && this.cache.get(entity.getClass());
+        if (entity == null) {
+            return false;
+        }
+        Class<?> type = entity.getClass();
+        Boolean hit = this.cache.get(type);
+        if (hit == null) {
+            hit = this.compute(type);
+            this.cache.put(type, hit);
+        }
+        return hit;
+    }
+
+    private Boolean compute(Class<?> type) {
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            if (current.getName().startsWith(this.packagePrefix)) {
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
     }
 }
