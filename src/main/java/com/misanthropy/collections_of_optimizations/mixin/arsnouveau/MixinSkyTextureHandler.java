@@ -3,6 +3,7 @@ package com.misanthropy.collections_of_optimizations.mixin.arsnouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.SkyTextureHandler;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.IrisState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -21,7 +22,7 @@ public abstract class MixinSkyTextureHandler {
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true, require = 0)
     private static void coo$throttleSkyTexture(RenderLevelStageEvent event, CallbackInfo ci) {
         int interval = CoOConfig.arsnouveauSkyTextureInterval;
-        if (interval <= 0 || !event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY)) {
+        if (interval <= 0 || !event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY) || IrisState.shaderPackInUse()) {
             return;
         }
 

@@ -143,7 +143,6 @@
     "pehkui.MixinTypedScaleModifier",
     "perception.MixinEntityTrailData",
     "punchy.MixinMultiPackResourceManager",
-    "alltheleaks.MixinAtlCrashReportGc",
     "quark.MixinPigLittersModule",
     "supplementaries.MixinEndermanSkullWatch",
     "supplementaries.MixinBlockEntityInfoCapSync",
@@ -535,6 +534,7 @@
     "l2hostility.MixinCurioCompatHasItem"
   ],
   "client": [
+    "alltheleaks.MixinAtlCrashReportGc",
     "asyncparticles.ChunkAccessBlockEntityMapsAccessor",
     "asyncparticles.MixinLevelChunkParticleThreadBlockEntity",
     "asyncparticles.MixinGpuParticleShaderSetup",

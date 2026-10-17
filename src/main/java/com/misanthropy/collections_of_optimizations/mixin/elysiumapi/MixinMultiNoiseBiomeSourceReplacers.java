@@ -23,14 +23,9 @@ import java.util.Random;
 public abstract class MixinMultiNoiseBiomeSourceReplacers {
 
     @Unique
-    private static final byte COO_UNKNOWN = 0;
+    private volatile RegistryAccess coo$access;
     @Unique
-    private static final byte COO_NONE = 1;
-    @Unique
-    private static final byte COO_SOME = 2;
-
-    @Unique
-    private volatile byte coo$replacerState;
+    private int coo$replacerCount;
     @Unique
     private List<ElysiumBiomeHelper.BiomeReplacer> coo$replacers;
     @Unique
@@ -41,27 +36,22 @@ public abstract class MixinMultiNoiseBiomeSourceReplacers {
             at = @At("RETURN")
     )
     private Holder<Biome> coo$applyBiomeReplacers(Holder<Biome> original, int x, int y, int z, Climate.Sampler sampler) {
-        byte state = this.coo$replacerState;
-        if (state == COO_NONE) {
-            return original;
-        }
         if (!(this instanceof ElysiumBiomeSource source) || source.getDimension() == null) {
             return original;
         }
-        if (state == COO_UNKNOWN) {
-            RegistryAccess access = Elysium.registryAccess;
-            if (access == null) {
-                return original;
-            }
-            List<ElysiumBiomeHelper.BiomeReplacer> replacers = ElysiumBiomeHelper.biomesForDimension(source.getDimension());
-            List<BiomeReplacerDataDriven> dataDriven = access.registryOrThrow(ElysiumRegistries.BIOME_REPLACER).stream().toList();
+        RegistryAccess access = Elysium.registryAccess;
+        if (access == null) {
+            return original;
+        }
+        List<ElysiumBiomeHelper.BiomeReplacer> replacers = ElysiumBiomeHelper.biomesForDimension(source.getDimension());
+        if (this.coo$access != access || this.coo$replacers != replacers || this.coo$replacerCount != replacers.size()) {
+            this.coo$replacerCount = replacers.size();
             this.coo$replacers = replacers;
-            this.coo$dataDrivenReplacers = dataDriven;
-            boolean none = replacers.isEmpty() && dataDriven.isEmpty();
-            this.coo$replacerState = none ? COO_NONE : COO_SOME;
-            if (none) {
-                return original;
-            }
+            this.coo$dataDrivenReplacers = access.registryOrThrow(ElysiumRegistries.BIOME_REPLACER).stream().toList();
+            this.coo$access = access;
+        }
+        if (this.coo$replacerCount == 0 && this.coo$dataDrivenReplacers.isEmpty()) {
+            return original;
         }
         return this.coo$replace(x, z, original, source.getWorldSeed());
     }

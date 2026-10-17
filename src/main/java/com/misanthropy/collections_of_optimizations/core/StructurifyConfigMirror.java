@@ -11,17 +11,12 @@ import com.faboslav.structurify.common.config.data.structure.FlatnessCheckData;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class StructurifyConfigMirror {
 
     private static final AtomicInteger GENERATION = new AtomicInteger(1);
-
-    private static final ThreadLocal<LastHit> LAST_HIT = ThreadLocal.withInitial(LastHit::new);
-
-    private static volatile SetLookup setLookup;
     private static volatile CheckState checkState;
     private static volatile boolean structureChecksLive;
 
@@ -46,28 +41,10 @@ public final class StructurifyConfigMirror {
         return structureChecksLive;
     }
 
+    // live read
     @Nullable
     public static StructureSetData structureSetData(@Nullable String structureSetId) {
-        if (structureSetId == null) {
-            return null;
-        }
-        Map<String, StructureSetData> source = Structurify.getConfig().getStructureSetData();
-
-        LastHit last = LAST_HIT.get();
-        if (last.source == source && last.id == structureSetId) {
-            return last.value;
-        }
-
-        SetLookup lookup = setLookup;
-        if (lookup == null || lookup.source != source) {
-            lookup = new SetLookup(source, new HashMap<>(source));
-            setLookup = lookup;
-        }
-        StructureSetData value = lookup.mirror.get(structureSetId);
-        last.source = source;
-        last.id = structureSetId;
-        last.value = value;
-        return value;
+        return structureSetId == null ? null : Structurify.getConfig().getStructureSetData().get(structureSetId);
     }
 
     public static boolean allStructureChecksDisabled() {
@@ -123,24 +100,6 @@ public final class StructurifyConfigMirror {
 
         public T value() {
             return this.value;
-        }
-    }
-
-    private static final class LastHit {
-
-        private Map<String, StructureSetData> source;
-        private String id;
-        private StructureSetData value;
-    }
-
-    private static final class SetLookup {
-
-        private final Map<String, StructureSetData> source;
-        private final Map<String, StructureSetData> mirror;
-
-        private SetLookup(Map<String, StructureSetData> source, Map<String, StructureSetData> mirror) {
-            this.source = source;
-            this.mirror = mirror;
         }
     }
 

@@ -16,7 +16,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import java.util.Optional;
 
@@ -25,21 +24,22 @@ final class IafDenGen {
     private IafDenGen() {
     }
 
-    static void generate(IafDenType denType, BoundingBox boundingBox, WorldGenLevel level,
+    static void generate(IafDenType denType, BlockPos center, WorldGenLevel level,
                          ChunkGenerator chunkGenerator, RandomSource random) {
         if (denType.isCave()) {
-            generateCave(denType, boundingBox, level, random);
+            generateCave(denType, center, level, random);
         } else {
-            generateRoost(denType, boundingBox, level, chunkGenerator, random);
+            generateRoost(denType, center, level, chunkGenerator, random);
         }
     }
 
-    private static void generateCave(IafDenType denType, BoundingBox boundingBox, WorldGenLevel level, RandomSource random) {
+    private static void generateCave(IafDenType denType, BlockPos center, WorldGenLevel level, RandomSource random) {
         WorldGenDragonCave feature = caveFeature(denType);
         if (feature == null) {
             return;
         }
-        BlockPos origin = new BlockPos(boundingBox.minX(), 0, boundingBox.minZ());
+        ChunkPos chunkPos = new ChunkPos(center);
+        BlockPos origin = new BlockPos(chunkPos.getMinBlockX(), 0, chunkPos.getMinBlockZ());
         int y = 40;
         for (int dx = 0; dx < 20; dx++) {
             for (int dz = 0; dz < 20; dz++) {
@@ -52,7 +52,6 @@ final class IafDenGen {
             return;
         }
 
-        ChunkPos chunkPos = new ChunkPos(origin);
         BlockPos cavePos = new BlockPos(chunkPos.x * 16 + 8, y, chunkPos.z * 16 + 8);
         boolean isMale = random.nextBoolean();
         feature.isMale = isMale;
@@ -82,13 +81,12 @@ final class IafDenGen {
         level.addFreshEntity(dragon);
     }
 
-    private static void generateRoost(IafDenType denType, BoundingBox boundingBox, WorldGenLevel level,
+    private static void generateRoost(IafDenType denType, BlockPos origin, WorldGenLevel level,
                                       ChunkGenerator chunkGenerator, RandomSource random) {
         WorldGenDragonRoosts feature = roostFeature(denType);
         if (feature == null) {
             return;
         }
-        BlockPos origin = new BlockPos(boundingBox.minX(), boundingBox.minY(), boundingBox.minZ());
         FeaturePlaceContext<NoneFeatureConfiguration> context = new FeaturePlaceContext<>(
                 Optional.empty(), level, chunkGenerator, random, origin, NoneFeatureConfiguration.INSTANCE);
         WorldGenDragonRoostsInvoker stages = (WorldGenDragonRoostsInvoker) feature;

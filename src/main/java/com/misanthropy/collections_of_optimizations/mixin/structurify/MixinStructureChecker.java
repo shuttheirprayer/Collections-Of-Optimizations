@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class MixinStructureChecker {
 
     @Inject(
-            method = "checkStructure",
+            method = "checkStructure(Lnet/minecraft/world/level/levelgen/structure/StructureStart;Lnet/minecraft/resources/ResourceLocation;Lcom/faboslav/structurify/common/api/StructurifyStructure;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/world/level/levelgen/RandomState;Lnet/minecraft/world/level/biome/BiomeSource;)Z",
             at = @At("HEAD"),
             cancellable = true,
             require = 0
@@ -33,6 +33,9 @@ public abstract class MixinStructureChecker {
                                                     RandomState randomState,
                                                     BiomeSource biomeSource,
                                                     CallbackInfoReturnable<Boolean> cir) {
+        if (structureStart.getPieces().isEmpty()) {
+            return;
+        }
         if (CoOConfig.structurifySkipDisabledStructureChecks
                 && StructurifyConfigMirror.allStructureChecksDisabled()
                 && chunkGenerator instanceof StructurifyChunkGenerator generator

@@ -12,7 +12,7 @@ public abstract class MixinStructurifyConfig {
 
     @Inject(
             method = "save(Z)V",
-            at = @At("HEAD"),
+            at = {@At("HEAD"), @At("RETURN")},
             require = 0
     )
     private void coo$invalidateMirror(boolean syncRegistries, CallbackInfo ci) {

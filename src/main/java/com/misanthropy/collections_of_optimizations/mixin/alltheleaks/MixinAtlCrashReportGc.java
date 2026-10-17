@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 
+// client-only on purpose
 @Pseudo
 @Mixin(targets = "dev.uncandango.alltheleaks.events.common.ModEvent", remap = false)
 public abstract class MixinAtlCrashReportGc {

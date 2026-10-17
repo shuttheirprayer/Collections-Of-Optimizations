@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Unique;
 public abstract class MixinTagKeyNumber implements TagKeyNumber {
 
     @Unique
-    private int coo$number;
+    private transient int coo$number;
 
     @Override
     public int coo$tagNumber() {

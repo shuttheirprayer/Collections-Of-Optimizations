@@ -281,6 +281,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("vanilla.MixinBeardifierReach", new String[]{"generator_accelerator"}),
             Map.entry("vanilla.MixinLevelDryRaycast", new String[]{"valkyrienskies"}),
             Map.entry("terrablender.MixinNamespacedSourceLazy", new String[]{"c2me"}),
+            Map.entry("elysiumapi.MixinMultiNoiseBiomeSourceReplacers", new String[]{"terrablender"}),
 
             Map.entry("vanilla.MixinStructureCheck", new String[]{"modernfix"}),
             Map.entry("vanilla.MixinServerLevelStructureState", new String[]{"modernfix"}),

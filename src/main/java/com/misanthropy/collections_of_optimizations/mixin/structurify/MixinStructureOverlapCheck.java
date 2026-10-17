@@ -15,8 +15,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = StructureOverlapCheck.class, remap = false)
 public abstract class MixinStructureOverlapCheck {
 
+    // newer versions keep their own logic
     @Inject(
-            method = "getStructurePiecesSections",
+            method = "getStructurePiecesSections(Lnet/minecraft/world/level/levelgen/structure/StructureStart;)[J",
             at = @At("HEAD"),
             cancellable = true,
             require = 0

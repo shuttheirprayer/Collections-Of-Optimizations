@@ -14,7 +14,7 @@ public abstract class MixinStructurifyConfigSerializer {
 
     @Inject(
             method = "load",
-            at = @At("RETURN"),
+            at = {@At("HEAD"), @At("RETURN")},
             require = 0
     )
     private static void coo$invalidateMirror(StructurifyConfig config, JsonObject json, CallbackInfo ci) {

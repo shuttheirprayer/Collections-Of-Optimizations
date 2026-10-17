@@ -13,7 +13,7 @@ public abstract class MixinStructurifyRegistryUpdater {
 
     @Inject(
             method = "updateRegistries",
-            at = @At("HEAD"),
+            at = {@At("HEAD"), @At("RETURN")},
             require = 0
     )
     private static void coo$invalidateMirror(UpdateRegistriesEvent event, CallbackInfo ci) {

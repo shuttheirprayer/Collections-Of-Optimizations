@@ -4,6 +4,7 @@ import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.IafDenGenFlag;
 import com.misanthropy.collections_of_optimizations.core.IafDenRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -54,12 +55,16 @@ public class IafDenPiece extends StructurePiece {
         if (this.generated || !CoOConfig.iafdragonfixStructureDens || !IafDenRegistry.isPortActive()) {
             return;
         }
+        BlockPos center = this.boundingBox.getCenter();
+        if (chunkPos.x != SectionPos.blockToSectionCoord(center.getX())
+                || chunkPos.z != SectionPos.blockToSectionCoord(center.getZ())) {
+            return;
+        }
         this.generated = true;
 
         ServerLevel serverLevel = level.getLevel();
         BlockPos spawn = serverLevel.getSharedSpawnPos();
-        BlockPos origin = new BlockPos(this.boundingBox.minX(), 0, this.boundingBox.minZ());
-        double distSq = spawn.distSqr(new BlockPos(origin.getX(), spawn.getY(), origin.getZ()));
+        double distSq = spawn.distSqr(new BlockPos(center.getX(), spawn.getY(), center.getZ()));
         int minDist = this.denType.isCave()
                 ? CoOConfig.iafdragonfixCaveSpawnDistance
                 : CoOConfig.iafdragonfixRoostSpawnDistance;
@@ -69,7 +74,7 @@ public class IafDenPiece extends StructurePiece {
 
         try {
             IafDenGenFlag.enable();
-            IafDenGen.generate(this.denType, this.boundingBox, level, chunkGenerator, random);
+            IafDenGen.generate(this.denType, center, level, chunkGenerator, random);
         } catch (Exception | LinkageError exception) {
             IafDenRegistry.LOGGER.error("Failed to generate dragon den {}", this.denType, exception);
         } finally {

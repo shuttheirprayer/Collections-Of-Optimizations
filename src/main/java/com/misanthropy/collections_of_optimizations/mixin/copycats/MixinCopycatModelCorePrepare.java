@@ -4,6 +4,7 @@ import com.copycatsplus.copycats.config.CCConfigs;
 import com.copycatsplus.copycats.config.CClient;
 import com.copycatsplus.copycats.foundation.copycat.model.CopycatModelCore;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
 import java.lang.reflect.Method;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MixinCopycatModelCorePrepare {
 
     @Unique
-    private static long coo$nextRefreshNanos;
+    private static int coo$nextRefreshTick;
 
     @Unique
     private static boolean coo$cacheValid;
@@ -40,8 +41,8 @@ public abstract class MixinCopycatModelCorePrepare {
         if (!CoOConfig.copycatsCachedModelConfig) {
             return;
         }
-        long now = System.nanoTime();
-        if (!coo$cacheValid || now - coo$nextRefreshNanos >= 0) {
+        int now = ClientTickStamp.current();
+        if (!coo$cacheValid || now - coo$nextRefreshTick >= 0) {
             try {
                 if (coo$getMethod == null) {
                     CClient client = CCConfigs.client();
@@ -52,7 +53,7 @@ public abstract class MixinCopycatModelCorePrepare {
                 coo$enhanced = (Boolean) coo$getMethod.invoke(coo$enhancedValue);
                 coo$colorize = (Boolean) coo$getMethod.invoke(coo$colorizeValue);
                 coo$cacheValid = true;
-                coo$nextRefreshNanos = now + 1_000_000_000L;
+                coo$nextRefreshTick = now + 20;
             } catch (Throwable t) {
                 return;
             }

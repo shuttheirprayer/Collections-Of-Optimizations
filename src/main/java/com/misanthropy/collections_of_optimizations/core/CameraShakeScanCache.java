@@ -21,6 +21,8 @@ public final class CameraShakeScanCache {
 
     private static final Map<Class<?>, List<Entity>> CACHE = new Reference2ObjectOpenHashMap<>(16);
 
+    private static final Map<Class<?>, AABB> BOXES = new Reference2ObjectOpenHashMap<>(16);
+
     private static final Map<String, List<? extends Entity>> KEYED = new HashMap<>(4);
 
     private static WeakReference<Level> scanned = new WeakReference<>(null);
@@ -40,6 +42,7 @@ public final class CameraShakeScanCache {
         stamp = Integer.MIN_VALUE;
         scanned = new WeakReference<>(null);
         CACHE.clear();
+        BOXES.clear();
         KEYED.clear();
     }
 
@@ -49,6 +52,7 @@ public final class CameraShakeScanCache {
             stamp = now;
             scanned = new WeakReference<>(level);
             CACHE.clear();
+            BOXES.clear();
             KEYED.clear();
         }
     }
@@ -62,6 +66,13 @@ public final class CameraShakeScanCache {
         if (cached == null) {
             cached = original.call(level, type, box);
             CACHE.put(type, cached);
+            BOXES.put(type, box);
+            return cached;
+        }
+        AABB first = BOXES.get(type);
+        if (Math.abs(first.getXsize() - box.getXsize()) > 0.01 || Math.abs(first.getYsize() - box.getYsize()) > 0.01
+                || Math.abs(first.getZsize() - box.getZsize()) > 0.01) {
+            return original.call(level, type, box);
         }
         return cached;
     }

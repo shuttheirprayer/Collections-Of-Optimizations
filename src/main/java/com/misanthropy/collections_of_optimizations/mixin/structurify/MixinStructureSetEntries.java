@@ -15,7 +15,7 @@ import java.util.List;
 public abstract class MixinStructureSetEntries {
 
     @Unique
-    private StructurifyConfigMirror.Cached<List<StructureSet.StructureSelectionEntry>> coo$entries;
+    private transient StructurifyConfigMirror.Cached<List<StructureSet.StructureSelectionEntry>> coo$entries;
 
     @Inject(
             method = "structures",
