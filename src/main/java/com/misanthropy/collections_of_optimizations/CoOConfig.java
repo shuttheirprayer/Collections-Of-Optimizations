@@ -496,6 +496,7 @@ public final class CoOConfig {
     public static boolean vanillaCacheBiomeQuartLookups = true;
     public static boolean vanillaMemoCameraFluid = true;
     public static boolean vanillaIndexModFiles = true;
+    public static boolean vanillaIndexZipPacks = true;
     public static boolean vanillaMemoSkyColour = true;
     public static boolean vanillaPurgeGhostPlayers = true;
     public static boolean vanillaFastBiomeBlend = true;
@@ -556,6 +557,8 @@ public final class CoOConfig {
     public static boolean covenantofthesevenSilenceDebugSpam = true;
 
     public static int simplyswordsConfigRereadInterval = 1000;
+
+    public static boolean apothicattributesSkipReplacedTooltipModifiers = true;
 
     public static int easyvillagersDirtyMarkInterval = 20;
 
@@ -2445,6 +2448,9 @@ public final class CoOConfig {
                 .comment("Index each mod jar's assets and data once so a lookup for a file the jar does not have is answered without touching the jar. Every model, blockstate and texture lookup asks every mod sharing a namespace, and each miss inside a jar throws three exceptions.")
                 .define("indexModFiles", true), v -> vanillaIndexModFiles = v);
         gate(builder
+                .comment("Index each zipped resource pack or data pack once so listing a folder inside it only walks the files under that folder. Vanilla walks every file in the zip for every listing, and a reload lists every folder of every namespace the zip has, so a big pack with many namespaces is walked thousands of times per reload. Same files in the same order.")
+                .define("indexZipPacks", true), v -> vanillaIndexZipPacks = v);
+        gate(builder
                 .comment("Work out the sky colour once per camera position per frame. Fog setup, the sky renderer and shader uniform packs each ask for it separately and every call samples 27 biomes.")
                 .define("memoSkyColour", true), v -> vanillaMemoSkyColour = v);
         gate(builder
@@ -2639,6 +2645,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the footfall particle call for a Simply More unique weapon that is not the entity's main hand item. Every unique in the mod calls the shared footfall helper from inventoryTick with no guard at all, for every slot the weapon sits in, on both sides, and the helper bottoms out in Simply Swords' config reader, which reads and parses general.json5 off disk on every single call. The helper's own first check is whether the stack is the main hand item, so a stack in any other slot only ever paid for that file read and did nothing. The step counter still advances exactly as it did, so the particle rhythm when the weapon is drawn is unchanged.")
                 .define("skipUnheldFootfalls", true), v -> simplymoreSkipUnheldFootfalls = v);
+        builder.pop();
+
+        builder.comment("Apothic Attributes patches.").push("apothicattributes");
+        gate(builder
+                .comment("Skip building vanilla's attribute modifier lines in item tooltips. Apothic Attributes deletes every one of those lines and writes its own, so vanilla's pass is thrown away on every tooltip, and JEI builds a tooltip for every item when you join a world. The tooltip you see is the same. Client.")
+                .define("skipReplacedTooltipModifiers", true), v -> apothicattributesSkipReplacedTooltipModifiers = v);
         builder.pop();
 
         builder.comment("Simply Swords patches.").push("simplyswords");

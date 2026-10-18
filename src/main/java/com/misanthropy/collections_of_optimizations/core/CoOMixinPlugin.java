@@ -47,6 +47,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("shouldersurfing", "shouldersurfing"),
             Map.entry("mythsandlegends", "mythsandlegends"),
             Map.entry("ambientsounds", "ambientsounds"),
+            Map.entry("apothicattributes", "attributeslib"),
             Map.entry("arsnouveau", "ars_nouveau"),
             Map.entry("arselemental", "ars_elemental"),
             Map.entry("goetydelight", "goetydelight"),

@@ -209,6 +209,7 @@
     "covenantoftheseven.MixinCotsCursedScrollPhase",
     "covenantoftheseven.MixinCotsDebugSpam",
     "vanilla.MixinForgePathPackResourcesIndex",
+    "vanilla.MixinFilePackResourcesIndex",
     "vanilla.MixinBlockPredictableDrops",
     "vanilla.MixinBoatFallDamage",
     "vanilla.MixinChunkMapEntityTracker",
@@ -534,6 +535,7 @@
     "l2hostility.MixinCurioCompatHasItem"
   ],
   "client": [
+    "apothicattributes.MixinApothReplacedTooltipModifiers",
     "alltheleaks.MixinAtlCrashReportGc",
     "asyncparticles.ChunkAccessBlockEntityMapsAccessor",
     "asyncparticles.MixinLevelChunkParticleThreadBlockEntity",
