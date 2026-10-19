@@ -106,10 +106,13 @@ public abstract class MixinBatchableBufferSource {
         if (!CoOConfig.immediatelyfastSingleBufferLookup) {
             return;
         }
-        ReferenceSet<BufferBuilder> fallback = this.fallbackBuffers.get(layer);
-        if (fallback != null) {
-            cir.setReturnValue(fallback);
-            return;
+        Map<RenderType, ReferenceSet<BufferBuilder>> fallbackBuffers = this.fallbackBuffers;
+        if (!fallbackBuffers.isEmpty()) {
+            ReferenceSet<BufferBuilder> fallback = fallbackBuffers.get(layer);
+            if (fallback != null) {
+                cir.setReturnValue(fallback);
+                return;
+            }
         }
         BufferBuilder fixed = ((BufferSourceFixedBuffersAccessor) this).coo$fixedBuffers().get(layer);
         cir.setReturnValue(fixed != null ? Collections.singleton(fixed) : Collections.emptySet());

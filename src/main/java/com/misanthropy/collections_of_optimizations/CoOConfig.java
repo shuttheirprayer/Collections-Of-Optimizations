@@ -37,6 +37,7 @@ public final class CoOConfig {
     public static boolean caelusSkipGroundedNonPlayers = true;
 
     public static boolean blockswapPaletteFilteredRetroGen = true;
+    public static boolean blockswapScanPaletteIds = true;
     public static boolean justdirethingsAvoidChunkTickets = true;
     public static boolean justdirethingsLeanAreaPreviewScan = true;
     public static boolean goetydelightSkipIdleVisualEffects = true;
@@ -91,6 +92,8 @@ public final class CoOConfig {
 
     public static boolean emfDropZeroAngerEntries = true;
     public static boolean emfCacheNbtPerTick = true;
+    public static boolean emfParseTokensWithoutExceptions = true;
+    public static boolean etfStacklessPropertyExceptions = true;
 
     public static boolean shouldersurfingSkipIdleCrosshairPick = true;
     public static double shouldersurfingCameraSweepStep = 0.125;
@@ -101,6 +104,8 @@ public final class CoOConfig {
     public static boolean geckolibReuseBoneQueues = true;
     public static boolean geckolibPrimitiveEasing = true;
     public static boolean geckolibKeyframeLocals = true;
+    public static boolean geckolibParseMolangNumbersWithoutExceptions = true;
+    public static boolean ldlibSkipMissingMetadataThrow = true;
     public static int geckolibHoldDistantPosePixels = 0;
     public static int fancymenuInternetProbeSeconds = 600;
     public static boolean vanillaMemoBiomeFogColour = true;
@@ -133,6 +138,7 @@ public final class CoOConfig {
 
     public static boolean terrablenderCacheNamespaceRule = true;
     public static boolean terrablenderThreadLocalAreaCache = true;
+    public static boolean terrablenderDedupeStackedLayers = true;
 
     public static boolean biomeswevegoneSkipForeignChunkTerrain = true;
 
@@ -265,6 +271,7 @@ public final class CoOConfig {
     public static boolean jeiWeakUnsupportedContainers = true;
     public static boolean radiumPartEntityCollisions = true;
     public static boolean radiumMemoEntityTouchableFlag = true;
+    public static boolean radiumNoThrowMethodOverrideScan = true;
     public static boolean radiumFixHashPaletteCopy = true;
     public static boolean radiumKeepBorderListeners = true;
     public static boolean modernfixOrderedModelLocations = true;
@@ -292,6 +299,9 @@ public final class CoOConfig {
     public static boolean punchyMemoBlacklistMatch = true;
     public static boolean punchyCacheItemIds = true;
     public static boolean punchySkipUnusedGeoScan = true;
+    public static boolean punchyMemoActiveMixOptions = true;
+    public static boolean punchyMemoAnimationMerge = true;
+    public static boolean punchyMemoSpearChecks = true;
     public static boolean embeddiumCacheShaderSources = true;
     public static boolean alltheleaksSkipCrashReportGc = true;
     public static boolean l2hostilitySkipTraitlessCapLookup = true;
@@ -320,6 +330,7 @@ public final class CoOConfig {
     public static boolean mowziesmobsDedupeCapabilityAttach = true;
     public static boolean mowziesmobsCacheCameraShakeScan = true;
     public static int mowziesmobsBossMusicPacketInterval = 5;
+    public static boolean mowziesmobsSkipMissingPrevTargetThrow = true;
     public static boolean mowziesmobsLeanBoneLookup = true;
     public static boolean mowziesmobsHoistChainRenderMatrix = true;
     public static int mowziesmobsDynamicChainSubstepCap = 4;
@@ -355,6 +366,7 @@ public final class CoOConfig {
     public static boolean tonsofenchantsSinglePhasePlayerTick = true;
 
     public static boolean subtleeffectsDisplayTickPlan = true;
+    public static boolean subtleeffectsMemoBiomeFiddles = true;
     public static boolean subtleeffectsIdleFluidHooks = true;
     public static boolean subtleeffectsUnusedBubbleTint = true;
     public static boolean subtleeffectsOneRangeCheck = true;
@@ -496,6 +508,12 @@ public final class CoOConfig {
     public static boolean vanillaCacheBiomeQuartLookups = true;
     public static boolean vanillaMemoCameraFluid = true;
     public static boolean vanillaIndexModFiles = true;
+    public static boolean vanillaIndexModFilesInBackground = true;
+    public static boolean vanillaCachePackNamespaces = true;
+    public static boolean vanillaSkipAbsentPackNamespaces = true;
+    public static boolean vanillaPlaceFeaturesWithoutStreams = true;
+    public static boolean vanillaSkipEmptyOwnerUuidParse = true;
+    public static boolean vanillaCacheStaticHardwareReport = true;
     public static boolean vanillaIndexZipPacks = true;
     public static boolean vanillaMemoSkyColour = true;
     public static boolean vanillaPurgeGhostPlayers = true;
@@ -552,6 +570,7 @@ public final class CoOConfig {
     public static boolean hexereiDisableDynamicLights = true;
     public static boolean hexereiCacheLightToggle = true;
     public static boolean hexereiSkipEmptyLightScan = true;
+    public static boolean hexereiLazyModelSwaps = false;
 
     public static boolean covenantofthesevenTickEndPhaseOnly = true;
     public static boolean covenantofthesevenSilenceDebugSpam = true;
@@ -966,6 +985,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Filter the retro-gen chunk sweep through each section's block state palette.")
                 .define("paletteFilteredRetroGen", true), v -> blockswapPaletteFilteredRetroGen = v);
+        gate(builder
+                .comment("Find the tracked blocks of a chunk section by reading its storage once and testing each palette entry once, instead of looking up all 4096 positions in a hash map. Needs paletteFilteredRetroGen. The same blocks are swapped in the same order. Turn it off for the per position lookup.")
+                .define("scanPaletteIds", true), v -> blockswapScanPaletteIds = v);
         builder.pop();
 
         builder.comment("Just Dire Things patches.").push("justdirethings");
@@ -1072,6 +1094,9 @@ public final class CoOConfig {
                 .comment("Find the current keyframe of every animated bone without building a throwaway location object for it. GeckoLib looks up the keyframe under the play head about nine times per animated bone per controller per frame, and every lookup wraps its answer in a small object that is unpacked on the next line and thrown away. With this on the same keyframe and the same start tick are worked out with the exact same arithmetic, in the same order, straight into locals, so every pose is bit for bit what it was. Turn it off for stock behaviour.")
                 .define("keyframeLocals", true), v -> geckolibKeyframeLocals = v);
         gate(builder
+                .comment("Stop reading animation files throwing a stack trace for every formula. GeckoLib reads each keyframe value in an animation file by first trying to turn the text into a number and, when that fails because the value is a Molang formula such as math.sin(query.anim_time), catching the NumberFormatException and parsing it as a formula instead. A model pack reads thousands of formulas at launch and every failed number parse copies the loading thread's call stack. With this on the text is only handed to the number parser when its first character, after any spaces and sign, could start a number at all, a digit, a dot, or the N and I of NaN and Infinity, and everything else gets one shared exception with no stack that the same catch block handles in the same way. Anything the real number parser accepts still goes through it unchanged. Client.")
+                .define("parseMolangNumbersWithoutExceptions", true), v -> geckolibParseMolangNumbersWithoutExceptions = v);
+        gate(builder
                 .comment("Let mobs that are only a few pixels tall on your screen redo their animation once per game tick instead of on every frame. 0 turns this off, which is the default. Any other number is the on screen height in pixels below which a mob counts as small, worked out from its size, its distance, your field of view, zoom and window height, so it follows spyglasses and resolution instead of a fixed block distance. 24 is about where a two block tall mob sits at 60 blocks at 1080p. A small mob reuses its own pose from earlier in the same tick, never another mob's, so nothing ever pops into the wrong pose, and it moves on to the next pose as soon as the next tick starts, so it is at most one tick behind. Bosses, players, the entity you are looking through, anything riding or being ridden, mobs in the middle of an animation change or a triggered animation, and animations with sound, particle or script keyframes are always animated every frame, so no sound or effect is ever skipped. Head turning and other per frame tweaks a mod adds on top still run every frame. This is the useful part of GeckoLib Animation Optimizer done without its bug where distant mobs of the same kind borrow each other's poses, and it stands down if that mod is installed.")
                 .defineInRange("holdDistantPosePixels", 0, 0, 256), 0, v -> geckolibHoldDistantPosePixels = v);
         builder.pop();
@@ -1143,6 +1168,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Remember each nbt() animation result per entity for one client tick instead of serialising the whole entity to NBT and regex matching it on every frame. Equipment or inventory changes show up at most one tick later. Client.")
                 .define("cacheNbtPerTick", true), v -> emfCacheNbtPerTick = v);
+        gate(builder
+                .comment("Stop the animation expression parser throwing a stack trace for every variable name it reads. Each piece of an animation expression in a model file, a bone angle formula, a condition, a variable, is first handed to the number parser, and anything that is not a number, which is nearly every name like head_rx or is_hurt, makes it throw a NumberFormatException that the parser catches to learn that the piece is a variable. A model pack with a few hundred animated models builds hundreds of thousands of those at launch, each one copying the loading thread's deep call stack. With this on a piece is only handed to the real number parser when its first character, after any spaces and sign, could start a number at all, which are a digit, a dot, or the N and I of NaN and Infinity, and everything else gets one shared exception with no stack that the same catch block handles in the same way. Every number the real parser accepts, including 1f, .5, hex floats, NaN and Infinity, still goes through it unchanged. Client.")
+                .define("parseTokensWithoutExceptions", true), v -> emfParseTokensWithoutExceptions = v);
         builder.pop();
 
         builder.comment("Shoulder Surfing Reloaded patches.").push("shouldersurfing");
@@ -1242,6 +1270,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Build a TerraBlender namespace's surface rules only when a chunk first needs them. For every chunk's surface pass TerraBlender builds the full surface rule tree of every mod that registered surface rules, hundreds of objects each, although a chunk usually only ever reaches one or two of them. With this on, a namespace whose rules are made only of vanilla rule types is built the first time a block in that chunk actually asks for it, with the very same call. Vanilla's rule conditions work out their answer from the chunk's current position whenever they are first asked, so building them later gives the same blocks. A namespace containing any other mod's rule types is built up front as before, and if any other mod changes the vanilla rule classes this patch has not checked, everything is built up front and the log says why once. Turn it off for stock behaviour.")
                 .define("lazyNamespaceRules", true), v -> terrablenderLazyNamespaceRules = v);
+        gate(builder
+                .comment("Drop repeated layers of TerraBlender's overworld and nether surface rules. TerraBlender writes its wrapped surface rules into level.dat and wraps them again on the next load, so every time a world is opened one more full copy of every mod's surface rules is stacked under the last. Below the surface each copy is walked in turn and gives the same answer as the first, so a world opened fifteen times runs the rules fifteen times per block and level.dat keeps growing. With this on, a layer whose rules are identical to a layer above it is skipped; layers that differ, such as rules saved by an older version of a mod, are kept in order, so the generated blocks are the same. Turn it off for stock behaviour.")
+                .define("dedupeStackedLayers", true), v -> terrablenderDedupeStackedLayers = v);
         builder.pop();
 
         builder.comment("Terramity patches.").push("terramity");
@@ -1672,6 +1703,9 @@ public final class CoOConfig {
                 .comment("Work out Radium's entity touchable block flag once per block class instead of once per block state. Every time the block caches are rebuilt (game start, joining a world, /reload) Radium asks every block state whether its block reacts to entities walking into it, and answers by searching the block's class and all its parents by reflection, throwing and catching an exception at every level of the search. The answer only depends on the block's class, so with this on the first state of each class asks Radium and every other state of that class reuses its answer. On a dedicated server the Radium class analysis warning also appears once per class instead of once per state. Turn it off for stock behaviour.")
                 .define("memoEntityTouchableFlag", true), v -> radiumMemoEntityTouchableFlag = v);
         gate(builder
+                .comment("Answer Radium's override search from a per class list of declared methods instead of asking each class in the chain and catching the exception it throws when the method is not there. The first time a block class is analysed, every level of its parent chain used to throw one. The answer is the same and the error handling for classes that cannot be analysed is still Radium's own. Turn it off for stock behaviour.")
+                .define("noThrowMethodOverrideScan", true), v -> radiumNoThrowMethodOverrideScan = v);
+        gate(builder
                 .comment("Fix copied chunk sections taking new blocks wrong under Radium. Radium keeps the block list of a chunk section in its own palette, and copying that palette loses the marker that means not in the list yet, so writing a block that is not already in a copied section silently stores the first entry of the list, usually air, instead. With this on a copy keeps the marker and takes new blocks the same way vanilla's own palette copies do. Vanilla only copies sections for render snapshots, which never write into them, so this protects mods that edit copied sections. Turn it off for stock behaviour.")
                 .define("fixHashPaletteCopy", true), v -> radiumFixHashPaletteCopy = v);
         gate(builder
@@ -1698,6 +1732,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Read compound and list tags with less garbage. With Radium installed every loaded compound gets a map with room for sixteen entries even though most compounds hold one to three, LongNbtKiller then builds a second map and throws one of the two away for every compound, and every key is copied into a fresh string even though chunk files repeat the same few hundred keys over and over. With this on each compound gets one small map that only grows when it has to, and repeated keys are shared from a small per thread table. The tags that come out are equal to the stock ones, the size accounting and the error messages are the same, and the depth limits below still apply. Turn it off to hand loading back to LongNbtKiller if it is installed, or to vanilla if it is not.")
                 .define("fastLoad", true), v -> NbtFastLoad.enabled = v);
+        gate(builder
+                .comment("Collect a compound's entries first and then build its map at the exact size, instead of starting at two entries and rehashing every time it fills up. Most chunk, entity and structure compounds hold three to ten entries, so the old way threw away two or three sets of arrays per compound. The map holds the same entries; entries that hash alike can come out in a different order. Needs fastLoad. Turn it off for the growing map.")
+                .define("presizeCompounds", true), v -> NbtFastLoad.presizeCompounds = v);
         plain(builder
                 .comment("How deep compound tags may nest before the rest of that branch is dropped with a warning, same as LongNbtKiller's setting of the same name. Vanilla throws at 512.")
                 .defineInRange("maxDepthForCompoundTag", Integer.MAX_VALUE, 512, Integer.MAX_VALUE), v -> NbtFastLoad.maxCompoundDepth = v);
@@ -1759,6 +1796,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the two resource scans at the start of Punchy's reload that list and parse every geo and every block and item model JSON in every pack, twice per launch. Punchy 2.8c keeps the result in two maps that nothing reads. Turn this off if a newer Punchy starts using resource pack geo models. Client.")
                 .define("skipUnusedGeoScan", true), v -> punchySkipUnusedGeoScan = v);
+        gate(builder
+                .comment("Work out the list of active animation pack ids once per resource pack change instead of rebuilding and lowercasing every pack name each time a tuning slot is read. Client.")
+                .define("memoActiveMixOptions", true), v -> punchyMemoActiveMixOptions = v);
+        gate(builder
+                .comment("Merge an item's custom animation list with the default list once instead of on every lookup. Stock builds a fresh map of every default entry each time, lowercasing and rebuilding each entry's key and serialising the selectors of every interaction entry with a new Gson, several times a tick and every frame. The merged list is shared between callers, which only read it. Client.")
+                .define("memoAnimationMerge", true), v -> punchyMemoAnimationMerge = v);
+        gate(builder
+                .comment("Remember whether an item is a spear by its class and by its registry name instead of lowercasing both names every time Punchy picks a tool kind. Client.")
+                .define("memoSpearChecks", true), v -> punchyMemoSpearChecks = v);
         builder.pop();
 
         builder.comment("Embeddium patches.").push("embeddium");
@@ -1864,6 +1910,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Ticks between boss music state packets. 1 keeps stock behaviour.")
                 .defineInRange("bossMusicPacketInterval", 5, 1, 100), 1, v -> mowziesmobsBossMusicPacketInterval = v);
+        gate(builder
+                .comment("Do not throw and swallow a NullPointerException for every frozen mob that has no remembered attack target when its frozen data is loaded. Stock reads the target with a call that fails on a missing tag and catches the failure; with this on the tag is checked first and the target is only set when it is there, exactly as before. Server.")
+                .define("skipMissingPrevTargetThrow", true), v -> mowziesmobsSkipMissingPrevTargetThrow = v);
         gate(builder
                 .comment("Drop the throwaway Optional from Mowzie's per-frame bone lookups.")
                 .define("leanBoneLookup", true), v -> mowziesmobsLeanBoneLookup = v);
@@ -2035,6 +2084,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the per block display tick hook off cached block state and biome answers, calling into Subtle Effects only where it can spawn something.")
                 .define("displayTickPlan", true), v -> subtleeffectsDisplayTickPlan = v);
+        gate(builder
+                .comment("Keep the random offsets vanilla's biome zoom works out for each corner of a biome cell instead of recomputing all eight corners with nine hash steps each for every display tick sample. The offsets only depend on the world seed and the cell, so the same biome is picked. Needs displayTickPlan. Client.")
+                .define("memoBiomeFiddles", true), v -> subtleeffectsMemoBiomeFiddles = v);
         gate(builder
                 .comment("Skip the water steam hook while steam and boiling are both off, and the lava spark hook on lava whose top is covered.")
                 .define("idleFluidHooks", true), v -> subtleeffectsIdleFluidHooks = v);
@@ -2448,6 +2500,24 @@ public final class CoOConfig {
                 .comment("Index each mod jar's assets and data once so a lookup for a file the jar does not have is answered without touching the jar. Every model, blockstate and texture lookup asks every mod sharing a namespace, and each miss inside a jar throws three exceptions.")
                 .define("indexModFiles", true), v -> vanillaIndexModFiles = v);
         gate(builder
+                .comment("Build a mod jar's file index on a background thread and keep answering from the jar until it is ready, instead of making whoever asks first wait for the whole walk while every other thread asking about the same jar waits on its lock. Needs indexModFiles. Turn it off to build the index in place.")
+                .define("indexModFilesInBackground", true), v -> vanillaIndexModFilesInBackground = v);
+        gate(builder
+                .comment("Remember which namespaces a mod jar's assets and data folders hold instead of walking the jar again each time somebody asks. FancyMenu asks every one of a few hundred mod packs for its namespace list every time it lists resources, and each answer is a directory walk inside the jar that, for every mod without a data folder or without an assets folder, ends in a file not found exception that is caught and turned into an empty list, which is tens of thousands of exceptions and walks at launch. Only packs read from inside a jar are remembered, a pack that is an ordinary folder on disk is always asked again, and every caller still gets its own fresh set with the same contents, in the same order, that the walk returned.")
+                .define("cachePackNamespaces", true), v -> vanillaCachePackNamespaces = v);
+        gate(builder
+                .comment("Skip listing a mod jar for a namespace it does not have. Loading models, textures, lang files and recipes asks every mod pack to list a namespace, and a pack that has no folder for it answers by searching a path that is not there and throwing a file not found exception that is caught and ignored, which is the biggest single source of exceptions at launch. With this on the pack's remembered namespace list is checked first and a pack that does not have the namespace lists nothing, which is the same result. Needs cachePackNamespaces.")
+                .define("skipAbsentPackNamespaces", true), v -> vanillaSkipAbsentPackNamespaces = v);
+        gate(builder
+                .comment("Place features with plain loops instead of a stream pipeline. Vanilla builds a stream with a lambda and a flat map stage for every placement modifier of every feature placement, which makes up a large part of the garbage world generation produces. Positions come out in the same order and the random source is used in the same order. Does nothing when Bye Pregen's own placement rewrite is active.")
+                .define("placeFeaturesWithoutStreams", true), v -> vanillaPlaceFeaturesWithoutStreams = v);
+        gate(builder
+                .comment("Skip parsing an empty owner name as a UUID when a tameable animal is loaded. Every wild wolf, cat, parrot and modded tameable has an empty owner, and vanilla throws and swallows an exception to find that out. The owner stays unset.")
+                .define("skipEmptyOwnerUuidParse", true), v -> vanillaSkipEmptyOwnerUuidParse = v);
+        gate(builder
+                .comment("Reuse the processor, graphics card and memory module lines of a crash report after the first one has been built. Building a crash report asks the hardware library for them again every time, which reads files from every mod jar, throws thousands of exceptions and takes a few hundred milliseconds, and mods build crash reports for errors they handle. Live memory figures are still read fresh.")
+                .define("cacheStaticHardwareReport", true), v -> vanillaCacheStaticHardwareReport = v);
+        gate(builder
                 .comment("Index each zipped resource pack or data pack once so listing a folder inside it only walks the files under that folder. Vanilla walks every file in the zip for every listing, and a reload lists every folder of every namespace the zip has, so a big pack with many namespaces is walked thousands of times per reload. Same files in the same order.")
                 .define("indexZipPacks", true), v -> vanillaIndexZipPacks = v);
         gate(builder
@@ -2675,6 +2745,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Return straight away from the dynamic light distance scans when nothing in the world is currently emitting dynamic light. Both scans take the shared read lock, allocate an iterator and walk the whole light source set before clamping the result, and they run once per quad during chunk meshing and once per entity per frame. Entities only enter that set while they are actually lit, so most of the time it is empty and the scan can only ever return zero, which is the value the fast path hands back. When anything is lit the stock scan runs exactly as before.")
                 .define("skipEmptyLightScan", true), v -> hexereiSkipEmptyLightScan = v);
+        gate(builder
+                .comment("Wrap Hexerei's connected texture block models the first time each one is asked for instead of all at once while the models are baked. Hexerei looks up every block state model of its connected blocks when the model event fires, which with ModernFix's dynamic resources forces every one of them to be baked at launch, over a second and a half. With this on, each swap is queued and runs the first time that model is read, replaced or removed, with the same base model and the same wrapper, and everything else that touches those entries finishes the queued swap first. Only applies with ModernFix dynamic resources. Client. Turn it off for stock behaviour.")
+                .define("lazyModelSwaps", false), v -> hexereiLazyModelSwaps = v);
         builder.pop();
 
         builder.comment("Covenant of the Seven patches.").push("covenantoftheseven");
@@ -2759,6 +2832,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Reuse the tag a tag filter points at instead of building it again on every check. A tag filter stores its tag as text, and every time anything asks whether an item matches it, FTB Quests checking a task against your inventory, a sorting or storage mod, the creative search, it parses that text into a new resource location and looks the tag up in the game's global tag table, which takes a lock. Checked against every item in a list that adds up to a visible hitch. With this on each tag text is parsed and looked up once and the result is reused, which is the exact same tag object the lookup returns anyway.")
                 .define("cacheTagFilterKeys", true), v -> itemfiltersCacheTagFilterKeys = v);
+        builder.pop();
+
+        builder.comment("LDLib patches.").push("ldlib");
+        gate(builder
+                .comment("Stop the block texture loader throwing an exception for every texture that has no LDLib metadata. When a block atlas is stitched LDLib asks the resource of every sprite for its ldlib section in the texture's mcmeta, and nearly every texture has none, so the lookup calls get on an empty Optional and the resulting NoSuchElementException is caught and thrown away to mean no metadata. A big pack asks about tens of thousands of textures at launch and each exception copies the call stack. With this on an empty answer is handed straight back as the same missing metadata marker the catch used to leave behind, and that result is cached exactly as before. Textures that do have the section are untouched. Client.")
+                .define("skipMissingMetadataThrow", true), v -> ldlibSkipMissingMetadataThrow = v);
+        builder.pop();
+
+        builder.comment("Entity Texture Features patches.").push("etf");
+        gate(builder
+                .comment("Stop the missing property error from copying a call stack. When a texture or model rule file leaves out a property, Entity Texture Features builds that property by reading it from the file and throwing its own error if the key is not there, and the code that asked catches it, discards it and moves on, which happens for every property type of every rule in every file. A big pack throws over ten thousand of those at launch and each one copies the loading thread's call stack, which nothing ever reads, because the only thing the mod does with the error is log its message. With this on the same error with the same message is thrown without capturing a stack. Client.")
+                .define("stacklessPropertyExceptions", true), v -> etfStacklessPropertyExceptions = v);
         builder.pop();
 
         builder.comment("Async Particles patches.").push("asyncparticles");

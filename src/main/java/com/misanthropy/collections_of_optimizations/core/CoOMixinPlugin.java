@@ -56,6 +56,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("goetyrevelation", "goety_revelation"),
             Map.entry("revelationfix", "revelationfix"),
             Map.entry("geckolib", "geckolib"),
+            Map.entry("ldlib", "ldlib"),
             Map.entry("gnetum", "gnetum"),
             Map.entry("tooltipoverhaul", "tooltipoverhaul"),
             Map.entry("cablefacades", "cable_facades"),
@@ -283,6 +284,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("vanilla.MixinLevelDryRaycast", new String[]{"valkyrienskies"}),
             Map.entry("terrablender.MixinNamespacedSourceLazy", new String[]{"c2me"}),
             Map.entry("elysiumapi.MixinMultiNoiseBiomeSourceReplacers", new String[]{"terrablender"}),
+
 
             Map.entry("vanilla.MixinStructureCheck", new String[]{"modernfix"}),
             Map.entry("vanilla.MixinServerLevelStructureState", new String[]{"modernfix"}),

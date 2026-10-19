@@ -1,6 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.blockswap;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.BlockSwapSectionScan;
 import corgitaco.blockswap.config.BlockSwapConfig;
 import corgitaco.blockswap.swapper.Swapper;
 import corgitaco.blockswap.util.TickHelper;
@@ -92,11 +93,18 @@ public abstract class MixinSwapper {
 
         for (int index = 0; index < sections.length; index++) {
             LevelChunkSection section = sections[index];
-            if (section == null || !section.maybeHas(tracked)) {
+            if (section == null) {
                 continue;
             }
 
             int baseY = SectionPos.sectionToBlockCoord(chunk.getSectionYFromSectionIndex(index));
+            if (CoOConfig.blockswapScanPaletteIds && BlockSwapSectionScan.sweep(section, plan, world, baseX, baseY, baseZ)) {
+                continue;
+            }
+            if (!section.maybeHas(tracked)) {
+                continue;
+            }
+
             PalettedContainer<BlockState> states = section.getStates();
 
             for (int y = 0; y < 16; y++) {

@@ -3,10 +3,16 @@
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public final class ModFileIndex {
 
@@ -33,21 +39,37 @@ public final class ModFileIndex {
             if (!Files.isDirectory(root)) {
                 continue;
             }
-            try (Stream<Path> walk = Files.walk(root)) {
-                for (Path file : (Iterable<Path>) walk::iterator) {
-                    if (!Files.isRegularFile(file)) {
-                        continue;
+            try {
+                Files.walkFileTree(root, new SimpleFileVisitor<>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                        if (!attrs.isRegularFile()) {
+                            return FileVisitResult.CONTINUE;
+                        }
+                        if (hashes.isEmpty() && !sameForm(resolver, top, root, file)) {
+                            throw new IllegalStateException();
+                        }
+                        hashes.add(hash(file.toString()));
+                        return FileVisitResult.CONTINUE;
                     }
-                    if (hashes.isEmpty() && !sameForm(resolver, top, root, file)) {
-                        return BROKEN;
-                    }
-                    hashes.add(hash(file.toString()));
-                }
+                });
             } catch (IOException | RuntimeException e) {
                 return BROKEN;
             }
         }
         return new ModFileIndex(hashes);
+    }
+
+    public static void buildInBackground(Function<String[], Path> resolver, Consumer<ModFileIndex> done) {
+        Workers.POOL.execute(() -> {
+            ModFileIndex built;
+            try {
+                built = build(resolver);
+            } catch (Throwable e) {
+                built = BROKEN;
+            }
+            done.accept(built);
+        });
     }
 
     public static boolean indexed(String first) {
@@ -71,5 +93,19 @@ public final class ModFileIndex {
             h *= 0x100000001b3L;
         }
         return h;
+    }
+
+    private static final class Workers {
+
+        private static final AtomicInteger COUNTER = new AtomicInteger();
+
+        private static final ExecutorService POOL = Executors.newFixedThreadPool(
+                Math.max(2, Math.min(4, Runtime.getRuntime().availableProcessors() / 4)),
+                task -> {
+                    Thread thread = new Thread(task, "CoO mod file index " + COUNTER.incrementAndGet());
+                    thread.setDaemon(true);
+                    thread.setPriority(Thread.MIN_PRIORITY);
+                    return thread;
+                });
     }
 }

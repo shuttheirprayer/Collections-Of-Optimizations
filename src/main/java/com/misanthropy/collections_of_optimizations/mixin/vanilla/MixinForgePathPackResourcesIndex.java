@@ -21,6 +21,9 @@ public abstract class MixinForgePathPackResourcesIndex {
     @Unique
     private volatile ModFileIndex coo$index;
 
+    @Unique
+    private volatile boolean coo$indexRequested;
+
     @Shadow
     protected abstract Path resolve(String... paths);
 
@@ -36,6 +39,17 @@ public abstract class MixinForgePathPackResourcesIndex {
         }
         ModFileIndex index = coo$index;
         if (index == null) {
+            if (CoOConfig.vanillaIndexModFilesInBackground) {
+                if (!coo$indexRequested) {
+                    synchronized (this) {
+                        if (!coo$indexRequested) {
+                            coo$indexRequested = true;
+                            ModFileIndex.buildInBackground(this::resolve, built -> coo$index = built);
+                        }
+                    }
+                }
+                return original.call(path, options);
+            }
             synchronized (this) {
                 index = coo$index;
                 if (index == null) {

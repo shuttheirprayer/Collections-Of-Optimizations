@@ -3,8 +3,11 @@ package com.misanthropy.collections_of_optimizations.mixin.bettercombat;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.WeaponAttributesCache;
 import net.bettercombat.api.WeaponAttributes;
 import net.bettercombat.logic.WeaponRegistry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +31,15 @@ public abstract class MixinOffhandOnlyTwoHandedCheck {
     private WeaponAttributes coo$offhandOnly(ItemStack stack, @Local(argsOnly = true) EquipmentSlot slot) {
         if (slot != EquipmentSlot.OFFHAND && CoOConfig.bettercombatOffhandOnlyTwoHandedCheck) {
             return null;
+        }
+        if (stack != null && CoOConfig.bettercombatCacheWeaponAttributes) {
+            CompoundTag tag = stack.getTag();
+            if (tag == null || !tag.contains("weapon_attributes", Tag.TAG_STRING)) {
+                Object cached = WeaponAttributesCache.lookup(stack.getItem());
+                if (cached != null) {
+                    return (WeaponAttributes) WeaponAttributesCache.unwrap(cached);
+                }
+            }
         }
         return WeaponRegistry.getAttributes(stack);
     }

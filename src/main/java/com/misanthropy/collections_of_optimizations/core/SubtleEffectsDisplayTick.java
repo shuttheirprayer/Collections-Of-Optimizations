@@ -16,6 +16,8 @@ import einstein.subtle_effects.ticking.tickers.WaterfallTicker;
 import einstein.subtle_effects.ticking.tickers.geyser.GeyserTicker;
 import einstein.subtle_effects.ticking.tickers.geyser.GeyserType;
 import einstein.subtle_effects.util.BlockTickerProvider;
+import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.mixin.vanilla.BiomeManagerSeedAccessor;
 import einstein.subtle_effects.util.MathUtil;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
@@ -30,6 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.LinearCongruentialGenerator;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -90,8 +93,19 @@ public final class SubtleEffectsDisplayTick {
     private static final ChunkAccess[] PASS_CHUNKS = new ChunkAccess[64];
     private static final LevelChunkSection[][] PASS_SECTIONS = new LevelChunkSection[64][];
     private static final BiomeManager.NoiseBiomeSource PASS_SOURCE = SubtleEffectsDisplayTick::passNoiseBiome;
+    private static final int FIDDLE_SLOTS = 4096;
+    private static final long[] FIDDLE_KEYS = new long[FIDDLE_SLOTS];
+    private static final long[] FIDDLE_VALUES = new long[FIDDLE_SLOTS];
+
+    static {
+        Arrays.fill(FIDDLE_VALUES, -1L);
+    }
+
     private static Level passLevel;
     private static BiomeManager passBiomes;
+    private static boolean passFiddles;
+    private static long passZoomSeed;
+    private static long fiddleSeed;
     private static int passMinQuartY;
     private static int passMaxQuartY;
     private static int passMinSection;
@@ -125,7 +139,7 @@ public final class SubtleEffectsDisplayTick {
     }
 
     public static Holder<Biome> run(Level level, BlockPos.MutableBlockPos cursor, RandomSource random) {
-        if (random != passRandom || level != watched[12] || level.getGameTime() != passTime) {
+        if (random != passRandom || level != passLevel || level.getGameTime() != passTime) {
             beginPass(level, random);
         }
         BlockState state = level.getBlockState(cursor);
@@ -144,7 +158,7 @@ public final class SubtleEffectsDisplayTick {
         if ((fireflies || effects) && !state.isCollisionShapeFullBlock(level, cursor)) {
             fluid = level.getFluidState(cursor);
             if (fluid.isEmpty()) {
-                biome = passBiomes.getBiome(cursor);
+                biome = biomeAt(cursor);
                 int info = biomeInfo(biome);
                 if (fireflies && firefly(info, flags)) {
                     pos = cursor.immutable();
@@ -205,6 +219,67 @@ public final class SubtleEffectsDisplayTick {
             SparkProviderManager.tick(level, random, block, state, pos);
         }
         return biome;
+    }
+
+    private static Holder<Biome> biomeAt(BlockPos pos) {
+        if (!passFiddles) {
+            return passBiomes.getBiome(pos);
+        }
+        int x = pos.getX() - 2;
+        int y = pos.getY() - 2;
+        int z = pos.getZ() - 2;
+        int cellX = x >> 2;
+        int cellY = y >> 2;
+        int cellZ = z >> 2;
+        double fracX = (double) (x & 3) / 4.0;
+        double fracY = (double) (y & 3) / 4.0;
+        double fracZ = (double) (z & 3) / 4.0;
+        int best = 0;
+        double bestDistance = Double.POSITIVE_INFINITY;
+        for (int corner = 0; corner < 8; corner++) {
+            boolean lowX = (corner & 4) == 0;
+            boolean lowY = (corner & 2) == 0;
+            boolean lowZ = (corner & 1) == 0;
+            long offsets = fiddles(lowX ? cellX : cellX + 1, lowY ? cellY : cellY + 1, lowZ ? cellZ : cellZ + 1);
+            double noiseX = (lowX ? fracX : fracX - 1.0) + fiddle((int) (offsets & 1023L));
+            double noiseY = (lowY ? fracY : fracY - 1.0) + fiddle((int) (offsets >>> 10 & 1023L));
+            double noiseZ = (lowZ ? fracZ : fracZ - 1.0) + fiddle((int) (offsets >>> 20 & 1023L));
+            double distance = Mth.square(noiseZ) + Mth.square(noiseY) + Mth.square(noiseX);
+            if (bestDistance > distance) {
+                best = corner;
+                bestDistance = distance;
+            }
+        }
+        return passNoiseBiome((best & 4) == 0 ? cellX : cellX + 1, (best & 2) == 0 ? cellY : cellY + 1, (best & 1) == 0 ? cellZ : cellZ + 1);
+    }
+
+    private static double fiddle(int steps) {
+        return ((double) steps / 1024.0 - 0.5) * 0.9;
+    }
+
+    private static long fiddles(int x, int y, int z) {
+        long key = ((long) (x & 0x3FFFFFF) << 38) | ((long) (z & 0x3FFFFFF) << 12) | (long) (y & 0xFFF);
+        int slot = (int) ((key * 0x9E3779B97F4A7C15L) >>> 52);
+        long packed = FIDDLE_VALUES[slot];
+        if (packed >= 0L && FIDDLE_KEYS[slot] == key) {
+            return packed;
+        }
+        long seed = passZoomSeed;
+        long l = LinearCongruentialGenerator.next(seed, x);
+        l = LinearCongruentialGenerator.next(l, y);
+        l = LinearCongruentialGenerator.next(l, z);
+        l = LinearCongruentialGenerator.next(l, x);
+        l = LinearCongruentialGenerator.next(l, y);
+        l = LinearCongruentialGenerator.next(l, z);
+        long first = Math.floorMod(l >> 24, 1024);
+        l = LinearCongruentialGenerator.next(l, seed);
+        long second = Math.floorMod(l >> 24, 1024);
+        l = LinearCongruentialGenerator.next(l, seed);
+        long third = Math.floorMod(l >> 24, 1024);
+        packed = first | second << 10 | third << 20;
+        FIDDLE_KEYS[slot] = key;
+        FIDDLE_VALUES[slot] = packed;
+        return packed;
     }
 
     private static Holder<Biome> passNoiseBiome(int quartX, int quartY, int quartZ) {
@@ -384,7 +459,17 @@ public final class SubtleEffectsDisplayTick {
         passRandom = random;
         passTime = level.getGameTime();
         passLevel = level;
-        passBiomes = level.getBiomeManager().withDifferentSource(PASS_SOURCE);
+        BiomeManager manager = level.getBiomeManager();
+        passFiddles = CoOConfig.subtleeffectsMemoBiomeFiddles && manager.getClass() == BiomeManager.class;
+        if (passFiddles) {
+            passZoomSeed = ((BiomeManagerSeedAccessor) manager).coo$biomeZoomSeed();
+            if (passZoomSeed != fiddleSeed) {
+                fiddleSeed = passZoomSeed;
+                Arrays.fill(FIDDLE_VALUES, -1L);
+            }
+        } else {
+            passBiomes = manager.withDifferentSource(PASS_SOURCE);
+        }
         Arrays.fill(PASS_CHUNK_KEYS, Long.MIN_VALUE);
         Arrays.fill(PASS_CHUNKS, null);
         Arrays.fill(PASS_SECTIONS, null);

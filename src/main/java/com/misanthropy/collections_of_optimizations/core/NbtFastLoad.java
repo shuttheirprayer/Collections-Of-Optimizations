@@ -20,6 +20,7 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -29,6 +30,7 @@ public final class NbtFastLoad {
 
     public static boolean enabled = true;
     public static boolean removeByteBufTagLimit = true;
+    public static boolean presizeCompounds = true;
     public static int maxCompoundDepth = Integer.MAX_VALUE;
     public static int maxListDepth = Integer.MAX_VALUE;
     public static Function<Map<String, Tag>, CompoundTag> compoundFactory;
@@ -108,6 +110,40 @@ public final class NbtFastLoad {
         }
         accounter.accountBytes(48L);
         Scratch scratch = SCRATCH.get();
+        if (!presizeCompounds) {
+            return loadCompoundGrowing(input, depth, accounter, scratch);
+        }
+        int base = scratch.top;
+        try {
+            while (true) {
+                accounter.accountBytes(2L);
+                byte id = input.readByte();
+                if (id == 0) {
+                    break;
+                }
+                String key = accounter.readUTF(readKey(input, scratch));
+                accounter.accountBytes(28 + 2 * key.length());
+                accounter.accountBytes(4L);
+                scratch.push(key, readValue(input, depth, accounter, id, key));
+            }
+            int top = scratch.top;
+            Object[] pairs = scratch.pairs;
+            Map<String, Tag> map = new Object2ObjectOpenHashMap<>((top - base) >> 1);
+            int added = 0;
+            for (int i = base; i < top; i += 2) {
+                if (map.put((String) pairs[i], (Tag) pairs[i + 1]) == null) {
+                    added++;
+                }
+            }
+            accounter.accountBytes(36L * added);
+            return compoundFactory.apply(map);
+        } finally {
+            Arrays.fill(scratch.pairs, base, scratch.top, null);
+            scratch.top = base;
+        }
+    }
+
+    private static CompoundTag loadCompoundGrowing(DataInput input, int depth, NbtAccounter accounter, Scratch scratch) throws IOException {
         Map<String, Tag> map = new Object2ObjectOpenHashMap<>(2);
         while (true) {
             accounter.accountBytes(2L);
@@ -118,22 +154,25 @@ public final class NbtFastLoad {
             String key = accounter.readUTF(readKey(input, scratch));
             accounter.accountBytes(28 + 2 * key.length());
             accounter.accountBytes(4L);
-            TagType<?> type = TagTypes.getType(id);
-            Tag tag;
-            try {
-                tag = type.load(input, depth + 1, accounter);
-            } catch (IOException e) {
-                CrashReport report = CrashReport.forThrowable(e, "Loading NBT data");
-                CrashReportCategory category = report.addCategory("NBT Tag");
-                category.setDetail("Tag name", key);
-                category.setDetail("Tag type", type.getName());
-                throw new ReportedException(report);
-            }
+            Tag tag = readValue(input, depth, accounter, id, key);
             if (map.put(key, tag) == null) {
                 accounter.accountBytes(36L);
             }
         }
         return compoundFactory.apply(map);
+    }
+
+    private static Tag readValue(DataInput input, int depth, NbtAccounter accounter, byte id, String key) throws IOException {
+        TagType<?> type = TagTypes.getType(id);
+        try {
+            return type.load(input, depth + 1, accounter);
+        } catch (IOException e) {
+            CrashReport report = CrashReport.forThrowable(e, "Loading NBT data");
+            CrashReportCategory category = report.addCategory("NBT Tag");
+            category.setDetail("Tag name", key);
+            category.setDetail("Tag type", type.getName());
+            throw new ReportedException(report);
+        }
     }
 
     private static ListTag loadList(DataInput input, int depth, NbtAccounter accounter) throws IOException {
@@ -205,5 +244,17 @@ public final class NbtFastLoad {
     private static final class Scratch {
         final String[] keys = new String[1024];
         byte[] bytes = new byte[256];
+        Object[] pairs = new Object[64];
+        int top;
+
+        void push(String key, Tag tag) {
+            int at = this.top;
+            if (at + 2 > this.pairs.length) {
+                this.pairs = Arrays.copyOf(this.pairs, this.pairs.length << 1);
+            }
+            this.pairs[at] = key;
+            this.pairs[at + 1] = tag;
+            this.top = at + 2;
+        }
     }
 }
