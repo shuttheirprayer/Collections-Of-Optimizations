@@ -373,6 +373,13 @@ public final class CoOConfig {
     public static boolean subtleeffectsDryChestTicker = true;
     public static boolean subtleeffectsLeanTickerRemoval = true;
 
+    public static boolean immersiveweatheringFastSpread = true;
+    public static boolean immersiveweatheringGrowthTable = true;
+    public static boolean immersiveweatheringOneChanceRoll = true;
+    public static boolean immersiveweatheringAreaScan = true;
+    public static boolean immersiveweatheringLeanFluidGenerators = true;
+    public static boolean immersiveweatheringLeafPileTint = true;
+
     public static boolean arsengSkipDeadRelayListeners = true;
     public static boolean arsengGateGenericInvWrapper = true;
 
@@ -2102,6 +2109,27 @@ public final class CoOConfig {
         gate(builder
                 .comment("Drain the ticker removal queue in one pass instead of one ArrayList#remove each.")
                 .define("leanTickerRemoval", true), v -> subtleeffectsLeanTickerRemoval = v);
+        builder.pop();
+
+        builder.comment("Immersive Weathering patches.").push("immersiveweathering");
+        gate(builder
+                .comment("Work out whether stone, cobblestone and bricks should start mossing or cracking without the throwaway Random, maps, lists and pairs Immersive Weathering builds on every neighbor update. Same answer for every block.")
+                .define("fastSpread", true), v -> immersiveweatheringFastSpread = v);
+        gate(builder
+                .comment("Look block growths up from a table built on reload instead of wrapping them in Optionals and a memoized biome on every random tick, and skip growths that can never fire.")
+                .define("growthTable", true), v -> immersiveweatheringGrowthTable = v);
+        gate(builder
+                .comment("Roll once for a whole row of growths on a randomly ticked block instead of once per growth. Every growth still fires at the same odds. Needs growthTable.")
+                .define("oneChanceRoll", true), v -> immersiveweatheringOneChanceRoll = v);
+        gate(builder
+                .comment("Scan the area around a growth from a cached offset table with no BlockPos list, stream or shuffle copies. Same blocks in the same order.")
+                .define("areaScan", true), v -> immersiveweatheringAreaScan = v);
+        gate(builder
+                .comment("Run lava generators like basalt and burnt moss without the EnumMap, lambdas and suppliers made on every lava update.")
+                .define("leanFluidGenerators", true), v -> immersiveweatheringLeanFluidGenerators = v);
+        gate(builder
+                .comment("Remember the faded leaf pile colour instead of converting it through LAB space for every tinted quad. Client.")
+                .define("leafPileTint", true), v -> immersiveweatheringLeafPileTint = v);
         builder.pop();
 
         builder.comment("Ars Energistique patches.").push("arseng");

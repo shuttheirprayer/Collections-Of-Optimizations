@@ -110,6 +110,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("morehitboxes", "morehitboxes"),
             Map.entry("moonlight", "moonlight"),
             Map.entry("subtleeffects", "subtle_effects"),
+            Map.entry("immersiveweathering", "immersive_weathering"),
             Map.entry("tonsofenchants", "tonsofenchants"),
             Map.entry("arseng", "arseng"),
             Map.entry("saintsdragons", "saintsdragons"),
@@ -258,7 +259,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     private static final Map<String, String> GROUP_EXACT_VERSION = Map.of(
             "radium", "0.14.3+git.e141a47",
             "cataclysm", "3.16",
-            "lionfishapi", "2.8"
+            "lionfishapi", "2.8",
+            "immersiveweathering", "1.20.1-2.0.5"
     );
 
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
@@ -281,6 +283,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, String[]> MIXIN_CONFLICTS = Map.ofEntries(
             Map.entry("vanilla.MixinBeardifierReach", new String[]{"generator_accelerator"}),
+            Map.entry("immersiveweathering.MixinAreaCheck", new String[]{"iwt"}),
+            Map.entry("immersiveweathering.MixinBlockGrowthHandler", new String[]{"iwt"}),
             Map.entry("vanilla.MixinLevelDryRaycast", new String[]{"valkyrienskies"}),
             Map.entry("terrablender.MixinNamespacedSourceLazy", new String[]{"c2me"}),
             Map.entry("elysiumapi.MixinMultiNoiseBiomeSourceReplacers", new String[]{"terrablender"}),
