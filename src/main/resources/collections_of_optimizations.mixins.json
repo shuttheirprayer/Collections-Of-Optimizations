@@ -552,7 +552,9 @@
     "fallentraits.MixinYggdrasilRootSlotList",
     "fallentraits.MixinSizeTraitScaleCache",
     "fallentraits.MixinFtDayNightModifierGuard",
-    "l2hostility.MixinCurioCompatHasItem"
+    "l2hostility.MixinCurioCompatHasItem",
+    "timm.MixinTimmStructureScan",
+    "timm.MixinTimmDebugLog"
   ],
   "client": [
     "apothicattributes.MixinApothReplacedTooltipModifiers",
@@ -825,7 +827,9 @@
     "vanilla.RenderTypeCompositeStateAccessor",
     "vanilla.MixinBlockRenderLayerMemo",
     "fallentraits.MixinLevelRendererScaleWindow",
-    "fallentraits.MixinMinecraftScaleWindowReset"
+    "fallentraits.MixinMinecraftScaleWindowReset",
+    "timm.MixinTimmSoundStream",
+    "timm.MixinTimmBiomePlaylist"
   ],
   "injectors": {
     "defaultRequire": 0

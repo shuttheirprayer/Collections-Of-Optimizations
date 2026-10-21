@@ -447,6 +447,11 @@ public final class CoOConfig {
     public static boolean mythsandlegendsCacheShakeScan = true;
 
     public static boolean ambientsoundsMemoBiomeMatch = true;
+
+    public static boolean timmStreamMusic = true;
+    public static boolean timmSkipStructureScan = true;
+    public static boolean timmCacheMusic = true;
+    public static boolean timmDebugLogToDebug = true;
     public static int arsnouveauSkyTextureInterval = 1;
 
     public static boolean arselementalFixGlobalHealBoost = true;
@@ -2354,6 +2359,21 @@ public final class CoOConfig {
         gate(builder
                 .comment("Work out whether a biome matches a region's biome patterns once instead of running the regex every client tick. Client.")
                 .define("memoBiomeMatch", true), v -> ambientsoundsMemoBiomeMatch = v);
+        builder.pop();
+
+        builder.comment("TIMM (The Immersive Music Mod) patches.").push("timm");
+        gate(builder
+                .comment("Stream TIMM's songs from disk like vanilla music. TIMM ships them unstreamed, so every song played is decoded whole into memory and kept until the next resource reload. Client.")
+                .define("streamMusic", true), v -> timmStreamMusic = v);
+        gate(builder
+                .comment("Skip TIMM's once-a-second structure scan around every player. TIMM never loads its structure playlist, so the scan cannot play anything. Server.")
+                .define("skipStructureScan", true), v -> timmSkipStructureScan = v);
+        gate(builder
+                .comment("Reuse one Music per song event instead of building a new one every client tick. Client.")
+                .define("cacheMusic", true), v -> timmCacheMusic = v);
+        gate(builder
+                .comment("Send TIMM's debug messages to the debug log instead of logging them at INFO, which spams every tick while a song fades out in a biome with no playlist.")
+                .define("debugLogToDebug", true), v -> timmDebugLogToDebug = v);
         builder.pop();
 
         builder.comment("Ars Nouveau patches.").push("arsnouveau");

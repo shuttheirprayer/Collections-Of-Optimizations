@@ -248,7 +248,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("chimes", "chimes"),
             Map.entry("sliceanddice", "sliceanddice"),
             Map.entry("projectiledamage", "projectile_damage"),
-            Map.entry("fallentraits", "fallen_traits")
+            Map.entry("fallentraits", "fallen_traits"),
+            Map.entry("timm", "timm")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(
@@ -261,7 +262,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "radium", "0.14.3+git.e141a47",
             "cataclysm", "3.16",
             "lionfishapi", "2.8",
-            "immersiveweathering", "1.20.1-2.0.5"
+            "immersiveweathering", "1.20.1-2.0.5",
+            "timm", "1.1.0-Forge"
     );
 
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
