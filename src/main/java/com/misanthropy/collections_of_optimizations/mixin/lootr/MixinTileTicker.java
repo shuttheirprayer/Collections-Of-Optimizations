@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import noobanidus.mods.lootr.block.entities.TileTicker;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +36,14 @@ public abstract class MixinTileTicker {
             require = 0
     )
     private static void coo$skipIdlePass(TickEvent.ServerTickEvent event, CallbackInfo ci) {
-        if (!CoOConfig.lootrSkipIdleTileTicker || event.phase != TickEvent.Phase.END) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        if (CoOConfig.lootrTileTickerInterval > 1 && ServerLifecycleHooks.getCurrentServer().getTickCount() % CoOConfig.lootrTileTickerInterval != 0) {
+            ci.cancel();
+            return;
+        }
+        if (!CoOConfig.lootrSkipIdleTileTicker) {
             return;
         }
         if (tileEntries.isEmpty() && pendingEntries.isEmpty()) {

@@ -138,6 +138,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("gtbcsgeomancy", "gtbcs_geomancy_plus"),
             Map.entry("legendarymonsters", "legendary_monsters"),
             Map.entry("xaeroworldmap", "xaeroworldmap"),
+            Map.entry("byepregen", "byepregen"),
             Map.entry("supplementaries", "supplementaries"),
             Map.entry("amendments", "amendments"),
             Map.entry("copycats", "copycats"),

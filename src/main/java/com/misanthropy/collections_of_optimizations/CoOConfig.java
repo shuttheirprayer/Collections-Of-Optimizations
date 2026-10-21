@@ -129,6 +129,7 @@ public final class CoOConfig {
 
     public static boolean lootrSkipIdleTileTicker = true;
     public static int lootrTileTickerBudget = 512;
+    public static int lootrTileTickerInterval = 5;
 
     public static boolean naturesauraFastAuraChunkSweep = true;
     public static boolean naturesauraResolveWatchedChunks = true;
@@ -290,6 +291,7 @@ public final class CoOConfig {
     public static boolean forgeCustomPayloadHeapCopy = true;
     public static boolean vanillaBoundBeardifierReach = true;
     public static boolean vanillaNumberTagChecks = true;
+    public static boolean vanillaDeferBlockedTickContainers = true;
     public static boolean vanillaShareColumnHeights = true;
     public static boolean createSinglePassContraptionCollision = true;
     public static boolean ftbchunksDisableMapWriting = false;
@@ -1226,6 +1228,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Maximum container conversion candidates Lootr may examine per server tick.")
                 .defineInRange("tileTickerBudget", 512, 0, 65536), 0, v -> lootrTileTickerBudget = v);
+        gate(builder
+                .comment("Run Lootr's container conversion pass every this many server ticks instead of every tick. Each pass rechecks every waiting chest against the 25 chunks around it, and chests at the edge of a large view distance wait there for minutes. New loot chests still turn into Lootr chests, at most this many ticks later. 1 is stock behaviour.")
+                .defineInRange("tileTickerInterval", 5, 1, 100), 1, v -> lootrTileTickerInterval = v);
         builder.pop();
 
         builder.comment("Nature's Aura patches.").push("naturesaura");
@@ -2626,6 +2631,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Every tag test the game makes, such as is this block climbable or is this item a sword, looks the tag up in the block's or item's tag set by hashing the tag name and comparing it with the stored names. With this on, each tag gets a number the first time it is used and each block, item and entity type keeps the sorted numbers of its tags, so a test compares two numbers instead. The numbers are rebuilt whenever tags are reloaded, so the answer is always the same as the set's own. Turn it off for stock behaviour.")
                 .define("numberTagChecks", true), v -> vanillaNumberTagChecks = v);
+        gate(builder
+                .comment("Every tick the game walks every chunk that has an overdue block or fluid tick and asks whether that chunk is close enough to a player to run it. Chunks loaded by a large view distance but outside the simulation distance never are, so their overdue ticks are asked about again every single tick, twice. With this on, a chunk that says no is asked again a second later instead. Its ticks still run once a player gets close, at most one second later than they would have. Turn it off for stock behaviour.")
+                .define("deferBlockedTickContainers", true), v -> vanillaDeferBlockedTickContainers = v);
         gate(builder
                 .comment("Structure placement keeps asking the world generator how high the ground is at a column, and every answer builds a small slice of terrain over the full world height, which costs one to four milliseconds. The same column is often asked again, from a different worker thread or for another structure. With this on, each world generator remembers the last 32768 answers for its seed and height range and returns them instead of building the slice again. The answer only depends on the generator, the seed, the column and the height range, so it is the same number. Turn it off for stock behaviour.")
                 .define("shareColumnHeights", true), v -> vanillaShareColumnHeights = v);
