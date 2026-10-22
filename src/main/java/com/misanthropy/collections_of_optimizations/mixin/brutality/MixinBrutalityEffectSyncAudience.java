@@ -3,6 +3,7 @@ package com.misanthropy.collections_of_optimizations.mixin.brutality;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.goo.brutality.entity.capabilities.EntityCapabilities;
 import net.goo.brutality.event.forge.ForgeEffectSyncHandler;
+import net.goo.brutality.registry.BrutalityModMobEffects;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -27,6 +28,14 @@ public abstract class MixinBrutalityEffectSyncAudience {
     )
     private static void coo$skipUnwatchedSync(MobEffect effect, LivingEntity entity,
                                               EntityCapabilities.EntityEffectCap cap, CallbackInfo ci) {
+        if (CoOConfig.brutalityEffectSyncOwnEffectsOnly
+                && effect != BrutalityModMobEffects.MIRACLE_BLIGHT.get()
+                && effect != BrutalityModMobEffects.ENRAGED.get()
+                && effect != BrutalityModMobEffects.THE_VOID.get()
+                && effect != BrutalityModMobEffects.LIGHT_BOUND.get()) {
+            ci.cancel();
+            return;
+        }
         if (!CoOConfig.brutalitySkipUnwatchedEffectSync || entity instanceof ServerPlayer
                 || !(entity.level() instanceof ServerLevel level)) {
             return;

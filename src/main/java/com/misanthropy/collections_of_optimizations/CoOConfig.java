@@ -177,6 +177,7 @@ public final class CoOConfig {
     public static boolean brutalityFastArmorSetCheck = true;
     public static boolean brutalitySealTypeNoThrow = true;
     public static boolean brutalitySkipUnwatchedEffectSync = true;
+    public static boolean brutalityEffectSyncOwnEffectsOnly = true;
     public static boolean brutalitySkipIdleBlightScan = true;
 
     public static boolean mutantmonstersLeanSpawnLimitScan = true;
@@ -244,6 +245,8 @@ public final class CoOConfig {
     public static int adamsarsplusFlameAuraScanInterval = 10;
     public static boolean uniqueaccessoriesLeanWaistWarmerScan = true;
     public static boolean uniqueaccessoriesSkipUnsetPersistentData = true;
+    public static boolean uniqueaccessoriesSkipRoseCleanupScan = true;
+    public static int uniqueaccessoriesRoseRepathInterval = 10;
 
     public static boolean bloodmagicCacheArcRecipeList = true;
     public static boolean bloodmagicCacheArcFurnaceRecipe = true;
@@ -1379,6 +1382,9 @@ public final class CoOConfig {
                 .comment("Skip the capability sync packet Brutality broadcasts to every player whenever any mob gains, loses or runs out of any effect, when the mob is not a player and no player has its chunk loaded.")
                 .define("skipUnwatchedEffectSync", true), v -> brutalitySkipUnwatchedEffectSync = v);
         gate(builder
+                .comment("Only send that capability sync packet for the four effects Brutality tracks (miracle blight, enraged, the void, light bound). Every other effect added, removed or expired on anything, including the ones curios refresh on players every tick, used to broadcast the entity's whole Brutality data to every player.")
+                .define("effectSyncOwnEffectsOnly", true), v -> brutalityEffectSyncOwnEffectsOnly = v);
+        gate(builder
                 .comment("Skip the 50 block miracle blight particle scan, run twice every client tick, while no entity anywhere is miracle blighted. Client.")
                 .define("skipIdleBlightScan", true), v -> brutalitySkipIdleBlightScan = v);
         builder.pop();
@@ -1609,6 +1615,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop the Suspicious Mushroom and Rose of Temptation handlers from attaching an empty ForgeData tag to every entity in the world.")
                 .define("skipUnsetPersistentData", true), v -> uniqueaccessoriesSkipUnsetPersistentData = v);
+        gate(builder
+                .comment("Skip the Rose of Temptation cleanup that scans every mob within 32 blocks of every player every tick. Each lured mob already clears its own speed boost on its own tick when it runs out.")
+                .define("skipRoseCleanupScan", true), v -> uniqueaccessoriesSkipRoseCleanupScan = v);
+        gate(builder
+                .comment("Ticks between new paths for mobs lured by the Rose of Temptation. A mob that has lost its path still gets a new one right away. The mod built a fresh path for every lured mob every tick. 1 restores that.")
+                .defineInRange("roseRepathInterval", 10, 1, 40), 1, v -> uniqueaccessoriesRoseRepathInterval = v);
         builder.pop();
 
         builder.comment("Blood Magic patches.").push("bloodmagic");
