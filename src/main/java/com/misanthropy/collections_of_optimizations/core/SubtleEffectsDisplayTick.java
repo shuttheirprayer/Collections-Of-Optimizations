@@ -454,6 +454,16 @@ public final class SubtleEffectsDisplayTick {
         return plan;
     }
 
+    public static void release() {
+        passLevel = null;
+        passRandom = null;
+        passBiomes = null;
+        Arrays.fill(PASS_CHUNK_KEYS, Long.MIN_VALUE);
+        Arrays.fill(PASS_CHUNKS, null);
+        Arrays.fill(PASS_SECTIONS, null);
+        Arrays.fill(watched, null);
+    }
+
     @SuppressWarnings("unchecked")
     private static void beginPass(Level level, RandomSource random) {
         passRandom = random;

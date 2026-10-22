@@ -6,6 +6,9 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "collections_of_optimizations.refmap.json",
   "mixins": [
+    "enigmaticlegacy.MixinEnigmaticCreativeTabContents",
+    "almostunified.MixinRecipeTransformerDuplicates",
+    "kubejs.MixinGeneratedResourcePackIndex",
     "byepregen.MixinColumnTemplate",
     "immersiveweathering.AdjacentBlocksAccessor",
     "immersiveweathering.ConfigurableBlockGrowthAccessor",
@@ -152,6 +155,11 @@
     "pehkui.MixinScaleDataClientCache",
     "pehkui.MixinEntityBoxScaleCache",
     "pehkui.MixinTypedScaleModifier",
+    "pehkui.MixinScaleTypeSlot",
+    "pehkui.MixinScaleCachingUtils",
+    "xaerolib.MixinXaeroServerConfigManagerRelease",
+    "immersiveaircraft.MixinLevelVehicleCount",
+    "immersiveaircraft.MixinProjectileUtilVehicleTrace",
     "perception.MixinEntityTrailData",
     "punchy.MixinMultiPackResourceManager",
     "quark.MixinPigLittersModule",
@@ -557,6 +565,8 @@
     "timm.MixinTimmDebugLog"
   ],
   "client": [
+    "goetyawaken.MixinGoetyAwakenBossScan",
+    "l2hostility.MixinClientEventsNamePlateSight",
     "apothicattributes.MixinApothReplacedTooltipModifiers",
     "alltheleaks.MixinAtlCrashReportGc",
     "asyncparticles.ChunkAccessBlockEntityMapsAccessor",

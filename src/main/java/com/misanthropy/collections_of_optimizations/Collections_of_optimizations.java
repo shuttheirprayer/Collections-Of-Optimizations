@@ -3,6 +3,8 @@ package com.misanthropy.collections_of_optimizations;
 import com.misanthropy.collections_of_optimizations.core.ArsElementalCurioBagKey;
 import com.misanthropy.collections_of_optimizations.core.CacRedPandaTracker;
 import com.misanthropy.collections_of_optimizations.core.CameraShakeScanCache;
+import com.misanthropy.collections_of_optimizations.core.ClientLevelRelease;
+import com.misanthropy.collections_of_optimizations.core.VehicleCount;
 import com.misanthropy.collections_of_optimizations.core.ElysiumSoundTransformers;
 import com.misanthropy.collections_of_optimizations.core.CoOEmbeddiumOptions;
 import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
@@ -112,6 +114,8 @@ public class Collections_of_optimizations {
 
         ClientTickStamp.register();
         CameraShakeScanCache.register();
+        ClientLevelRelease.register();
+        VehicleCount.register();
 
         GhostPlayerPurge.register();
         LeakProbe.register();

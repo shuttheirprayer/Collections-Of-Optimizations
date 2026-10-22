@@ -18,6 +18,11 @@ public final class CoOConfig {
     private static ForgeConfigSpec.BooleanValue fastBiomeBlendValue;
 
     public static boolean masterEnabled = true;
+    public static boolean releaseStoppedServer = true;
+    public static boolean goetyawakenScanOncePerTick = true;
+    public static boolean almostunifiedBucketDuplicates = true;
+    public static boolean kubejsIndexGeneratedPack = true;
+    public static boolean immersiveaircraftSkipEmptyVehicleTrace = true;
 
     public static boolean curiosSkipSlotlessEntities = true;
     public static boolean curiosSkipClientTickOnNonPlayers = true;
@@ -71,6 +76,7 @@ public final class CoOConfig {
     public static boolean fancymenuCacheScreenBlacklist = true;
 
     public static boolean geckolibReuseRenderVectors = true;
+    public static boolean geckolibFastCubeWrite = true;
     public static boolean geckolibCacheBoneLookup = true;
 
     public static boolean saintsdragonsSkipRedundantBoneTracking = true;
@@ -224,6 +230,7 @@ public final class CoOConfig {
     public static boolean enigmaticdelicacySkipUnsetPersistentData = true;
     public static int enigmaticlegacyGuardianHeartScanInterval = 4;
     public static boolean enigmaticlegacyNarrowCursedRingAngerScan = true;
+    public static boolean enigmaticlegacyGroupTabMembers = true;
     public static boolean enigmaticlegacyPruneAngeredGuardians = true;
     public static boolean enigmaticlegacyCachedCurioLookup = true;
     public static boolean travelopticsLeanClimbCurioScan = true;
@@ -308,6 +315,7 @@ public final class CoOConfig {
     public static boolean alltheleaksSkipCrashReportGc = true;
     public static boolean l2hostilitySkipTraitlessCapLookup = true;
     public static boolean l2hostilityLeanCurioItemCheck = true;
+    public static boolean l2hostilityNamePlateSightPerTick = true;
     public static boolean fallentraitsCacheSpawnBonus = true;
     public static boolean fallentraitsClampInfernalFollowRange = true;
     public static boolean fallentraitsIndexDevourers = true;
@@ -361,6 +369,7 @@ public final class CoOConfig {
 
     public static boolean pehkuiLeanScaleTick = true;
     public static boolean pehkuiMemoModifierType = true;
+    public static boolean pehkuiCacheEveryScaleType = true;
 
     public static boolean tonsofenchantsSkipAbsentAttributeRemoval = true;
     public static boolean tonsofenchantsFrostbiteSkipClient = true;
@@ -523,6 +532,7 @@ public final class CoOConfig {
     public static boolean vanillaMemoCameraFluid = true;
     public static boolean vanillaIndexModFiles = true;
     public static boolean vanillaIndexModFilesInBackground = true;
+    public static boolean vanillaIndexModFileListing = true;
     public static boolean vanillaCachePackNamespaces = true;
     public static boolean vanillaSkipAbsentPackNamespaces = true;
     public static boolean vanillaPlaceFeaturesWithoutStreams = true;
@@ -1096,6 +1106,9 @@ public final class CoOConfig {
                 .comment("Reuse the scratch vectors GeckoLib allocates while writing model geometry.")
                 .define("reuseRenderVectors", true), v -> geckolibReuseRenderVectors = v);
         gate(builder
+                .comment("Write each GeckoLib cube's vertices straight into the render buffer in one batch through Embeddium's vertex writer, instead of one vertex call per corner. Renderers that change how a quad is written keep their own path.")
+                .define("fastCubeWrite", true), v -> geckolibFastCubeWrite = v);
+        gate(builder
                 .comment("Memoise BakedGeoModel#getBone(String) per baked model.")
                 .define("cacheBoneLookup", true), v -> geckolibCacheBoneLookup = v);
         gate(builder
@@ -1540,6 +1553,9 @@ public final class CoOConfig {
                 .comment("Ask the Cursed Ring anger scan for the piglins and neutral mobs its loop can actually anger instead of every living entity in a forty eight block cube. The loop computes an armour and invisibility visibility fraction for every entity it is handed and then discards everything that is not a piglin or a neutral mob. Result is identical.")
                 .define("narrowCursedRingAngerScan", true), v -> enigmaticlegacyNarrowCursedRingAngerScan = v);
         gate(builder
+                .comment("Enigmatic Legacy walks every item in the game once per creative tab to find its own items each time the tabs are built (world join, JEI start, creative inventory). Group its items by tab once instead. Same items, same order.")
+                .define("groupCreativeTabMembers", true), v -> enigmaticlegacyGroupTabMembers = v);
+        gate(builder
                 .comment("Drop removed entities from the angered guardian map when a new one is added. Enigmatic Legacy keeps every guardian that has ever targeted a Heart of the Guardian bearer in a strong keyed multimap and only clears it when a world is loaded, so a session at a guardian farm retains every dead guardian.")
                 .define("pruneAngeredGuardians", true), v -> enigmaticlegacyPruneAngeredGuardians = v);
         gate(builder
@@ -1843,6 +1859,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Make L2 Hostility's curio item check do only the work its answer needs. Every Fallen Traits relic hook, the trait items and many L2 items ask whether an entity wears a given curio, often around ten times per combat hit. Each ask resolved the curio inventory three times, ran a full first match search whose result was thrown away, and built a new tag key for every slot type it walked. With this on the inventory is resolved once, the unused search is skipped and each slot type's tag key is built once and reused. The answer is the same. Turn it off for stock behaviour.")
                 .define("leanCurioItemCheck", true), v -> l2hostilityLeanCurioItemCheck = v);
+        gate(builder
+                .comment("Ray trace the player's line of sight to a mob once per game tick for L2Hostility's level and trait name plate, instead of once per mob per frame.")
+                .define("namePlateSightPerTick", true), v -> l2hostilityNamePlateSightPerTick = v);
         builder.pop();
 
         builder.comment("Fallen Traits and Relics patches.").push("fallentraits");
@@ -2035,6 +2054,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Let Pehkui keep its already existing per tick scale cache on the client too. Pehkui only fills that cache on the server, so every client side scale read walks the whole modifier chain again. WARNING: if a mod changes an entity's scale without going through Pehkui's own setters, the visual size can lag by one tick. Turn this off if you see entities stuck at the wrong size.")
                 .define("cacheClientScales", true), v -> pehkuiCacheClientScales = v);
+        gate(builder
+                .comment("Keep every built in scale type in Pehkui's per entity lookup array. Pehkui only does that for 9 of them, so every other scale read locks a synchronized map, for every entity, every tick, on both sides.")
+                .define("cacheEveryScaleType", true), v -> pehkuiCacheEveryScaleType = v);
         builder.pop();
 
         builder.comment("Relics patches.").push("relics");
@@ -2508,6 +2530,21 @@ public final class CoOConfig {
 
         builder.comment("Vanilla patches. These are the only patches here that are not aimed at a specific mod.").push("vanilla");
         gate(builder
+                .comment("When a world is closed, drop the references other mods keep to it (Citadel, Copycats, KubeJS, Opposing Force, Xaero's config library, Simply Swords, Subtle Effects). Without this the last world stays in memory on the title screen and next to the new world after rejoining.")
+                .define("releaseClosedWorld", true), v -> releaseStoppedServer = v);
+        gate(builder
+                .comment("Goety Awaken looks for its Nameless One boss around the player in every fog and level render pass. Look once per tick instead.")
+                .define("goetyAwakenBossScanOncePerTick", true), v -> goetyawakenScanOncePerTick = v);
+        gate(builder
+                .comment("Almost Unified compares every unified recipe with every recipe of the same type on each data pack load to find duplicates. Only compare recipes whose compared fields are the same, the duplicates found are identical.")
+                .define("almostUnifiedGroupedDuplicateCheck", true), v -> almostunifiedBucketDuplicates = v);
+        gate(builder
+                .comment("KubeJS walks every file in kubejs/data for each folder a data pack load lists. Look the files up in a sorted index instead.")
+                .define("kubejsIndexedGeneratedPack", true), v -> kubejsIndexGeneratedPack = v);
+        gate(builder
+                .comment("Immersive Aircraft searches for aircraft around every aimed ray (the crosshair every frame, every flying projectile every tick). Skip that search while the world has no aircraft loaded.")
+                .define("immersiveAircraftSkipEmptyVehicleSearch", true), v -> immersiveaircraftSkipEmptyVehicleTrace = v);
+        gate(builder
                 .comment("Maximum times a dropped item stack's model is drawn.")
                 .defineInRange("itemEntityRenderCap", 1, 0, 5), 0, v -> itemEntityRenderCap = v);
         gate(builder
@@ -2555,6 +2592,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Build a mod jar's file index on a background thread and keep answering from the jar until it is ready, instead of making whoever asks first wait for the whole walk while every other thread asking about the same jar waits on its lock. Needs indexModFiles. Turn it off to build the index in place.")
                 .define("indexModFilesInBackground", true), v -> vanillaIndexModFilesInBackground = v);
+        gate(builder
+                .comment("Answer folder listings of a mod jar (every tag, recipe, loot table and model folder, on every data pack load and resource reload) from its file index instead of walking the jar again. The index is kept for the whole session, Forge makes new pack objects for every load. Needs indexModFiles.")
+                .define("indexModFileListing", true), v -> vanillaIndexModFileListing = v);
         gate(builder
                 .comment("Remember which namespaces a mod jar's assets and data folders hold instead of walking the jar again each time somebody asks. FancyMenu asks every one of a few hundred mod packs for its namespace list every time it lists resources, and each answer is a directory walk inside the jar that, for every mod without a data folder or without an assets folder, ends in a file not found exception that is caught and turned into an empty list, which is tens of thousands of exceptions and walks at launch. Only packs read from inside a jar are remembered, a pack that is an ordinary folder on disk is always asked again, and every caller still gets its own fresh set with the same contents, in the same order, that the walk returned.")
                 .define("cachePackNamespaces", true), v -> vanillaCachePackNamespaces = v);

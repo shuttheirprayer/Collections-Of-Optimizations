@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.lang.ref.WeakReference;
 import java.util.HashSet;
 
 @Pseudo
@@ -17,10 +18,10 @@ import java.util.HashSet;
 public abstract class MixinMahouClientProxy {
 
     @Unique
-    private static HashSet<Entity> coo$entities;
+    private static WeakReference<HashSet<Entity>> coo$entities = new WeakReference<>(null);
 
     @Unique
-    private static ClientLevel coo$entitiesLevel;
+    private static WeakReference<ClientLevel> coo$entitiesLevel = new WeakReference<>(null);
 
     @Unique
     private static int coo$entitiesStamp = Integer.MIN_VALUE;
@@ -34,13 +35,13 @@ public abstract class MixinMahouClientProxy {
         if (stamp == -1) {
             return original.call(level);
         }
-        HashSet<Entity> cached = coo$entities;
-        if (cached != null && stamp == coo$entitiesStamp && level == coo$entitiesLevel) {
+        HashSet<Entity> cached = coo$entities.get();
+        if (cached != null && stamp == coo$entitiesStamp && level == coo$entitiesLevel.get()) {
             return cached;
         }
         HashSet<Entity> value = original.call(level);
-        coo$entities = value;
-        coo$entitiesLevel = level;
+        coo$entities = new WeakReference<>(value);
+        coo$entitiesLevel = new WeakReference<>(level);
         coo$entitiesStamp = stamp;
         return value;
     }

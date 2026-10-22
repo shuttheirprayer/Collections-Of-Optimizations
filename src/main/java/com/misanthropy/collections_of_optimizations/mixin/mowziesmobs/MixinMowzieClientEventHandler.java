@@ -12,19 +12,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 @Mixin(value = ClientEventHandler.class, remap = false)
 public abstract class MixinMowzieClientEventHandler {
 
     @Unique
-    private List<EntityCameraShake> coo$cameraShakes;
+    private WeakReference<List<EntityCameraShake>> coo$cameraShakes = new WeakReference<>(null);
 
     @Unique
     private int coo$cameraShakeTick = Integer.MIN_VALUE;
 
     @Unique
-    private Level coo$cameraShakeLevel;
+    private WeakReference<Level> coo$cameraShakeLevel = new WeakReference<>(null);
 
     @WrapOperation(
             method = "onSetupCamera",
@@ -41,13 +42,14 @@ public abstract class MixinMowzieClientEventHandler {
             return original.call(level, type, box);
         }
         int tick = coo$clientTick(level);
-        if (this.coo$cameraShakes != null && this.coo$cameraShakeTick == tick && this.coo$cameraShakeLevel == level) {
-            return this.coo$cameraShakes;
+        List<EntityCameraShake> cached = this.coo$cameraShakes.get();
+        if (cached != null && this.coo$cameraShakeTick == tick && this.coo$cameraShakeLevel.get() == level) {
+            return cached;
         }
         List<EntityCameraShake> resolved = original.call(level, type, box);
-        this.coo$cameraShakes = resolved;
+        this.coo$cameraShakes = new WeakReference<>(resolved);
         this.coo$cameraShakeTick = tick;
-        this.coo$cameraShakeLevel = level;
+        this.coo$cameraShakeLevel = new WeakReference<>(level);
         return resolved;
     }
 
