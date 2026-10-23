@@ -290,6 +290,13 @@ public final class CoOConfig {
     public static boolean terrablenderLazyNamespaceRules = true;
     public static boolean vanillaSkipIrrelevantFireScan = true;
     public static boolean vanillaDryRaycast = true;
+    public static boolean vanillaLeanRaycast = true;
+    public static boolean touchnmotionFastStrideProbe = true;
+    public static boolean touchnmotionLastStateLookup = true;
+    public static boolean touchnmotionSharedWorldSpace = true;
+    public static boolean touchnmotionBlockMemo = true;
+    public static boolean touchnmotionFastFloor = true;
+    public static boolean touchnmotionPartNameCache = true;
     public static boolean vanillaLeanGameEventLookup = true;
     public static boolean vanillaPrecheckBlockRemovalScan = true;
     public static boolean vanillaPrecheckRepellentScan = true;
@@ -2179,6 +2186,27 @@ public final class CoOConfig {
                 .define("leanTickerRemoval", true), v -> subtleeffectsLeanTickerRemoval = v);
         builder.pop();
 
+        builder.comment("Touch'n Motion patches.").push("touchnmotion");
+        gate(builder
+                .comment("Check whether the ground under a stepping foot is level without building a ClipContext, a collision context and a hit result for each of the up to 27 ground probes per leg, every frame. Same answer. Client.")
+                .define("fastStrideProbe", true), v -> touchnmotionFastStrideProbe = v);
+        gate(builder
+                .comment("Remember the last player each per player state table was asked about, so the dozens of lookups a frame for the same player skip the hash map. Same states. Client.")
+                .define("lastStateLookup", true), v -> touchnmotionLastStateLookup = v);
+        gate(builder
+                .comment("Without Sable, hand every ground, wall and handle search the same one entry list of spaces instead of a new list for each probe. Client.")
+                .define("sharedWorldSpace", true), v -> touchnmotionSharedWorldSpace = v);
+        gate(builder
+                .comment("While Touch'n Motion poses one player, read each block it probes once and reuse the block and its shape for the rest of that player's ground, wall and step probes, instead of looking the same few blocks up hundreds of times. Blocks cannot change in the middle of drawing a player. Needs leanRaycast. Client.")
+                .define("blockMemo", true), v -> touchnmotionBlockMemo = v);
+        gate(builder
+                .comment("Find the floor under each balance and foot sample without the clip context, collision context, ray ends and hit result Touch'n Motion builds for each of up to 289 samples. Same floor. Client.")
+                .define("fastFloor", true), v -> touchnmotionFastFloor = v);
+        gate(builder
+                .comment("Remember which model part each part name points to, so the dozens of part lookups a frame per player skip the hash map. Same parts. Client.")
+                .define("partNameCache", true), v -> touchnmotionPartNameCache = v);
+        builder.pop();
+
         builder.comment("Immersive Weathering patches.").push("immersiveweathering");
         gate(builder
                 .comment("Work out whether stone, cobblestone and bricks should start mossing or cracking without the throwaway Random, maps, lists and pairs Immersive Weathering builds on every neighbor update. Same answer for every block.")
@@ -2712,6 +2740,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Raycasts that ignore fluids, such as mob line of sight, arrows and explosion exposure, no longer read the fluid in every block they cross. That fluid could never stop the ray, so every hit is the same. Rays that can hit fluids run exactly as before. Turn it off for stock behaviour.")
                 .define("dryRaycast", true), v -> vanillaDryRaycast = v);
+        gate(builder
+                .comment("Raycasts that ignore fluids test each block shape against boxes worked out once per shape, instead of building a fresh list of boxes, moved copies of them and several vectors for every block the ray crosses. Same hit, same point, same face. Needs dryRaycast. Turn it off for stock behaviour.")
+                .define("leanRaycast", true), v -> vanillaLeanRaycast = v);
         gate(builder
                 .comment("Game events such as steps, landings and block changes skip chunk sections that have no listeners, instead of creating an empty listener list in each of them and keeping it until the chunk unloads. The same listeners hear the same events in the same order. Turn it off for stock behaviour.")
                 .define("leanGameEventLookup", true), v -> vanillaLeanGameEventLookup = v);

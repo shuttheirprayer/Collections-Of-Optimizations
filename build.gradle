@@ -227,6 +227,8 @@ dependencies {
     compileOnly files('libs-compile/morehitboxes-forge-1.20.1-1.9.2.jar')
     compileOnly files('libs-compile/moonlight-2.16.34-apionly.jar')
     compileOnly files('libs-compile/SubtleEffects-forge-1.20.1-1.15.0.jar')
+    compileOnly files('libs-compile/touch_n_motion_forge_1.20.1_1.0.4.jar')
+    compileOnly files('libs-compile/emf_compat_core_forge_1.20.1_2.3.2.jar')
     compileOnly files('libs-compile/immersive_weathering-1.20.1-2.0.5-forge.jar')
     compileOnly files('libs-compile/punchy-2.8c-forge-1.20.1.jar')
     compileOnly files('libs-compile/fancymenu_forge_3.9.14_MC_1.20.1.jar')

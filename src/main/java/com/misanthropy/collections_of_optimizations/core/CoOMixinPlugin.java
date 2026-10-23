@@ -113,6 +113,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("morehitboxes", "morehitboxes"),
             Map.entry("moonlight", "moonlight"),
             Map.entry("subtleeffects", "subtle_effects"),
+            Map.entry("touchnmotion", "touch_n_motion"),
             Map.entry("immersiveweathering", "immersive_weathering"),
             Map.entry("tonsofenchants", "tonsofenchants"),
             Map.entry("arseng", "arseng"),
@@ -267,7 +268,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "cataclysm", "3.16",
             "lionfishapi", "2.8",
             "immersiveweathering", "1.20.1-2.0.5",
-            "timm", "1.1.0-Forge"
+            "timm", "1.1.0-Forge",
+            "touchnmotion", "1.0.4"
     );
 
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
