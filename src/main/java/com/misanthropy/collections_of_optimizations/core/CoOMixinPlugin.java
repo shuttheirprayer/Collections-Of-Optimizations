@@ -406,6 +406,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             return true;
         }
         String group = remainder.substring(0, separator);
+        // totally not a code comment to commit again
         for (Map.Entry<String, String> takesEverything : TAKES_EVERYTHING.entrySet()) {
             String modId = takesEverything.getKey();
             if (isModPresent(modId)) {
