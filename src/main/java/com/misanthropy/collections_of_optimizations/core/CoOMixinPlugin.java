@@ -5,6 +5,7 @@ import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.fml.loading.LoadingModList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.AnnotationNode;
@@ -272,6 +273,10 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "touchnmotion", "1.0.4"
     );
 
+    private static final Map<String, String[]> MIXIN_MIN_VERSION = Map.of(
+            "fancymenu.MixinGuiGraphicsPoseStack", new String[]{"fancymenu", "3.9.0"}
+    );
+
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
             "create.MixinContraptionCollisionUnion", new String[]{"create", "6.0.8"},
             "geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"},
@@ -479,6 +484,10 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
         }
         String[] pinned = MIXIN_EXACT_VERSION.get(remainder);
         if (pinned != null && !pinned[1].equals(modVersion(pinned[0]))) {
+            return false;
+        }
+        String[] minimum = MIXIN_MIN_VERSION.get(remainder);
+        if (minimum != null && new DefaultArtifactVersion(modVersion(minimum[0])).compareTo(new DefaultArtifactVersion(minimum[1])) < 0) {
             return false;
         }
         String[] required = MIXIN_REQUIRES.get(remainder);
