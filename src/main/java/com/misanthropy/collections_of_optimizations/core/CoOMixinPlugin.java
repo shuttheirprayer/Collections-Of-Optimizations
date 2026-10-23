@@ -323,7 +323,10 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "bons_and_furious", BonsAndFuriousOverlap.MIXINS
     );
 
-    private static final String[] TAKES_EVERYTHING = {"tickweave"};
+    private static final Map<String, String> TAKES_EVERYTHING = Map.of(
+            "tickweave", "runs entity ticks on worker threads and its own mixins are mandatory",
+            "vulkanmod", "replaces the whole OpenGL renderer and overwrites the methods these patches target"
+    );
 
     private static final Map<String, String[]> MIXIN_REQUIRES = Map.ofEntries(
             Map.entry("elysiumapi.MixinElysiumTerrablenderHelper", new String[]{"terrablender"}),
@@ -403,10 +406,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             return true;
         }
         String group = remainder.substring(0, separator);
-        for (String modId : TAKES_EVERYTHING) {
+        for (Map.Entry<String, String> takesEverything : TAKES_EVERYTHING.entrySet()) {
+            String modId = takesEverything.getKey();
             if (isModPresent(modId)) {
                 if (WARNED_GROUPS.add("incompatible:" + modId)) {
-                    LOGGER.warn("Disabling every Collections of Optimizations patch: '{}' runs entity ticks on worker threads and its own mixins are mandatory, so none of these patches can be applied safely next to it", modId);
+                    LOGGER.warn("Disabling every Collections of Optimizations patch: '{}' {}, so none of these patches can be applied safely next to it", modId, takesEverything.getValue());
                 }
                 return false;
             }
