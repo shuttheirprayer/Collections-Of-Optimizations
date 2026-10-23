@@ -371,6 +371,7 @@ public final class CoOConfig {
     public static boolean moonlightSkipEmptyMapMarkerScan = true;
 
     public static boolean pehkuiLeanScaleTick = true;
+    public static boolean pehkuiSnapshotTickTypes = true;
     public static boolean pehkuiMemoModifierType = true;
     public static boolean pehkuiCacheEveryScaleType = true;
 
@@ -539,6 +540,11 @@ public final class CoOConfig {
     public static boolean vanillaCachePackNamespaces = true;
     public static boolean vanillaSkipAbsentPackNamespaces = true;
     public static boolean vanillaPlaceFeaturesWithoutStreams = true;
+    public static boolean vanillaMultifaceWithoutStreams = true;
+    public static boolean vanillaShareTemplatePositions = true;
+    public static boolean flywheelParkWorkers = true;
+    public static boolean mowzieShareChamberColumns = true;
+    public static boolean xaeroworldmapLazyTileHeights = true;
     public static boolean vanillaSkipEmptyOwnerUuidParse = true;
     public static boolean vanillaCacheStaticHardwareReport = true;
     public static boolean vanillaIndexZipPacks = true;
@@ -1008,6 +1014,18 @@ public final class CoOConfig {
                 .define("skipGroundedNonPlayers", true), v -> caelusSkipGroundedNonPlayers = v);
         builder.pop();
 
+        builder.comment("Mowzie's Mobs world generation patches.").push("mowziesmobsWorldgen");
+        gate(builder
+                .comment("While the Wroughtnaut chamber looks for a cave wall, build each terrain column once instead of again for every wall check that passes over it. One search used to build up to about two thousand full height columns, most of them the same ones. The search sees the same columns and picks the same spot.")
+                .define("shareChamberColumns", true), v -> mowzieShareChamberColumns = v);
+        builder.pop();
+
+        builder.comment("Flywheel patches (Create's renderer).").push("flywheel");
+        gate(builder
+                .comment("Wake Flywheel's worker threads by parking and unparking them instead of a shared lock. With the lock, the render thread had to wait for a low priority worker that was holding it while chunk generation kept every core busy, which showed up as 50 to 90 ms hitches while flying. Takes effect on the next launch.")
+                .define("parkWorkers", true), v -> flywheelParkWorkers = v);
+        builder.pop();
+
         builder.comment("Block Swap patches.").push("blockswap");
         gate(builder
                 .comment("Filter the retro-gen chunk sweep through each section's block state palette.")
@@ -1081,6 +1099,9 @@ public final class CoOConfig {
         builder.pop();
 
         builder.comment("Xaero's World Map patches.").push("xaeroworldmap");
+        gate(builder
+                .comment("Give new map tiles a shared empty height table and make each tile its own copy only when a height is first written. The map writer makes tiles for every chunk around you before it knows the chunk can be drawn, and each one used to allocate two 8 KB height tables straight away, which at high render distance was over 100 MB per second of garbage on the render thread. Tiles that get drawn behave exactly as before. Takes effect on the next launch.")
+                .define("lazyTileHeights", true), v -> xaeroworldmapLazyTileHeights = v);
         gate(builder
                 .comment("Milliseconds between the map limiter's free VRAM query, which stock fires a blocking glGetIntegerv for on every single frame. 0 restores the stock every frame behaviour. Client.")
                 .defineInRange("vramPollInterval", 500, 0, 60000), 0, v -> xaeroworldmapVramPollInterval = v);
@@ -2058,6 +2079,9 @@ public final class CoOConfig {
                 .comment("Stop allocating two throwaway lambdas per scale type per entity per tick.")
                 .define("leanScaleTick", true), v -> pehkuiLeanScaleTick = v);
         gate(builder
+                .comment("Walk a fixed copy of the scale type list when every entity ticks its scales, instead of stepping through the linked nodes of the registry map for every entity on every tick. Same types, same order. The copy is rebuilt if the number of scale types changes.")
+                .define("snapshotTickTypes", true), v -> pehkuiSnapshotTickTypes = v);
+        gate(builder
                 .comment("Remember which scale type a typed scale modifier points at instead of calling its supplier again on every single scale read. WARNING: a mod that swaps the type a modifier resolves to at runtime will be pinned to the first answer.")
                 .define("memoModifierType", true), v -> pehkuiMemoModifierType = v);
         gate(builder
@@ -2616,6 +2640,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Place features with plain loops instead of a stream pipeline. Vanilla builds a stream with a lambda and a flat map stage for every placement modifier of every feature placement, which makes up a large part of the garbage world generation produces. Positions come out in the same order and the random source is used in the same order. Does nothing when Bye Pregen's own placement rewrite is active.")
                 .define("placeFeaturesWithoutStreams", true), v -> vanillaPlaceFeaturesWithoutStreams = v);
+        gate(builder
+                .comment("Check the faces of glow lichen, sculk veins and other multiface blocks with a plain loop instead of building a stream for every check. World generation and block updates of sculk veins run this for every block they touch. Same answer.")
+                .define("multifaceWithoutStreams", true), v -> vanillaMultifaceWithoutStreams = v);
+        gate(builder
+                .comment("Give every structure piece the same block position objects for the same spots inside the piece instead of a new one per block. Loaded structure pieces hold millions of these, almost all of them repeats, so the pieces take noticeably less memory and loading new ones makes less garbage. Positions read the same.")
+                .define("shareTemplatePositions", true), v -> vanillaShareTemplatePositions = v);
         gate(builder
                 .comment("Skip parsing an empty owner name as a UUID when a tameable animal is loaded. Every wild wolf, cat, parrot and modded tameable has an empty owner, and vanilla throws and swallows an exception to find that out. The owner stays unset.")
                 .define("skipEmptyOwnerUuidParse", true), v -> vanillaSkipEmptyOwnerUuidParse = v);

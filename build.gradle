@@ -245,6 +245,7 @@ dependencies {
     compileOnly files('libs-compile/cofh_core-1.20.1-11.0.2.56.jar')
     compileOnly files('libs-compile/xaerolib-forge-1.20.1-1.7.1.jar')
     compileOnly files('libs-compile/create-1.20.1-6.0.8.jar')
+    compileOnly files('libs-compile/flywheel-forge-1.20.1-1.0.5.jar')
     compileOnly files('libs-compile/gnetum-2.5.0+1.20.1-forge.jar')
     compileOnly files('libs-compile/createsolar-1.2.6-1.20.1.jar')
     compileOnly files('libs-compile/moonlight-1.20-2.16.34-forge.jar')

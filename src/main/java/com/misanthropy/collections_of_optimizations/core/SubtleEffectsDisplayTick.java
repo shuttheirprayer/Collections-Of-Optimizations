@@ -102,6 +102,8 @@ public final class SubtleEffectsDisplayTick {
     }
 
     private static Level passLevel;
+    private static Level plainsLevel;
+    private static Holder<Biome> plains;
     private static BiomeManager passBiomes;
     private static boolean passFiddles;
     private static long passZoomSeed;
@@ -303,7 +305,14 @@ public final class SubtleEffectsDisplayTick {
             int y = Mth.clamp(quartY, passMinQuartY, passMaxQuartY);
             return sections[(y >> 2) - passMinSection].getNoiseBiome(quartX & 3, y & 3, quartZ & 3);
         }
-        return chunk != null ? chunk.getNoiseBiome(quartX, quartY, quartZ) : passLevel.getUncachedNoiseBiome(quartX, quartY, quartZ);
+        if (chunk != null) {
+            return chunk.getNoiseBiome(quartX, quartY, quartZ);
+        }
+        if (plainsLevel != passLevel) {
+            plains = passLevel.getUncachedNoiseBiome(quartX, quartY, quartZ);
+            plainsLevel = passLevel;
+        }
+        return plains;
     }
 
     private static boolean firefly(int info, int flags) {
@@ -456,6 +465,8 @@ public final class SubtleEffectsDisplayTick {
 
     public static void release() {
         passLevel = null;
+        plainsLevel = null;
+        plains = null;
         passRandom = null;
         passBiomes = null;
         Arrays.fill(PASS_CHUNK_KEYS, Long.MIN_VALUE);

@@ -133,6 +133,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("cofh", "cofh_core"),
             Map.entry("xaerolib", "xaerolib"),
             Map.entry("create", "create"),
+            Map.entry("flywheel", "flywheel"),
             Map.entry("cataclysm", "cataclysm"),
             Map.entry("dodosmobs", "dodosmobs"),
             Map.entry("eeeabsmobs", "eeeabsmobs"),
