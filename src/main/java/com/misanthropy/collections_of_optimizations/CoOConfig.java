@@ -552,10 +552,23 @@ public final class CoOConfig {
     public static boolean flywheelParkWorkers = true;
     public static boolean mowzieShareChamberColumns = true;
     public static boolean xaeroworldmapLazyTileHeights = true;
+    public static boolean xaeroworldmapSkipUploadBenchmark = true;
     public static boolean vanillaSkipEmptyOwnerUuidParse = true;
     public static boolean vanillaCacheStaticHardwareReport = true;
     public static boolean vanillaIndexZipPacks = true;
     public static boolean vanillaMemoSkyColour = true;
+    public static boolean vanillaGuardedEvents = true;
+    public static boolean ironsspellbooksFlatSpellcasterScan = true;
+    public static boolean vanillaWarmClasses = true;
+    public static boolean vanillaBudgetFrameTasks = true;
+    public static boolean vanillaBudgetLightPolls = true;
+    public static boolean vanillaDeferAmbientParticles = true;
+    public static boolean vanillaScheduleClientBlockEntities = true;
+    public static boolean vanillaSnapshotEntityUnloads = true;
+    public static boolean immersiveoptimizationFastBlockEntitySchedule = true;
+    public static boolean chunksendingCacheOnlyWhenShared = true;
+    public static boolean alltheleaksPruneDeadReferences = true;
+    public static boolean alltheleaksLazyLeakSummary = true;
     public static boolean vanillaPurgeGhostPlayers = true;
     public static boolean vanillaFastBiomeBlend = true;
     public static double vanillaMovementCheckSlack = 100.0D;
@@ -1109,6 +1122,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Give new map tiles a shared empty height table and make each tile its own copy only when a height is first written. The map writer makes tiles for every chunk around you before it knows the chunk can be drawn, and each one used to allocate two 8 KB height tables straight away, which at high render distance was over 100 MB per second of garbage on the render thread. Tiles that get drawn behave exactly as before. Takes effect on the next launch.")
                 .define("lazyTileHeights", true), v -> xaeroworldmapLazyTileHeights = v);
+        gate(builder
+                .comment("Skip the world map's texture upload benchmark. For the first few hundred map texture uploads of every launch, of each of seven kinds, Xaero's World Map waits for the graphics card to finish all queued work twice per upload just to time it, and the timings are only ever shown in a debug line. Each wait stalls the frame for as long as the card takes to drain, which is what made the map stutter while you explore early in a session. Uploads themselves are unchanged. Client.")
+                .define("skipUploadBenchmark", true), v -> xaeroworldmapSkipUploadBenchmark = v);
         gate(builder
                 .comment("Milliseconds between the map limiter's free VRAM query, which stock fires a blocking glGetIntegerv for on every single frame. 0 restores the stock every frame behaviour. Client.")
                 .defineInRange("vramPollInterval", 500, 0, 60000), 0, v -> xaeroworldmapVramPollInterval = v);
@@ -2687,6 +2703,15 @@ public final class CoOConfig {
                 .comment("Work out the sky colour once per camera position per frame. Fog setup, the sky renderer and shader uniform packs each ask for it separately and every call samples 27 biomes.")
                 .define("memoSkyColour", true), v -> vanillaMemoSkyColour = v);
         gate(builder
+                .comment("Skip event listeners that would return straight away. Forge hands every render stage, tick phase and living entity tick to every listener, and most of them open with a check like 'if this is not my stage, return' or 'if this is not a player, return'. Each listener's opening checks are read once from its class file and the bus only calls the listeners those checks let through, in the same order. Listeners from classes another mod patched are always called. Both sides.")
+                .define("guardedEvents", true), v -> vanillaGuardedEvents = v);
+        gate(builder
+                .comment("Find nearby players and spellcasting mobs for Iron's Spellbooks' per-tick cast particles by walking the client's loaded entity list instead of every entity section in a 128 block box. Same entities, same box test. Client.")
+                .define("ironsspellbooksFlatSpellcasterScan", true), v -> ironsspellbooksFlatSpellcasterScan = v);
+        gate(builder
+                .comment("Remember which classes the game loads in the first minutes of play and load them again in the background from the title screen on the next launch, until a few seconds into the world. A class that is loaded for the first time while you play stalls the frame or the server tick while mods patch it, which is most of the stutter right after joining. Only loads them, no class is initialised early. The list lives in config/collections_of_optimizations/warm-classes.txt. Client.")
+                .define("warmClasses", true), v -> vanillaWarmClasses = v);
+        gate(builder
                 .comment("Keep the sky colour for a whole client tick instead of recomputing it whenever the camera position or partial tick changes, which is every frame while moving. The biome blend it samples spans 24 blocks, so one tick of camera movement cannot change it visibly. Needs memoSkyColour. Client.")
                 .define("memoSkyColourPerTick", true), v -> vanillaMemoSkyColourPerTick = v);
         gate(builder
@@ -2770,6 +2795,21 @@ public final class CoOConfig {
         gate(builder
                 .comment("Structure placement keeps asking the world generator how high the ground is at a column, and every answer builds a small slice of terrain over the full world height, which costs one to four milliseconds. The same column is often asked again, from a different worker thread or for another structure. With this on, each world generator remembers the last 32768 answers for its seed and height range and returns them instead of building the slice again. The answer only depends on the generator, the seed, the column and the height range, so it is the same number. Turn it off for stock behaviour.")
                 .define("shareColumnHeights", true), v -> vanillaShareColumnHeights = v);
+        gate(builder
+                .comment("Spread the work of incoming packets over frames instead of doing all of it in one. Vanilla handles every packet that arrived since the last frame before drawing it, so when a batch of chunks lands at a high render distance one frame takes several milliseconds longer than the rest and the game stutters even at a high frame rate. With this on each frame handles packets for about half a millisecond plus a little more for every packet still waiting, so a backlog still clears within a few frames. Packets run in the same order, at most a frame later. Off while the world is still loading. Client.")
+                .define("budgetFrameTasks", true), v -> vanillaBudgetFrameTasks = v);
+        gate(builder
+                .comment("Spread the light setup of newly received chunks over frames the same way. Vanilla turns on the light of up to a tenth of the waiting chunks every frame, and all of them at once when a thousand are waiting, which at a high render distance is the biggest stall when you fly or turn into new terrain. With this on each frame stops after about half a millisecond plus a little more for every chunk still waiting, never doing more than vanilla would. Client.")
+                .define("budgetLightPolls", true), v -> vanillaBudgetLightPolls = v);
+        gate(builder
+                .comment("Spawn the ambient block particles of a client tick, such as torch smoke, leaf litter, fireflies and dripping water, at the start of the next frame instead of inside the tick. The tick already makes one frame out of every twenty a few milliseconds longer than the rest, which is what makes a high frame rate feel uneven, and the particle scan around the player is one of the larger parts of it. The same scan runs with the same position, at most one frame later. Client.")
+                .define("deferAmbientParticles", true), v -> vanillaDeferAmbientParticles = v);
+        gate(builder
+                .comment("On the client, remember when a block entity Immersive Optimization is slowing down is next allowed to tick and skip it until then, instead of looking it up and asking again every tick. At a high render distance the client holds thousands of ticking block entities and most of them are far enough away to tick only every few ticks, yet each one was visited every tick. They tick on exactly the same ticks as before. Removed block entities leave the list in one pass instead of one shift per removal, at most a second later for far ones. Client.")
+                .define("scheduleClientBlockEntities", true), v -> vanillaScheduleClientBlockEntities = v);
+        gate(builder
+                .comment("Unload the entities of chunks that left view distance from a copy of the waiting list instead of walking the live list. Unloading an entity fires events other mods listen to, and if one of them loads or keeps a chunk while the list is being walked, the list changes under the walk and the server crashes in a fastutil iterator. Seen once after a long distance teleport at a high view distance. Same chunks unload in the same tick; a chunk that came back into view during the walk is left loaded. Server.")
+                .define("snapshotEntityUnloads", true), v -> vanillaSnapshotEntityUnloads = v);
         builder.pop();
 
         builder.push("gnetum");
@@ -2947,6 +2987,27 @@ public final class CoOConfig {
         gate(builder
                 .comment("Walk the owner chain for the mod's friendly fire check without allocating. Companions asks whether two entities are linked before almost every hit, every projectile impact and every target pick, and the very first thing that check does twice is build a HashSet purely to guard against a loop while walking at most a projectile to its shooter to its owner. That set is allocated and thrown away for every candidate entity of every area of effect scan on every tick. The replacement walks the same chain with a plain loop and a depth limit of thirty two, which returns the same answer including the nothing at the end of a loop.")
                 .define("fastOwnerWalk", true), v -> companionsFastOwnerWalk = v);
+        builder.pop();
+
+        builder.comment("All The Leaks patches.").push("alltheleaks");
+        gate(builder
+                .comment("Drop dead entries from All The Leaks' leak tracker every five seconds instead of only when a world loads. The tracker keeps a weak reference to every chunk that unloads, on the client and the server, so it can report chunks that were never freed. Dead references were only cleared on world load, so at a high render distance the tracker collected hundreds of thousands of them while you travelled, every one of them hashes to the same bucket once its chunk is gone, and adding the next one could take over a hundred milliseconds in the middle of a frame. Pruning runs on a background thread, and leak reports still list every object that is really still alive.")
+                .define("pruneDeadReferences", true), v -> alltheleaksPruneDeadReferences = v);
+        gate(builder
+                .comment("Only rebuild All The Leaks' leak summary every five seconds while its debug screen summary is turned on, and right before it writes the summary to the log. The rebuild walks every tracked object and groups them by class on the client tick and on the server tick, and its result is only ever read by that debug screen line and the periodic log. The log and the force_refresh command still get an up to date summary.")
+                .define("lazyLeakSummary", true), v -> alltheleaksLazyLeakSummary = v);
+        builder.pop();
+
+        builder.comment("Chunk Sending patches.").push("chunksending");
+        gate(builder
+                .comment("Only keep a copy of each chunk's network packet while more than one player is online. Chunk Sending stores the packet it built for a chunk, a few dozen kilobytes of blocks plus copies of every light layer, on that chunk for up to five minutes so a second player can be sent the same one. With a single player nobody ever reuses it, and at a high view distance the server holds thousands of them, several hundred megabytes that the garbage collector has to copy and mark while you travel. With this on nothing is stored while you are alone and caching resumes as soon as a second player joins. Server.")
+                .define("cacheOnlyWhenShared", true), v -> chunksendingCacheOnlyWhenShared = v);
+        builder.pop();
+
+        builder.comment("Immersive Optimization patches.").push("immersiveoptimization");
+        gate(builder
+                .comment("Keep Immersive Optimization's block entity tick rates in a plain map per world instead of one shared concurrent map of boxed chunk positions. The mod asks for the rate of every ticking block entity every tick on both the client and the server, and each ask did two hash lookups, boxed the chunk position and walked a tree of colliding keys, because the boxed chunk positions of nearby chunks hash to the same few buckets. The rates and the tick pattern are the same; the client and the server each keep their own copy instead of sharing one.")
+                .define("fastBlockEntitySchedule", true), v -> immersiveoptimizationFastBlockEntitySchedule = v);
         builder.pop();
 
         builder.comment("Immersive Armors patches.").push("immersivearmors");

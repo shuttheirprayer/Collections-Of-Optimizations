@@ -4,12 +4,12 @@ import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.core.Cursor3D;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Cursor3D.class)
 public abstract class MixinCursor3DCounting {
@@ -32,22 +32,26 @@ public abstract class MixinCursor3DCounting {
                 && (long) this.width * this.height * this.depth == this.end;
     }
 
-    @Inject(method = "advance", at = @At("HEAD"), cancellable = true, require = 0)
-    private void coo$countingAdvance(CallbackInfoReturnable<Boolean> cir) {
-        if (!CoOConfig.vanillaLeanBlockPosRange || !this.coo$countable) {
-            return;
-        }
+    @Overwrite
+    public boolean advance() {
         if (this.index == this.end) {
-            cir.setReturnValue(false);
-            return;
+            return false;
         }
-        if (this.index++ != 0 && ++this.x == this.width) {
-            this.x = 0;
-            if (++this.y == this.height) {
-                this.y = 0;
-                ++this.z;
+        if (CoOConfig.vanillaLeanBlockPosRange && this.coo$countable) {
+            if (this.index++ != 0 && ++this.x == this.width) {
+                this.x = 0;
+                if (++this.y == this.height) {
+                    this.y = 0;
+                    ++this.z;
+                }
             }
+            return true;
         }
-        cir.setReturnValue(true);
+        this.x = this.index % this.width;
+        int column = this.index / this.width;
+        this.y = column % this.height;
+        this.z = column / this.height;
+        ++this.index;
+        return true;
     }
 }

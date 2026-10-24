@@ -181,6 +181,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("companions", "companions"),
             Map.entry("manybows", "too_many_bows"),
             Map.entry("immersivearmors", "immersive_armors"),
+            Map.entry("immersiveoptimization", "immersive_optimization"),
+            Map.entry("chunksending", "chunksending"),
             Map.entry("starcatcher", "starcatcher"),
             Map.entry("neobackports", "neobackports"),
             Map.entry("faunify", "faunify"),

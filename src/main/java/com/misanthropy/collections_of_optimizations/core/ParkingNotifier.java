@@ -24,6 +24,14 @@ public final class ParkingNotifier {
 
     public void post() {
         generation.incrementAndGet();
+        Thread thread = parked.poll();
+        if (thread != null) {
+            LockSupport.unpark(thread);
+        }
+    }
+
+    public void postAll() {
+        generation.incrementAndGet();
         for (Thread thread : parked) {
             LockSupport.unpark(thread);
         }

@@ -24,7 +24,7 @@ public abstract class MixinParallelTaskExecutor {
     private void coo$unparkOnStop(Object notifier) {
         notifier.notifyAll();
         if (notifier instanceof ParkingNotifier.Holder holder) {
-            holder.coo$parking().post();
+            holder.coo$parking().postAll();
         }
     }
 }

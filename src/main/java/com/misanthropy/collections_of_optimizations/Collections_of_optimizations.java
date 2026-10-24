@@ -33,6 +33,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import com.misanthropy.collections_of_optimizations.core.WarmClasses;
+import com.misanthropy.collections_of_optimizations.core.LeakTrackerPruner;
 
 @Mod(Collections_of_optimizations.MODID)
 public class Collections_of_optimizations {
@@ -55,6 +57,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("supplementaries")) {
             MapTintCache.register();
+        }
+
+        if (ModList.get().isLoaded("alltheleaks")) {
+            LeakTrackerPruner.register();
         }
 
         if (ModList.get().isLoaded("elysium_api")) {
@@ -115,6 +121,9 @@ public class Collections_of_optimizations {
         ClientTickStamp.register();
         CameraShakeScanCache.register();
         ClientLevelRelease.register();
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            WarmClasses.register();
+        }
         VehicleCount.register();
 
         GhostPlayerPurge.register();
