@@ -386,6 +386,9 @@ public final class CoOConfig {
     public static boolean dungeoncrawlSkipBlockEntityProbe = true;
 
     public static boolean moonlightSkipEmptyMapMarkerScan = true;
+    public static boolean rplSkipIdleChunkTick = true;
+    public static boolean wrFastPossessionChecks = true;
+    public static boolean wrSkipIdleWitherScans = true;
 
     public static boolean pehkuiLeanScaleTick = true;
     public static boolean pehkuiSnapshotTickTypes = true;
@@ -507,6 +510,8 @@ public final class CoOConfig {
     public static double relicsEssenceMaxSpeed = 4.0D;
 
     public static boolean morehitboxesSkipAbsentMultiPartFilter = true;
+    public static boolean morehitboxesBoxFirstPartQuery = true;
+    public static boolean compositematerialHealPlayersOnly = true;
 
     public static boolean goetyrevelationCacheHaloLookup = true;
     public static boolean revelationfixSkipMobFluidStandScan = true;
@@ -2146,6 +2151,21 @@ public final class CoOConfig {
                 .define("skipEmptyMapMarkerScan", true), v -> moonlightSkipEmptyMapMarkerScan = v);
         builder.pop();
 
+        builder.comment("Ritchie's Projectile Library patches.").push("ritchiesprojectilelib");
+        gate(builder
+                .comment("Skip the projectile chunk loader's tick on every world while no shell has asked for a chunk. It used to allocate a set and an array and mark its save file dirty on every world every tick, so each autosave rewrote an empty file per dimension.")
+                .define("skipIdleChunkTick", true), v -> rplSkipIdleChunkTick = v);
+        builder.pop();
+
+        builder.comment("Wither Reincarnated patches.").push("witherreincarnated");
+        gate(builder
+                .comment("Answer \"is this mob possessed\" from a remembered reference instead of looking the capability up again. The mod asks this on every team check, ally check, attack check and wander check of every mob. Mobs with nothing going on also skip the possession tick.")
+                .define("fastPossessionChecks", true), v -> wrFastPossessionChecks = v);
+        gate(builder
+                .comment("While no Wither is loaded, skip the box search every mob runs to look for a Wither to flee from, and the client's scan of every entity for Wither music.")
+                .define("skipIdleWitherScans", true), v -> wrSkipIdleWitherScans = v);
+        builder.pop();
+
         builder.comment("Pehkui patches.").push("pehkui");
         gate(builder
                 .comment("Stop allocating two throwaway lambdas per scale type per entity per tick.")
@@ -2210,6 +2230,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip More Hitboxes' multipart pass over the result of every entity box query when the result holds no multipart. The pass allocates a hash set and re-tests the predicate for each hit, and almost every query returns none.")
                 .define("skipAbsentMultiPartFilter", true), v -> morehitboxesSkipAbsentMultiPartFilter = v);
+        gate(builder
+                .comment("More Hitboxes walks every multipart mob in the world on every typed entity search and ran a slow list scan before the cheap box check. Check the box first, so the list scan only runs for parts that are actually inside the search.")
+                .define("boxFirstPartQuery", true), v -> morehitboxesBoxFirstPartQuery = v);
+        builder.pop();
+
+        builder.comment("Composite Material patches.").push("compositematerial");
+        gate(builder
+                .comment("Every heal on any mob searched a 32 block box for every living thing, only to find players blocking with the dungeon shield. Look at the world's players instead. Mobs that heal every tick made this a real server cost.")
+                .define("healPlayersOnly", true), v -> compositematerialHealPlayersOnly = v);
         builder.pop();
 
         builder.comment("Tons Of Enchants patches.").push("tonsofenchants");

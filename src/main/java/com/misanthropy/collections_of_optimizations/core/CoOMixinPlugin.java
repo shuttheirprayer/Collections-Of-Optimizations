@@ -113,7 +113,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("terracurio", "confluence"),
             Map.entry("cosmeticarmor", "cosmeticarmorreworked"),
             Map.entry("morehitboxes", "morehitboxes"),
+            Map.entry("compositematerial", "composite_material"),
             Map.entry("moonlight", "moonlight"),
+            Map.entry("rpl", "ritchiesprojectilelib"),
+            Map.entry("cbc", "createbigcannons"),
+            Map.entry("witherreincarnated", "witherreincarnated"),
             Map.entry("subtleeffects", "subtle_effects"),
             Map.entry("touchnmotion", "touch_n_motion"),
             Map.entry("immersiveweathering", "immersive_weathering"),
@@ -273,7 +277,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "lionfishapi", "2.8",
             "immersiveweathering", "1.20.1-2.0.5",
             "timm", "1.1.0-Forge",
-            "touchnmotion", "1.0.4"
+            "touchnmotion", "1.0.4",
+            "witherreincarnated", "1.0.5"
     );
 
     private static final Map<String, String[]> MIXIN_MIN_VERSION = Map.of(
@@ -282,6 +287,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
             "create.MixinContraptionCollisionUnion", new String[]{"create", "6.0.8"},
+            "cbc.MixinCbcAutocannonSeat", new String[]{"createbigcannons", "5.11.4"},
             "geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"},
             "subtleeffects.MixinBubbleParticleTint", new String[]{"subtle_effects", "1.15.0"},
             "subtleeffects.MixinChestTickerDryChest", new String[]{"subtle_effects", "1.15.0"},
