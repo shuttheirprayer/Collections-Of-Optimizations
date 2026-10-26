@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.CableFacadePresence;
+import com.misanthropy.collections_of_optimizations.core.CableFacadeServerData;
 import com.portingdeadmods.cable_facades.CFConfig;
 import com.portingdeadmods.cable_facades.api.facade_type.FacadeTypes;
 import com.portingdeadmods.cable_facades.content.items.DirectionalFacadeItem;
@@ -48,6 +49,9 @@ public abstract class MixinCableFacadesLeanStateHooks {
             return null;
         }
         if (CoOConfig.cablefacadesSkipGuardWhenEmpty && !(getter instanceof ServerLevel) && !CableFacadePresence.any()) {
+            return null;
+        }
+        if (CoOConfig.cablefacadesCacheServerFacadeData && getter instanceof ServerLevel serverLevel && CableFacadeServerData.noFacades(serverLevel)) {
             return null;
         }
         if (coo$facadeGuard.get()) {

@@ -15,6 +15,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +81,9 @@ public abstract class MixinLevelClientBlockEntitySchedule {
         List<TickingBlockEntity> tickers = this.blockEntityTickers;
         int size = tickers.size();
         int kept = 0;
+        long verdictChunk = Long.MIN_VALUE;
+        boolean verdict = false;
+        Long2ByteOpenHashMap verdicts = new Long2ByteOpenHashMap(64);
         for (int index = 0; index < size; index++) {
             TickingBlockEntity ticker = tickers.get(index);
             ScheduledTicker scheduled = ticker instanceof ScheduledTicker cast ? cast : null;
@@ -87,10 +92,23 @@ public abstract class MixinLevelClientBlockEntitySchedule {
                     continue;
                 }
                 BlockPos pos = ticker.getPos();
-                if (pos != null && this.shouldTickBlocksAt(pos)) {
-                    ticker.tick();
-                } else if (scheduled != null && pos != null) {
-                    scheduled.coo$due(ScheduledTicker.nextDue(level, ChunkPos.asLong(pos), now));
+                if (pos != null) {
+                    long chunk = ChunkPos.asLong(pos);
+                    if (chunk != verdictChunk) {
+                        verdictChunk = chunk;
+                        byte known = verdicts.get(chunk);
+                        if (known == 0) {
+                            verdict = this.shouldTickBlocksAt(pos);
+                            verdicts.put(chunk, verdict ? (byte) 1 : (byte) 2);
+                        } else {
+                            verdict = known == 1;
+                        }
+                    }
+                    if (verdict) {
+                        ticker.tick();
+                    } else if (scheduled != null) {
+                        scheduled.coo$due(ScheduledTicker.nextDue(level, chunk, now));
+                    }
                 }
             }
             if (kept != index) {

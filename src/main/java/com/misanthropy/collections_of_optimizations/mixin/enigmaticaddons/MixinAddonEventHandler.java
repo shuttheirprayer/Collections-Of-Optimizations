@@ -3,6 +3,7 @@ package com.misanthropy.collections_of_optimizations.mixin.enigmaticaddons;
 import auviotre.enigmatic.addon.handlers.AddonEventHandler;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
@@ -13,6 +14,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -34,9 +36,23 @@ public abstract class MixinAddonEventHandler {
         if (entity.getTicksFrozen() != 0) {
             return;
         }
-        if (entity instanceof EntityPersistentDataAccessor access && access.coo$persistentData() == null) {
+        if (entity instanceof EntityPersistentDataAccessor access && coo$idle(access.coo$persistentData())) {
             ci.cancel();
         }
+    }
+
+    @Unique
+    private static boolean coo$idle(CompoundTag tag) {
+        return tag == null || (!tag.contains("ForgottenFrozenHard")
+                && !tag.contains("RevivingPoisoned")
+                && !tag.contains("CosmicPotion")
+                && !tag.contains("Ichor")
+                && !tag.contains("Electric")
+                && !tag.contains("CursedNextSpawn")
+                && !tag.contains("BlessNextSpawn")
+                && !tag.contains("WorthyNextSpawn")
+                && !tag.contains("EvilCurseThreshold")
+                && !tag.contains("DisasterCurse"));
     }
 
     @Redirect(

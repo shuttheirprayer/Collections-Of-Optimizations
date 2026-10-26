@@ -146,7 +146,14 @@ public final class GuardedEvents {
         final Object[][] constants;
         final Class<?>[][] types;
         final ClassLoader[] loaders;
-        final Map<Object, int[]> byKey = new ConcurrentHashMap<>();
+        final Map<Object, int[]> byStage = new ConcurrentHashMap<>();
+        final ClassValue<Slot> byClass = new ClassValue<>() {
+            @Override
+            protected Slot computeValue(Class<?> type) {
+                return new Slot();
+            }
+        };
+        final Slot plain = new Slot();
         final int[] everything;
         final boolean filterable;
 
@@ -224,10 +231,18 @@ public final class GuardedEvents {
             Class<?> level = null;
             Class<?> entityLevel = null;
             int client = -1;
-            Object key;
+            Slot slot;
+            Object keyA;
+            Object keyB;
             if (event instanceof net.minecraftforge.client.event.RenderLevelStageEvent stageEvent) {
                 stage = stageEvent.getStage();
-                key = stage;
+                int[] cached = byStage.get(stage);
+                if (cached != null) {
+                    return cached;
+                }
+                slot = null;
+                keyA = null;
+                keyB = null;
             } else if (event instanceof TickEvent tick) {
                 phase = tick.phase;
                 side = tick.side;
@@ -236,12 +251,18 @@ public final class GuardedEvents {
                     entity = playerTick.player.getClass();
                     Level l = playerTick.player.level();
                     entityLevel = l == null ? null : l.getClass();
-                    key = new Key(phase, entityLevel, entity);
+                    slot = byClass.get(entity);
+                    keyA = phase;
+                    keyB = entityLevel;
                 } else if (tick instanceof TickEvent.LevelTickEvent levelTick) {
                     level = levelTick.level.getClass();
-                    key = new Key(phase, side, level);
+                    slot = byClass.get(level);
+                    keyA = phase;
+                    keyB = side;
                 } else {
-                    key = new Key(phase, side, null);
+                    slot = plain;
+                    keyA = phase;
+                    keyB = side;
                 }
             } else if (event instanceof LivingEvent.LivingTickEvent living) {
                 Entity e = living.getEntity();
@@ -249,13 +270,17 @@ public final class GuardedEvents {
                 Level l = e.level();
                 client = l != null && l.isClientSide ? 1 : 0;
                 entityLevel = l == null ? null : l.getClass();
-                key = new Key(null, entityLevel, entity);
+                slot = byClass.get(entity);
+                keyA = null;
+                keyB = entityLevel;
             } else {
                 return everything;
             }
-            int[] cached = byKey.get(key);
-            if (cached != null) {
-                return cached;
+            if (slot != null) {
+                int[] cached = slot.find(keyA, keyB);
+                if (cached != null) {
+                    return cached;
+                }
             }
             int[] out = new int[everything.length];
             int count = 0;
@@ -265,8 +290,12 @@ public final class GuardedEvents {
                 }
             }
             int[] picked = java.util.Arrays.copyOf(out, count);
-            if (byKey.size() < 4096) {
-                byKey.put(key, picked);
+            if (slot == null) {
+                if (byStage.size() < 4096) {
+                    byStage.put(stage, picked);
+                }
+            } else {
+                slot.add(keyA, keyB, picked);
             }
             return picked;
         }
@@ -311,6 +340,38 @@ public final class GuardedEvents {
         }
     }
 
-    private record Key(Object a, Object b, Class<?> c) {
+    private static final class Slot {
+        private static final Pick[] NONE = new Pick[0];
+
+        private volatile Pick[] picks = NONE;
+
+        int[] find(Object a, Object b) {
+            Pick[] current = picks;
+            for (int i = 0; i < current.length; i++) {
+                Pick pick = current[i];
+                if (pick.a == a && pick.b == b) {
+                    return pick.picked;
+                }
+            }
+            return null;
+        }
+
+        synchronized void add(Object a, Object b, int[] picked) {
+            Pick[] current = picks;
+            if (current.length >= 64) {
+                return;
+            }
+            for (Pick pick : current) {
+                if (pick.a == a && pick.b == b) {
+                    return;
+                }
+            }
+            Pick[] grown = java.util.Arrays.copyOf(current, current.length + 1);
+            grown[current.length] = new Pick(a, b, picked);
+            picks = grown;
+        }
+    }
+
+    private record Pick(Object a, Object b, int[] picked) {
     }
 }

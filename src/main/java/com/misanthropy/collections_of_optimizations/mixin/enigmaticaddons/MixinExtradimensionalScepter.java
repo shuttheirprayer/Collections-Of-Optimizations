@@ -2,6 +2,7 @@ package com.misanthropy.collections_of_optimizations.mixin.enigmaticaddons;
 
 import auviotre.enigmatic.addon.contents.items.ExtradimensionalScepter;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.PersistentKeys;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -19,7 +20,7 @@ public abstract class MixinExtradimensionalScepter {
             return;
         }
         LivingEntity entity = event.getEntity();
-        if (entity instanceof EntityPersistentDataAccessor access && access.coo$persistentData() == null) {
+        if (entity instanceof EntityPersistentDataAccessor access && PersistentKeys.lacks(access.coo$persistentData(), "ExtradimensionCounter")) {
             ci.cancel();
         }
     }

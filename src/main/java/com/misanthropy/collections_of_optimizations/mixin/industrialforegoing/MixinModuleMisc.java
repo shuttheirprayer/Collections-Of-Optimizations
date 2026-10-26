@@ -1,6 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.industrialforegoing;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.PersistentKeys;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -23,7 +24,7 @@ public abstract class MixinModuleMisc {
         if (!(entity instanceof Mob)) {
             return;
         }
-        if (entity instanceof EntityPersistentDataAccessor access && access.coo$persistentData() == null) {
+        if (entity instanceof EntityPersistentDataAccessor access && PersistentKeys.lacks(access.coo$persistentData(), "StasisChamberTime")) {
             cir.setReturnValue(Boolean.FALSE);
         }
     }

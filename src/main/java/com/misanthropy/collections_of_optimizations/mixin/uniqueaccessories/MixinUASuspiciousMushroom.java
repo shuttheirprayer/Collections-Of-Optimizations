@@ -1,6 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.uniqueaccessories;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.PersistentKeys;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
 import net.genzyuro.uniqueaccessories.system.SuspiciousMushroomEvents;
 import net.minecraft.world.entity.LivingEntity;
@@ -19,7 +20,7 @@ public abstract class MixinUASuspiciousMushroom {
             return;
         }
         LivingEntity entity = event.getEntity();
-        if (entity instanceof EntityPersistentDataAccessor access && access.coo$persistentData() == null) {
+        if (entity instanceof EntityPersistentDataAccessor access && PersistentKeys.lacks(access.coo$persistentData(), "ua_sm_regen_until")) {
             ci.cancel();
         }
     }

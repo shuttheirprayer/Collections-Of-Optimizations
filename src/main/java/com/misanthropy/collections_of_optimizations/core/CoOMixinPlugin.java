@@ -36,6 +36,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, String> GROUP_TO_MODID = Map.ofEntries(
             Map.entry("radium", "radium"),
+            Map.entry("mekanism", "mekanism"),
             Map.entry("curios", "curios"),
             Map.entry("oddaccessories", "oddaccessories"),
             Map.entry("artifacts", "artifacts"),
