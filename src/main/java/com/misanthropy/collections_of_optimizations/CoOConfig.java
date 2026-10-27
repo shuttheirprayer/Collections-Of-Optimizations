@@ -148,6 +148,7 @@ public final class CoOConfig {
     public static int xaeroMinimapRenderFpsCap = 0;
     public static boolean xaeroMinimapDeferRadarUpdate = true;
     public static boolean xaeroMinimapSkipHiddenRadar = true;
+    public static boolean xaeroSkipEmptyElementRenderers = true;
     public static boolean w2w2DeferWaypointSave = true;
 
     public static boolean terrablenderCacheNamespaceRule = true;
@@ -1350,6 +1351,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the radar entity lists while the minimap is hidden and no screen is open. The radar sorts every loaded entity into its categories each tick, and with the minimap turned off nothing reads the result. The world map still gets them while it is open. Client.")
                 .define("skipHiddenRadar", true), v -> xaeroMinimapSkipHiddenRadar = v);
+        gate(builder
+                .comment("Skip a minimap element renderer (waypoints in the world, and the like) for the rest of a client tick when it drew nothing on the first frame of that tick. With no waypoint in view it still set up its buffers and walked its lists every frame. A new waypoint shows up at most one tick later. Client.")
+                .define("skipEmptyElementRenderers", true), v -> xaeroSkipEmptyElementRenderers = v);
         builder.pop();
 
         builder.comment("Xaero's + Waystones compatibility patches.").push("w2w2");

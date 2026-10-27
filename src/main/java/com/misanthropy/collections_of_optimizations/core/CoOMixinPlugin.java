@@ -285,17 +285,18 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "fancymenu.MixinGuiGraphicsPoseStack", new String[]{"fancymenu", "3.9.0"}
     );
 
-    private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.of(
-            "create.MixinContraptionCollisionUnion", new String[]{"create", "6.0.8"},
-            "cbc.MixinCbcAutocannonSeat", new String[]{"createbigcannons", "5.11.4"},
-            "geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"},
-            "subtleeffects.MixinBubbleParticleTint", new String[]{"subtle_effects", "1.15.0"},
-            "subtleeffects.MixinChestTickerDryChest", new String[]{"subtle_effects", "1.15.0"},
-            "subtleeffects.MixinClientLevelDisplayTick", new String[]{"subtle_effects", "1.15.0"},
-            "subtleeffects.MixinEntityTickerManagerRange", new String[]{"subtle_effects", "1.15.0"},
-            "subtleeffects.MixinEntityTickerRange", new String[]{"subtle_effects", "1.15.0"},
-            "subtleeffects.MixinLavaFluidSparks", new String[]{"subtle_effects", "1.15.0"},
-            "subtleeffects.MixinWaterFluidSteam", new String[]{"subtle_effects", "1.15.0"}
+    private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.ofEntries(
+            Map.entry("create.MixinContraptionCollisionUnion", new String[]{"create", "6.0.8"}),
+            Map.entry("cbc.MixinCbcAutocannonSeat", new String[]{"createbigcannons", "5.11.4"}),
+            Map.entry("goety.MixinGoetyGlowGate", new String[]{"goety", "2.5.58.4"}),
+            Map.entry("geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"}),
+            Map.entry("subtleeffects.MixinBubbleParticleTint", new String[]{"subtle_effects", "1.15.0"}),
+            Map.entry("subtleeffects.MixinChestTickerDryChest", new String[]{"subtle_effects", "1.15.0"}),
+            Map.entry("subtleeffects.MixinClientLevelDisplayTick", new String[]{"subtle_effects", "1.15.0"}),
+            Map.entry("subtleeffects.MixinEntityTickerManagerRange", new String[]{"subtle_effects", "1.15.0"}),
+            Map.entry("subtleeffects.MixinEntityTickerRange", new String[]{"subtle_effects", "1.15.0"}),
+            Map.entry("subtleeffects.MixinLavaFluidSparks", new String[]{"subtle_effects", "1.15.0"}),
+            Map.entry("subtleeffects.MixinWaterFluidSteam", new String[]{"subtle_effects", "1.15.0"})
     );
 
     private static final Map<String, String[]> GROUP_CONFLICTS = Map.of(
