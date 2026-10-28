@@ -2,6 +2,7 @@ package com.misanthropy.collections_of_optimizations.mixin.emf;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.NumberSyntax;
+import com.misanthropy.collections_of_optimizations.core.RegexCache;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -17,5 +18,14 @@ public abstract class MixinMathExpressionParserTokens {
     )
     private float coo$parseWithoutThrowing(String token) {
         return CoOConfig.emfParseTokensWithoutExceptions ? NumberSyntax.parseFloat(token) : Float.parseFloat(token);
+    }
+
+    @Redirect(
+            method = "readVariableOrConstant",
+            at = @At(value = "INVOKE", target = "Ljava/lang/String;matches(Ljava/lang/String;)Z"),
+            require = 0
+    )
+    private boolean coo$compiledOnce(String input, String regex) {
+        return CoOConfig.emfCompiledPatterns ? RegexCache.matches(input, regex) : input.matches(regex);
     }
 }

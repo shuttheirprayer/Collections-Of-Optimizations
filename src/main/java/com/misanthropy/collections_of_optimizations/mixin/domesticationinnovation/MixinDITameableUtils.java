@@ -5,6 +5,7 @@ import com.github.alexthe668.domesticationinnovation.DomesticationMod;
 import com.github.alexthe668.domesticationinnovation.server.entity.TameableUtils;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.DomesticationEnchantCache;
+import com.misanthropy.collections_of_optimizations.core.DomesticationHealers;
 import com.misanthropy.collections_of_optimizations.core.DomesticationTameable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(value = TameableUtils.class, remap = false)
 public abstract class MixinDITameableUtils {
@@ -46,6 +49,13 @@ public abstract class MixinDITameableUtils {
         }
         if (entity == null || !DomesticationTameable.canEverBeTamed(entity.getClass())) {
             cir.setReturnValue(Boolean.FALSE);
+        }
+    }
+
+    @Inject(method = "getNearbyHealers", at = @At("HEAD"), cancellable = true, require = 0)
+    private static void coo$indexedHealers(LivingEntity hurtOwner, CallbackInfoReturnable<List<LivingEntity>> cir) {
+        if (CoOConfig.domesticationinnovationIndexedHealers) {
+            cir.setReturnValue(DomesticationHealers.nearby(hurtOwner));
         }
     }
 

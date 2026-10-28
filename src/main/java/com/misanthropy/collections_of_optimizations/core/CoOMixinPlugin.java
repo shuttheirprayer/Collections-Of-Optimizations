@@ -99,6 +99,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("cerbonsapi", "cerbons_api"),
             Map.entry("echelon", "tiered"),
             Map.entry("balm", "balm"),
+            Map.entry("biggerstacks", "biggerstacks"),
             Map.entry("macabre", "macabre"),
             Map.entry("alexsmobs", "alexsmobs"),
             Map.entry("alexscaves", "alexscaves"),
@@ -272,7 +273,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     );
 
     private static final Map<String, String> GROUP_EXACT_VERSION = Map.of(
-            "radium", "0.14.3+git.e141a47",
+            "radium", "0.14.4+git.53d76d5",
             "cataclysm", "3.16",
             "lionfishapi", "2.8",
             "immersiveweathering", "1.20.1-2.0.5",

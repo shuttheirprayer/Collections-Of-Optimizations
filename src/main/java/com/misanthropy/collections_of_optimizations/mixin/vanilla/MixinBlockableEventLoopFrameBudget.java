@@ -15,8 +15,12 @@ public abstract class MixinBlockableEventLoopFrameBudget {
     @Unique
     private long coo$taskDeadline;
 
+    @Unique
+    private boolean coo$overran;
+
     @Inject(method = "runAllTasks", at = @At("HEAD"))
     private void coo$startTaskBudget(CallbackInfo ci) {
+        this.coo$overran = false;
         this.coo$taskDeadline = FrameWorkBudget.taskDeadline((BlockableEventLoop<?>) (Object) this);
     }
 
@@ -28,8 +32,16 @@ public abstract class MixinBlockableEventLoopFrameBudget {
         long deadline = this.coo$taskDeadline;
         if (deadline != 0L && System.nanoTime() - deadline >= 0L) {
             this.coo$taskDeadline = 0L;
+            this.coo$overran = true;
             return false;
         }
         return loop.pollTask();
+    }
+
+    @Inject(method = "runAllTasks", at = @At("TAIL"))
+    private void coo$finishTaskBudget(CallbackInfo ci) {
+        if (FrameWorkBudget.isClientLoop((BlockableEventLoop<?>) (Object) this)) {
+            FrameWorkBudget.tasksFinished(this.coo$overran);
+        }
     }
 }

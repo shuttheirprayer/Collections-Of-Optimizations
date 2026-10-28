@@ -44,6 +44,7 @@ public final class GuardedEvents {
 
     private static final Map<Class<?>, Plan> PLANS = new ConcurrentHashMap<>();
     private static final Map<String, Boolean> DUMPED = new ConcurrentHashMap<>();
+    private static final boolean DUMP = Boolean.getBoolean("coo.dumpGuardedEvents");
 
     private GuardedEvents() {
     }
@@ -168,7 +169,7 @@ public final class GuardedEvents {
             loaders = new ClassLoader[n];
             List<Integer> all = new ArrayList<>();
             boolean any = false;
-            StringBuilder dump = new StringBuilder();
+            StringBuilder dump = DUMP ? new StringBuilder() : null;
             for (int i = 0; i < n; i++) {
                 IEventListener listener = source[i];
                 if (listener instanceof EventPriority) {
@@ -203,11 +204,13 @@ public final class GuardedEvents {
                     }
                     any = true;
                 }
-                dump.append(found == null ? "  -    " : "  guard ").append(listener).append(found == null ? "" : " " + found).append('\n');
+                if (dump != null) {
+                    dump.append(found == null ? "  -    " : "  guard ").append(listener).append(found == null ? "" : " " + found).append('\n');
+                }
             }
             everything = all.stream().mapToInt(Integer::intValue).toArray();
             filterable = any;
-            if (DUMPED.putIfAbsent(eventType.getName() + "#" + n, Boolean.TRUE) == null) {
+            if (dump != null && DUMPED.putIfAbsent(eventType.getName() + "#" + n, Boolean.TRUE) == null) {
                 try {
                     Files.createDirectories(FMLPaths.GAMEDIR.get().resolve("logs"));
                     try (PrintWriter out = new PrintWriter(Files.newBufferedWriter(FMLPaths.GAMEDIR.get().resolve("logs/coo-guarded-events.txt"),

@@ -23,6 +23,7 @@ public final class CoOConfig {
     public static boolean almostunifiedBucketDuplicates = true;
     public static boolean kubejsIndexGeneratedPack = true;
     public static boolean kubejsSkipFileNameScan = true;
+    public static boolean kubejsIngredientMatchItemSet = true;
     public static boolean immersiveaircraftSkipEmptyVehicleTrace = true;
 
     public static boolean curiosSkipSlotlessEntities = true;
@@ -102,6 +103,7 @@ public final class CoOConfig {
     public static boolean emfDropZeroAngerEntries = true;
     public static boolean emfCacheNbtPerTick = true;
     public static boolean emfParseTokensWithoutExceptions = true;
+    public static boolean emfCompiledPatterns = true;
     public static boolean emfIndexedResourceExists = true;
     public static boolean mekanismSkipEmptyRadiationScan = true;
     public static boolean etfStacklessPropertyExceptions = true;
@@ -120,6 +122,13 @@ public final class CoOConfig {
     public static int geckolibHoldDistantPosePixels = 0;
     public static int fancymenuInternetProbeSeconds = 600;
     public static boolean vanillaMemoBiomeFogColour = true;
+    public static boolean vanillaSkipIdenticalRegistrySnapshot = true;
+    public static boolean vanillaFastBiomeTreeSort = true;
+    public static boolean vanillaFlatBiomeSearch = true;
+    public static boolean vanillaGeometricHolderGrowth = true;
+    public static boolean vanillaEdgeCulling = false;
+    public static boolean vanillaPausedWorldFrame = true;
+    public static boolean vanillaIndexedObjectHolders = true;
     public static boolean vanillaSkipOrderIndependentSort = true;
     public static boolean vanillaMemoSkyColourPerTick = true;
     public static boolean vanillaSkipEmptyBeardifier = true;
@@ -321,6 +330,7 @@ public final class CoOConfig {
     public static boolean vanillaShareColumnHeights = true;
     public static boolean createSinglePassContraptionCollision = true;
     public static boolean createSkipIdleBehaviourTicks = true;
+    public static boolean createCacheRuntimeData = true;
     public static boolean ftbchunksDisableMapWriting = false;
     public static boolean ftbchunksDisableWaystoneIcons = false;
     public static boolean punchyCacheResourceStackMisses = true;
@@ -383,6 +393,8 @@ public final class CoOConfig {
     public static boolean elysiumapiCacheSoundTransformers = true;
     public static boolean balmMemoDynamicModelKeys = true;
     public static boolean balmCacheConfigIdentifier = true;
+    public static boolean biggerstacksSkipCallerLookup = true;
+    public static boolean sophisticatedbackpacksLazyShapes = true;
 
     public static boolean dungeoncrawlSkipBlockEntityProbe = true;
 
@@ -436,6 +448,7 @@ public final class CoOConfig {
     public static boolean goetySkipBossMusicTargetLookup = true;
     public static boolean goetyCacheFogWightScan = true;
     public static boolean goetyCacheShakeScan = true;
+    public static boolean goetySameLevelOwnerLookup = true;
 
     public static boolean cataclysmCacheShakeScan = true;
     public static boolean cataclysmSkipIdleAnimate = true;
@@ -532,6 +545,7 @@ public final class CoOConfig {
     public static boolean alexscavesMemoClimateSample = true;
     public static boolean alexscavesCacheShakeScan = true;
     public static boolean alexscavesSingleMagnetQuery = true;
+    public static boolean alexscavesRadiumEntityCollisions = true;
 
     public static boolean architecturyDirectEventDispatch = true;
 
@@ -601,6 +615,10 @@ public final class CoOConfig {
     public static boolean vanillaUniformSectionLookup = true;
     public static boolean vanillaAxisAlignedRotation = true;
     public static boolean vanillaLeanBlockPosRange = true;
+    public static boolean vanillaReplayVillagerLayers = true;
+    public static boolean vanillaMemoBlockTickChunk = true;
+    public static boolean vanillaReuseNoiseColumnCells = true;
+    public static boolean vanillaCacheBiomeLookups = true;
     public static boolean createsolarMemoGogglesLookup = true;
     public static int xaeroworldmapUploadHeadroomMicros = 1000;
     public static boolean xaeroworldmapOpenReflectedFields = true;
@@ -635,6 +653,7 @@ public final class CoOConfig {
     public static boolean domesticationinnovationFastEnchantLookup = true;
     public static boolean domesticationinnovationSafeCollarPrune = true;
     public static boolean domesticationinnovationSkipImpossibleTamedCheck = true;
+    public static boolean domesticationinnovationIndexedHealers = true;
 
     public static boolean moreartifactsFastEquipState = true;
     public static boolean moreartifactsTickEndPhaseOnly = true;
@@ -1138,6 +1157,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the behaviours of a Create block that have nothing to tick. Every tick every Create machine, shaft and cog walks all of its behaviours and calls their tick, and for most behaviours that tick only counts down a timer that leads to nothing because they never react to it. With this on only behaviours that actually do something on tick or on their slow tick are called, in the same order; the rest are skipped. Both sides.")
                 .define("skipIdleBehaviourTicks", true), v -> createSkipIdleBehaviourTicks = v);
+        gate(builder
+                .comment("Create works out its wood cutting recipes by checking every item in the game against a few patterns, on the main thread, every time a world is opened. The answer only depends on which items exist, so work it out once in the background when loading finishes and reuse it.")
+                .define("cacheRuntimeData", true), v -> createCacheRuntimeData = v);
         builder.pop();
 
         builder.comment("XaeroLib patches.").push("xaerolib");
@@ -1276,6 +1298,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop the animation expression parser throwing a stack trace for every variable name it reads. Each piece of an animation expression in a model file, a bone angle formula, a condition, a variable, is first handed to the number parser, and anything that is not a number, which is nearly every name like head_rx or is_hurt, makes it throw a NumberFormatException that the parser catches to learn that the piece is a variable. A model pack with a few hundred animated models builds hundreds of thousands of those at launch, each one copying the loading thread's deep call stack. With this on a piece is only handed to the real number parser when its first character, after any spaces and sign, could start a number at all, which are a digit, a dot, or the N and I of NaN and Infinity, and everything else gets one shared exception with no stack that the same catch block handles in the same way. Every number the real parser accepts, including 1f, .5, hex floats, NaN and Infinity, still goes through it unchanged. Client.")
                 .define("parseTokensWithoutExceptions", true), v -> emfParseTokensWithoutExceptions = v);
+        gate(builder
+                .comment("Compile the handful of regular expressions EMF checks every animation variable against once instead of on every check, and walk animation text with a plain character loop instead of a stream, while models load.")
+                .define("compiledPatterns", true), v -> emfCompiledPatterns = v);
         gate(builder
                 .comment("Answer the misses of the model file existence check from the list EMF already made. EMF lists every model file under emf/cem and optifine/cem once per resource reload, but for every file that is not in that list it still asked each resource pack in turn, hundreds of packs on disk, whether the file exists, and nearly every such question is a miss. With this on those misses are answered from the list, and files are found exactly as before. Client.")
                 .define("indexedResourceExists", true), v -> emfIndexedResourceExists = v);
@@ -2149,6 +2174,12 @@ public final class CoOConfig {
                 .define("cacheConfigIdentifier", true), v -> balmCacheConfigIdentifier = v);
         builder.pop();
 
+        builder.comment("Bigger Stacks patches.").push("biggerstacks");
+        gate(builder
+                .comment("Skip the full stack trace Bigger Stacks captures on every stack size lookup before a world is loaded. It only feeds a debug log line that is off.")
+                .define("skipCallerLookup", true), v -> biggerstacksSkipCallerLookup = v);
+        builder.pop();
+
         builder.comment("Moonlight Lib patches.").push("moonlight");
         gate(builder
                 .comment("Skip Moonlight's custom map marker refresh on maps that have no markers.")
@@ -2393,6 +2424,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the camera shake entity scan once per tick instead of once per frame. Client.")
                 .define("cacheShakeScan", true), v -> goetyCacheShakeScan = v);
+        gate(builder
+                .comment("Look for a servant's owner in the servant's own dimension first. The stock lookup walks every loaded dimension in a fixed order, several times per servant per tick, so with 25 dimensions a servant next to its owner in the Nether still asked the other dimensions first.")
+                .define("sameLevelOwnerLookup", true), v -> goetySameLevelOwnerLookup = v);
         builder.pop();
 
         builder.comment("L_Ender's Cataclysm patches.").push("cataclysm");
@@ -2653,6 +2687,9 @@ public final class CoOConfig {
                 .comment("Look for screen shaking mobs once per tick instead of once per frame.")
                 .define("cacheShakeScan", true), v -> alexscavesCacheShakeScan = v);
         gate(builder
+                .comment("Alex's Caves replaces the whole entity movement collision step to add magnet block collisions, which also throws away Radium's faster entity collision lookup. Every moving entity then checks every nearby entity, item drops included, on both client and server. Keep Alex's Caves' step but ask Radium for the entity collisions, the same way Radium does for unmodified movement. Same collisions, far fewer entity checks.")
+                .define("radiumEntityCollisions", true), v -> alexscavesRadiumEntityCollisions = v);
+        gate(builder
                 .comment("Find nearby attracting and repelling magnets with one point of interest search instead of two for every magnetic entity on every tick. Server.")
                 .define("singleMagnetQuery", true), v -> alexscavesSingleMagnetQuery = v);
         builder.pop();
@@ -2704,6 +2741,21 @@ public final class CoOConfig {
 
         builder.comment("Vanilla patches. These are the only patches here that are not aimed at a specific mod.").push("vanilla");
         gate(builder
+                .comment("When a world is opened Forge re-applies the registry ids saved in it and rebuilds every registry, even when the ids are exactly the ones the game already uses. Skip that when every saved id, alias and owner matches the running game. Anything different takes the normal path.")
+                .define("skipIdenticalRegistrySnapshot", true), v -> vanillaSkipIdenticalRegistrySnapshot = v);
+        gate(builder
+                .comment("Build the biome lookup trees TerraBlender and vanilla make on every world load with each node's sort keys worked out once instead of on every comparison. The trees come out identical.")
+                .define("fastBiomeTreeSort", true), v -> vanillaFastBiomeTreeSort = v);
+        gate(builder
+                .comment("Search the biome lookup trees from flat number arrays instead of walking linked node objects. Same visiting order and same answers as vanilla, every tree checks itself against the vanilla search when it is built and keeps the vanilla search if they ever disagree.")
+                .define("flatBiomeSearch", true), v -> vanillaFlatBiomeSearch = v);
+        gate(builder
+                .comment("Forge grows each registry's holder list by exactly one slot per registered entry, copying the whole list every time. Grow it in bigger steps instead. The list holds the same entries, only its spare room differs.")
+                .define("geometricHolderGrowth", true), v -> vanillaGeometricHolderGrowth = v);
+        gate(builder
+                .comment("After each registry is filled at startup Forge refreshes every registry object reference in the game just to update the ones for that registry. Keep them sorted by registry so each refresh only touches its own. References Forge cannot place are still refreshed every time.")
+                .define("indexedObjectHolders", true), v -> vanillaIndexedObjectHolders = v);
+        gate(builder
                 .comment("When a world is closed, drop the references other mods keep to it (Citadel, Copycats, KubeJS, Opposing Force, Xaero's config library, Simply Swords, Subtle Effects). Without this the last world stays in memory on the title screen and next to the new world after rejoining.")
                 .define("releaseClosedWorld", true), v -> releaseStoppedServer = v);
         gate(builder
@@ -2715,6 +2767,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("KubeJS walks every file in kubejs/data for each folder a data pack load lists. Look the files up in a sorted index instead.")
                 .define("kubejsIndexedGeneratedPack", true), v -> kubejsIndexGeneratedPack = v);
+        gate(builder
+                .comment("Recipe filters like {input: [...]} test every listed item against every ingredient of every recipe. For plain ingredients look each ingredient item up in a set of the listed items instead. Same matches.")
+                .define("kubejsIngredientMatchItemSet", true), v -> kubejsIngredientMatchItemSet = v);
         gate(builder
                 .comment("Skip the KubeJS file probes. While the game starts KubeJS opens every file in kubejs/assets and kubejs/data one by one only to warn about upper case letters or odd characters in their names, and when a world loads it opens every file in kubejs/data again just to ask whether it can be read, both times on a single thread while the game waits. With a few thousand files that is several seconds each time, far more with an antivirus that scans every opened file. With this on both probes are skipped; the files are still read exactly as before when the data loads, and a file that cannot be read is still reported then. Only the file name warnings are gone.")
                 .define("kubejsSkipFileNameScan", true), v -> kubejsSkipFileNameScan = v);
@@ -2812,6 +2867,12 @@ public final class CoOConfig {
                 .comment("Keep the sky colour for a whole client tick instead of recomputing it whenever the camera position or partial tick changes, which is every frame while moving. The biome blend it samples spans 24 blocks, so one tick of camera movement cannot change it visibly. Needs memoSkyColour. Client.")
                 .define("memoSkyColourPerTick", true), v -> vanillaMemoSkyColourPerTick = v);
         gate(builder
+                .comment("Mobs and animated blocks near the left and right edges of the screen stop being drawn a bit sooner than ones in the middle, down to 60 % of their normal draw distance at the very edge. Nothing closer than 32 blocks is touched, and the shader shadow pass is left alone. Client.")
+                .define("edgeCulling", false), v -> vanillaEdgeCulling = v);
+        gate(builder
+                .comment("While a singleplayer game is paused behind the pause or options menu, redraw the frozen world 10 times a second instead of every frame and show the last picture in between. The menu itself still runs at full speed. Client.")
+                .define("pausedWorldFrame", true), v -> vanillaPausedWorldFrame = v);
+        gate(builder
                 .comment("Sample the blended biome fog colour once per client tick instead of once per frame. Same 216 biome lookups and Vec3 garbage per call as the sky colour. This is not bit exact: inside one tick every frame reuses the colour sampled at the start of that tick, so while you move across a biome border the fog colour can trail the camera by up to one twentieth of a second. Client.")
                 .define("memoBiomeFogColour", true), v -> vanillaMemoBiomeFogColour = v);
         gate(builder
@@ -2856,6 +2917,18 @@ public final class CoOConfig {
         gate(builder
                 .comment("Walk BlockPos.betweenClosed and Cursor3D with three counters instead of two integer divisions per position. Cursor3D is what every entity uses each tick to find the block it stands on, and what mob pathfinding uses for its collision checks. Same positions in the same order. An inverted BlockPos range yields nothing instead of looping forever.")
                 .define("leanBlockPosRange", true), v -> vanillaLeanBlockPosRange = v);
+        gate(builder
+                .comment("Villager and zombie villager outfits are drawn as up to three extra passes of the whole villager model (biome, profession, level badge), each walking every bone and transforming every vertex again with the exact same pose. Walk the model once, keep the finished vertices, and copy them into the other outfit textures. Pixels are identical; models from mods that draw bones themselves are detected and left alone.")
+                .define("replayVillagerLayers", true), v -> vanillaReplayVillagerLayers = v);
+        gate(builder
+                .comment("While ticking block entities, ask whether a chunk is block-ticking once per run of block entities in that chunk instead of once per block entity. The answer comes from chunk ticket levels, which only change between ticks, so the result is identical. Big storage rooms and factories tick thousands of block entities per tick, mostly grouped by chunk.")
+                .define("memoBlockTickChunk", true), v -> vanillaMemoBlockTickChunk = v);
+        gate(builder
+                .comment("Terrain height lookups (structure placement, meteorites, spawn checks) each build the noise for one 4x4 block cell from scratch, so asking for the 16 columns of the same cell computes the same corner noise 16 times. Keep the last few cells per worker thread and only redo the cheap part per column. Same heights as before.")
+                .define("reuseNoiseColumnCells", true), v -> vanillaReuseNoiseColumnCells = v);
+        gate(builder
+                .comment("Remember the biome picked at each biome cell for the noise biome source. While generating, every chunk asks again for the biomes just outside its own edges, which are the edge biomes its neighbours already worked out, and each answer is a full climate sample plus a search over every biome in the pack. Answers come from the same biome source, so biomes are identical.")
+                .define("cacheBiomeLookups", true), v -> vanillaCacheBiomeLookups = v);
         gate(builder
                 .comment("Skip the fire and lava check that runs at the end of every entity movement when its answer cannot change anything. For a mob that is not burning and was not burning last tick, the game only uses this check to reset a fire timer that already holds the reset value, so the block scan is skipped. Burning entities and the client still run the full check. Turn it off for stock behaviour.")
                 .define("skipIrrelevantFireScan", true), v -> vanillaSkipIrrelevantFireScan = v);
@@ -3018,6 +3091,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Answer Domestication Innovation's is-tamed question with a plain no for entities that can never be tamed. The check runs against every entity the mod's handlers see and went through a chain of type checks each time. With this on, whether an entity type can be tamed at all is worked out once per type and remembered, an entity type that is none of the animals the mod handles gets the no straight away, and every other entity still takes the stock check.")
                 .define("skipImpossibleTamedCheck", true), v -> domesticationinnovationSkipImpossibleTamedCheck = v);
+        gate(builder
+                .comment("Find the Healing Aura pets near a hurt mob from a list of the pets that actually have Healing Aura instead of scanning every entity in a 32 by 8 by 32 box. The stock scan runs on every single hit to any mob, which made it a quarter of the server tick in big fights. Pets join the list when they load in or when their upgrades change, so the same pets get found.")
+                .define("indexedHealers", true), v -> domesticationinnovationIndexedHealers = v);
         builder.pop();
 
         builder.comment("More Artifacts patches.").push("moreartifacts");
@@ -3882,6 +3958,9 @@ public final class CoOConfig {
         builder.pop();
 
         builder.comment("Sophisticated Backpacks patches.").push("sophisticatedbackpacks");
+        gate(builder
+                .comment("Work out each backpack block's outline shape the first time it is needed instead of all of them on the main thread at every resource reload.")
+                .define("lazyShapes", true), v -> sophisticatedbackpacksLazyShapes = v);
         gate(builder
                 .comment("Let Sophisticated Backpacks leave alone every mob that is not carrying one of its backpacks. The mod listens to the living tick event, which fires for every living entity on the server every single tick, and the first thing it does there is ask the entity for its Forge persistent data and then pull the sophisticatedbackpacks compound out of it, twice. Asking for the persistent data creates and permanently attaches an empty compound to any entity that did not already have one, and that empty compound is then written into the save file as a ForgeData tag for the rest of that entity's life, while pulling out a compound that is not there hands back a freshly allocated one that is thrown away immediately. A world with a few hundred mobs loaded is paying a couple of thousand throwaway compound tags a second and is quietly growing the saved data of everything that has ever ticked, all to find out that the mob has no backpack. This reads the persistent data field directly without creating it, and if the mob has no sophisticatedbackpacks compound then neither branch of the handler could have done anything, so the handler is skipped outright. The same check is put in front of the chunk unload path that clears a dropped backpack's contents id, which reads the same data the same way for every monster that leaves the level. Mobs that actually spawned wearing a backpack take exactly the stock path, so mob backpack spawning, the jukebox upgrade they can carry and the contents cleanup all behave as before. Turn it off for stock behaviour.")
                 .define("skipEntityDataChecks", true), v -> sophisticatedbackpacksSkipEntityDataChecks = v);

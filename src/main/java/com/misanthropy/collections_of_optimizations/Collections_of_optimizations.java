@@ -20,6 +20,7 @@ import com.misanthropy.collections_of_optimizations.core.CurioPresenceCache;
 import com.misanthropy.collections_of_optimizations.core.CuriosSlotCache;
 import com.misanthropy.collections_of_optimizations.core.IafDenRegistry;
 import com.misanthropy.collections_of_optimizations.core.MapTintCache;
+import com.misanthropy.collections_of_optimizations.core.CreateRuntimeDataCache;
 import com.misanthropy.collections_of_optimizations.core.NbtFastLoad;
 import com.misanthropy.collections_of_optimizations.core.RecipeCacheGeneration;
 import com.misanthropy.collections_of_optimizations.core.SkyArenaAltarMapPurge;
@@ -53,6 +54,10 @@ public class Collections_of_optimizations {
 
         if (ModList.get().isLoaded("goetydelight")) {
             GoetyDelightLogItems.register();
+        }
+
+        if (ModList.get().isLoaded("create")) {
+            CreateRuntimeDataCache.register();
         }
 
         if (ModList.get().isLoaded("supplementaries")) {

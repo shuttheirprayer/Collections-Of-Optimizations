@@ -31,16 +31,19 @@ public abstract class MixinClientLevelLightPollBudget {
             return;
         }
         int limit = size < 1000 ? Math.max(10, size / 10) : size;
+        boolean catchUp = FrameWorkBudget.lightCatchUp();
         long deadline = System.nanoTime() + FrameWorkBudget.budgetNanos(size);
         for (int index = 0; index < limit; index++) {
             Runnable update = queue.poll();
             if (update == null) {
-                return;
+                break;
             }
             update.run();
-            if (System.nanoTime() - deadline >= 0L) {
+            if (!catchUp && index + 1 < limit && System.nanoTime() - deadline >= 0L) {
+                FrameWorkBudget.lightFinished(true);
                 return;
             }
         }
+        FrameWorkBudget.lightFinished(false);
     }
 }
