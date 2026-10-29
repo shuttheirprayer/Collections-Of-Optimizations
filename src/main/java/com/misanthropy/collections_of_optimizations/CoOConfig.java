@@ -127,7 +127,6 @@ public final class CoOConfig {
     public static boolean vanillaFlatBiomeSearch = true;
     public static boolean vanillaGeometricHolderGrowth = true;
     public static boolean vanillaEdgeCulling = false;
-    public static boolean vanillaPausedWorldFrame = true;
     public static boolean vanillaIndexedObjectHolders = true;
     public static boolean vanillaSkipOrderIndependentSort = true;
     public static boolean vanillaMemoSkyColourPerTick = true;
@@ -2869,9 +2868,6 @@ public final class CoOConfig {
         gate(builder
                 .comment("Mobs and animated blocks near the left and right edges of the screen stop being drawn a bit sooner than ones in the middle, down to 60 % of their normal draw distance at the very edge. Nothing closer than 32 blocks is touched, and the shader shadow pass is left alone. Client.")
                 .define("edgeCulling", false), v -> vanillaEdgeCulling = v);
-        gate(builder
-                .comment("While a singleplayer game is paused behind the pause or options menu, redraw the frozen world 10 times a second instead of every frame and show the last picture in between. The menu itself still runs at full speed. Client.")
-                .define("pausedWorldFrame", true), v -> vanillaPausedWorldFrame = v);
         gate(builder
                 .comment("Sample the blended biome fog colour once per client tick instead of once per frame. Same 216 biome lookups and Vec3 garbage per call as the sky colour. This is not bit exact: inside one tick every frame reuses the colour sampled at the start of that tick, so while you move across a biome border the fog colour can trail the camera by up to one twentieth of a second. Client.")
                 .define("memoBiomeFogColour", true), v -> vanillaMemoBiomeFogColour = v);
