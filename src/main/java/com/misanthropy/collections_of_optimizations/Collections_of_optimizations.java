@@ -6,6 +6,7 @@ import com.misanthropy.collections_of_optimizations.core.CameraShakeScanCache;
 import com.misanthropy.collections_of_optimizations.core.ClientLevelRelease;
 import com.misanthropy.collections_of_optimizations.core.VehicleCount;
 import com.misanthropy.collections_of_optimizations.core.ElysiumSoundTransformers;
+import com.misanthropy.collections_of_optimizations.core.EmfStatuePause;
 import com.misanthropy.collections_of_optimizations.core.CoOEmbeddiumOptions;
 import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
 import com.misanthropy.collections_of_optimizations.core.ArsAdditionsPortalScanCache;
@@ -121,6 +122,10 @@ public class Collections_of_optimizations {
 
         if (FMLEnvironment.dist == Dist.CLIENT && ModList.get().isLoaded("ars_elemental")) {
             ArsElementalCurioBagKey.register();
+        }
+
+        if (FMLEnvironment.dist == Dist.CLIENT && ModList.get().isLoaded("entity_model_features") && ModList.get().isLoaded("supplementaries")) {
+            EmfStatuePause.register();
         }
 
         ClientTickStamp.register();

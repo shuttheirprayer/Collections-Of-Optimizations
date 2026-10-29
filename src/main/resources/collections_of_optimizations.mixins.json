@@ -654,10 +654,6 @@
     "endinglibrary.MixinEndingLibraryLevelForceTick"
   ],
   "client": [
-    "vanilla.MixinEdgeCulling$WorldFov",
-    "vanilla.MixinEdgeCulling$Frame",
-    "vanilla.MixinEdgeCulling$Entities",
-    "vanilla.MixinEdgeCulling$BlockEntities",
     "emf.MixinEmfVariableFactoryPatterns",
     "emf.MixinEmfParserCharIterator",
     "emf.MixinEmfMethodCharIterator",
@@ -687,6 +683,8 @@
     "distanthorizons.MixinDhSharedApi",
     "distanthorizons.MixinDhTintGetterBlend",
     "vanilla.MixinStringRenderOutputFontSet",
+    "vanilla.MixinArmorResourcePath",
+    "vanilla.MixinLivingEntityRendererGuardedEvents",
     "vanilla.MixinFontOutlineStyle",
     "vanilla.MixinParticleEngineTextBatch",
     "dummmmmmy.MixinDummyDamageNumberBatch",
@@ -786,6 +784,7 @@
     "jei.MixinRecipeTransferManager",
     "ftbxmodcompat.MixinWaystonesMapIcons",
     "geckolib.MixinGeoRenderer",
+    "geckolib.MixinGeoArmorResourcePath",
     "geckolib.MixinEasingTypePrimitive",
     "geckolib.MixinAnimationControllerKeyframes",
     "geckolib.MixinAnimatableManagerPoseHold",
@@ -847,7 +846,6 @@
     "arsadditions.MixinMagelightLanternParticles",
     "xaerominimap.MixinMinimapFBORenderer",
     "xaerominimap.MixinRadarSessionDeferredUpdate",
-    "xaerominimap.MixinElementRendererEmptySkip",
     "iceandfire.MixinWorldEventContext",
     "iceandfire.MixinLayerDragonArmor",
     "iceandfire.MixinRenderDragonBase",
@@ -951,6 +949,7 @@
     "defaultRequire": 0
   },
   "overwrites": {
+    "conformVisibility": true,
     "requireAnnotations": true
   }
 }

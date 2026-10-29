@@ -14,7 +14,7 @@ public abstract class MixinPalettedContainerUniform<T> {
     private volatile PalettedContainer.Data<T> data;
 
     @Overwrite
-    protected T get(int index) {
+    public T get(int index) {
         PalettedContainer.Data<T> current = this.data;
         if (current.palette() instanceof SingleValuePalette<T> palette && palette.value != null && CoOConfig.vanillaUniformSectionLookup) {
             return palette.value;

@@ -16,9 +16,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 @Mixin(value = BatchableBufferSource.class, remap = false)
 public abstract class MixinBatchableBufferSource {
@@ -35,6 +37,41 @@ public abstract class MixinBatchableBufferSource {
 
     @Unique
     private final ReferenceLinkedOpenHashSet<RenderType> coo$busyLayers = new ReferenceLinkedOpenHashSet<>();
+
+    @Unique
+    private final ArrayDeque<ReferenceLinkedOpenHashSet<BufferBuilder>> coo$spareSets = new ArrayDeque<>();
+
+    @Redirect(
+            method = "addNewFallbackBuffer",
+            at = @At(value = "INVOKE", target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"),
+            require = 0
+    )
+    private Object coo$reuseFallbackSet(Map<RenderType, ReferenceSet<BufferBuilder>> buffers, Object layer, Function<Object, ReferenceSet<BufferBuilder>> factory) {
+        if (!CoOConfig.immediatelyfastReuseFallbackSets) {
+            return buffers.computeIfAbsent((RenderType) layer, factory::apply);
+        }
+        ReferenceSet<BufferBuilder> set = buffers.get(layer);
+        if (set == null) {
+            ReferenceLinkedOpenHashSet<BufferBuilder> spare = this.coo$spareSets.pollLast();
+            set = spare != null ? spare : new ReferenceLinkedOpenHashSet<>();
+            buffers.put((RenderType) layer, set);
+        }
+        return set;
+    }
+
+    @Redirect(
+            method = "m_109912_(Lnet/minecraft/client/renderer/RenderType;)V",
+            at = @At(value = "INVOKE", target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;"),
+            require = 0
+    )
+    private Object coo$recycleFallbackSet(Map<RenderType, ReferenceSet<BufferBuilder>> buffers, Object layer) {
+        Object removed = buffers.remove(layer);
+        if (CoOConfig.immediatelyfastReuseFallbackSets && removed instanceof ReferenceLinkedOpenHashSet<?> set && this.coo$spareSets.size() < 256) {
+            set.clear();
+            this.coo$spareSets.addLast((ReferenceLinkedOpenHashSet<BufferBuilder>) set);
+        }
+        return removed;
+    }
 
     @Redirect(
             method = "m_109911_()V",

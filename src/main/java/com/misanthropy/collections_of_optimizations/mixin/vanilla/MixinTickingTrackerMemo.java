@@ -32,7 +32,7 @@ public abstract class MixinTickingTrackerMemo {
     private byte coo$secondLevel;
 
     @Overwrite
-    protected int getLevel(long chunkPos) {
+    public int getLevel(long chunkPos) {
         if (!CoOConfig.vanillaTickingLevelMemo || Thread.currentThread() != this.coo$owner) {
             return this.chunks.get(chunkPos);
         }
@@ -51,7 +51,7 @@ public abstract class MixinTickingTrackerMemo {
     }
 
     @Overwrite
-    protected void setLevel(long chunkPos, int level) {
+    public void setLevel(long chunkPos, int level) {
         this.coo$firstKey = Long.MIN_VALUE;
         this.coo$secondKey = Long.MIN_VALUE;
         if (level > 33) {

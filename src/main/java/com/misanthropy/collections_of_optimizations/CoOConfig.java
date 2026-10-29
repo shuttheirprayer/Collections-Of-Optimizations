@@ -90,6 +90,7 @@ public final class CoOConfig {
     public static boolean saintsdragonsSkipNonSeatBoneCapture = true;
 
     public static boolean immediatelyfastSingleBufferLookup = true;
+    public static boolean immediatelyfastReuseFallbackSets = true;
     public static boolean immediatelyfastSkipIdleLayers = true;
 
     public static boolean modernfixFastRepresentedTabs = true;
@@ -126,7 +127,6 @@ public final class CoOConfig {
     public static boolean vanillaFastBiomeTreeSort = true;
     public static boolean vanillaFlatBiomeSearch = true;
     public static boolean vanillaGeometricHolderGrowth = true;
-    public static boolean vanillaEdgeCulling = false;
     public static boolean vanillaIndexedObjectHolders = true;
     public static boolean vanillaSkipOrderIndependentSort = true;
     public static boolean vanillaMemoSkyColourPerTick = true;
@@ -156,7 +156,6 @@ public final class CoOConfig {
     public static int xaeroMinimapRenderFpsCap = 0;
     public static boolean xaeroMinimapDeferRadarUpdate = true;
     public static boolean xaeroMinimapSkipHiddenRadar = true;
-    public static boolean xaeroSkipEmptyElementRenderers = true;
     public static boolean w2w2DeferWaypointSave = true;
 
     public static boolean terrablenderCacheNamespaceRule = true;
@@ -322,6 +321,7 @@ public final class CoOConfig {
     public static boolean forgeStatusPingChannelGroups = true;
     public static boolean forgeRenderLayerMemo = true;
     public static boolean forgePlainTranslationFormat = true;
+    public static boolean forgeArmorTexturePathCache = true;
     public static boolean forgeCustomPayloadHeapCopy = true;
     public static boolean vanillaBoundBeardifierReach = true;
     public static boolean vanillaNumberTagChecks = true;
@@ -1250,6 +1250,9 @@ public final class CoOConfig {
                 .comment("Find a render layer's buffer with one map lookup instead of a contains check plus a get.")
                 .define("singleBufferLookup", true), v -> immediatelyfastSingleBufferLookup = v);
         gate(builder
+                .comment("Reuse the small buffer lists ImmediatelyFast keeps for each mob and item texture instead of building new ones every frame. Every texture that is not one of the fixed render layers gets a fresh list when something draws with it and the list is thrown away when the batch is drawn, which in a village or a structure full of mobs is tens of megabytes of garbage per second and more frequent garbage collection pauses. With this on a drawn list is emptied and kept for the next texture, the draw order stays exactly the same. Client. Turn it off for stock behaviour.")
+                .define("reuseFallbackSets", true), v -> immediatelyfastReuseFallbackSets = v);
+        gate(builder
                 .comment("End only the render layers that were actually drawn into instead of walking every fixed buffer on each flush.")
                 .define("skipIdleLayers", true), v -> immediatelyfastSkipIdleLayers = v);
         builder.pop();
@@ -1375,9 +1378,6 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the radar entity lists while the minimap is hidden and no screen is open. The radar sorts every loaded entity into its categories each tick, and with the minimap turned off nothing reads the result. The world map still gets them while it is open. Client.")
                 .define("skipHiddenRadar", true), v -> xaeroMinimapSkipHiddenRadar = v);
-        gate(builder
-                .comment("Skip a minimap element renderer (waypoints in the world, and the like) for the rest of a client tick when it drew nothing on the first frame of that tick. With no waypoint in view it still set up its buffers and walked its lists every frame. A new waypoint shows up at most one tick later. Client.")
-                .define("skipEmptyElementRenderers", true), v -> xaeroSkipEmptyElementRenderers = v);
         builder.pop();
 
         builder.comment("Xaero's + Waystones compatibility patches.").push("w2w2");
@@ -1879,6 +1879,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip Forge's message formatter for translations that have nothing to format. Every time a piece of translated text is built for the first time, for example item names and tooltips, Forge runs the full message formatter over any translation that has no percent placeholders, even when the text contains no braces or quotes and the formatter can only hand back exactly what it was given. With this on that plain text is used as is, and anything with braces or quotes still goes through Forge as before. Turn it off for stock behaviour.")
                 .define("plainTranslationFormat", true), v -> forgePlainTranslationFormat = v);
+        gate(builder
+                .comment("Remember armor texture paths instead of formatting them again for every armor piece on every mob in every frame. Forge builds the path of each worn armor texture with a full string format call each time it is drawn, so a room full of armored piglins or zombies spends a noticeable part of the frame parsing the same format string. With this on each finished path is kept and handed back for the same material, layer and overlay, mods that pick their own armor textures are still asked every time, and the texture that ends up drawn is exactly the same. Client. Turn it off for stock behaviour.")
+                .define("armorTexturePathCache", true), v -> forgeArmorTexturePathCache = v);
         gate(builder
                 .comment("Stop modded network packets from leaking off heap memory on the client. When a mod packet arrives, Forge versions before 47.4.24 copy its data into Netty's pooled off heap memory and never give that copy back, and some mods that read the data themselves never give it back either, so on a busy server direct memory keeps growing until the game runs out. With this on the copy is made in normal memory instead, with the same bytes and the same read position, so the garbage collector cleans it up whether or not anyone releases it. Turn it off for stock behaviour.")
                 .define("customPayloadHeapCopy", true), v -> forgeCustomPayloadHeapCopy = v);
@@ -2865,9 +2868,6 @@ public final class CoOConfig {
         gate(builder
                 .comment("Keep the sky colour for a whole client tick instead of recomputing it whenever the camera position or partial tick changes, which is every frame while moving. The biome blend it samples spans 24 blocks, so one tick of camera movement cannot change it visibly. Needs memoSkyColour. Client.")
                 .define("memoSkyColourPerTick", true), v -> vanillaMemoSkyColourPerTick = v);
-        gate(builder
-                .comment("Mobs and animated blocks near the left and right edges of the screen stop being drawn a bit sooner than ones in the middle, down to 60 % of their normal draw distance at the very edge. Nothing closer than 32 blocks is touched, and the shader shadow pass is left alone. Client.")
-                .define("edgeCulling", false), v -> vanillaEdgeCulling = v);
         gate(builder
                 .comment("Sample the blended biome fog colour once per client tick instead of once per frame. Same 216 biome lookups and Vec3 garbage per call as the sky colour. This is not bit exact: inside one tick every frame reuses the colour sampled at the start of that tick, so while you move across a biome border the fog colour can trail the camera by up to one twentieth of a second. Client.")
                 .define("memoBiomeFogColour", true), v -> vanillaMemoBiomeFogColour = v);

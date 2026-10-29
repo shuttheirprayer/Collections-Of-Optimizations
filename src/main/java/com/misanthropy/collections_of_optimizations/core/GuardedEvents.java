@@ -267,6 +267,15 @@ public final class GuardedEvents {
                     keyA = phase;
                     keyB = side;
                 }
+            } else if (event instanceof net.minecraftforge.client.event.RenderLivingEvent<?, ?> render) {
+                Entity e = render.getEntity();
+                entity = e.getClass();
+                Level l = e.level();
+                client = 1;
+                entityLevel = l == null ? null : l.getClass();
+                slot = byClass.get(entity);
+                keyA = null;
+                keyB = entityLevel;
             } else if (event instanceof LivingEvent.LivingTickEvent living) {
                 Entity e = living.getEntity();
                 entity = e.getClass();
