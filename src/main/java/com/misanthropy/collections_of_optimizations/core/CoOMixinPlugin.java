@@ -167,6 +167,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("biolith", "biolith"),
             Map.entry("skarriermobs", "skarrier_mobs"),
             Map.entry("createsolar", "createsolar"),
+            Map.entry("jerotes", "jerotes"),
             Map.entry("summonity", "summonity"),
             Map.entry("cnc", "cnc"),
             Map.entry("crittersandcompanions", "crittersandcompanions"),

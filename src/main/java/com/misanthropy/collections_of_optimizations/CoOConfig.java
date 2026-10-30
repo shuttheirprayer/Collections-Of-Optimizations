@@ -106,6 +106,7 @@ public final class CoOConfig {
     public static boolean emfParseTokensWithoutExceptions = true;
     public static boolean emfCompiledPatterns = true;
     public static boolean emfIndexedResourceExists = true;
+    public static boolean emfReuseCompiledAnimations = true;
     public static boolean mekanismSkipEmptyRadiationScan = true;
     public static boolean etfStacklessPropertyExceptions = true;
 
@@ -591,6 +592,7 @@ public final class CoOConfig {
     public static boolean vanillaIndexZipPacks = true;
     public static boolean vanillaMemoSkyColour = true;
     public static boolean vanillaGuardedEvents = true;
+    public static boolean vanillaSkipServerOnlyListenersOnClient = true;
     public static boolean ironsspellbooksFlatSpellcasterScan = true;
     public static boolean vanillaWarmClasses = true;
     public static boolean vanillaBudgetFrameTasks = true;
@@ -617,8 +619,10 @@ public final class CoOConfig {
     public static boolean vanillaReplayVillagerLayers = true;
     public static boolean vanillaMemoBlockTickChunk = true;
     public static boolean vanillaReuseNoiseColumnCells = true;
+    public static boolean vanillaEarlyStart = true;
     public static boolean vanillaCacheBiomeLookups = true;
     public static boolean createsolarMemoGogglesLookup = true;
+    public static boolean jerotesTrueFactionOnce = true;
     public static int xaeroworldmapUploadHeadroomMicros = 1000;
     public static boolean xaeroworldmapOpenReflectedFields = true;
     public static boolean xaeroworldmapOrphanUploadPbo = true;
@@ -1306,6 +1310,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Answer the misses of the model file existence check from the list EMF already made. EMF lists every model file under emf/cem and optifine/cem once per resource reload, but for every file that is not in that list it still asked each resource pack in turn, hundreds of packs on disk, whether the file exists, and nearly every such question is a miss. With this on those misses are answered from the list, and files are found exactly as before. Client.")
                 .define("indexedResourceExists", true), v -> emfIndexedResourceExists = v);
+        gate(builder
+                .comment("Keep each compiled animation class EMF makes and hand the same class back whenever a model with the same animations is built again. EMF turns the animation formulas of every animated model into a small class with its own class loader each time that model is built, and models are built again at runtime, for example statues and other blocks or mobs that make a fresh model. Every rebuilt model left a dead class behind, and each time the garbage collector found a dead class it had to sweep the whole compiled code cache during its remark pause, which turned a 35 ms pause into a 70 ms freeze every minute or so. With this on the bytes of each new animation class are compared with the classes already made and an identical class is reused, so no animation class ever dies and the remark pause stays short. Animations run the same code as before. Client.")
+                .define("reuseCompiledAnimations", true), v -> emfReuseCompiledAnimations = v);
         builder.pop();
 
         builder.comment("Shoulder Surfing Reloaded patches.").push("shouldersurfing");
@@ -2860,6 +2867,9 @@ public final class CoOConfig {
                 .comment("Skip event listeners that would return straight away. Forge hands every render stage, tick phase and living entity tick to every listener, and most of them open with a check like 'if this is not my stage, return' or 'if this is not a player, return'. Each listener's opening checks are read once from its class file and the bus only calls the listeners those checks let through, in the same order. Listeners from classes another mod patched are always called. Both sides.")
                 .define("guardedEvents", true), v -> vanillaGuardedEvents = v);
         gate(builder
+                .comment("Skip a short list of tick listeners on the client that only ever do something on the server. Forge posts every living entity tick and player tick on both sides, so a server side mod listener runs for every mob your client ticks too, twenty times a second, even though the first thing it checks deep inside is whether the world is a server world. Each listener on the list was read and does nothing at all on the client, so it is simply not called there. It still runs on the server exactly as before. Needs guardedEvents. Client.")
+                .define("skipServerOnlyListenersOnClient", true), v -> vanillaSkipServerOnlyListenersOnClient = v);
+        gate(builder
                 .comment("Find nearby players and spellcasting mobs for Iron's Spellbooks' per-tick cast particles by walking the client's loaded entity list instead of every entity section in a 128 block box. Same entities, same box test. Client.")
                 .define("ironsspellbooksFlatSpellcasterScan", true), v -> ironsspellbooksFlatSpellcasterScan = v);
         gate(builder
@@ -2922,6 +2932,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Terrain height lookups (structure placement, meteorites, spawn checks) each build the noise for one 4x4 block cell from scratch, so asking for the 16 columns of the same cell computes the same corner noise 16 times. Keep the last few cells per worker thread and only redo the cheap part per column. Same heights as before.")
                 .define("reuseNoiseColumnCells", true), v -> vanillaReuseNoiseColumnCells = v);
+        gate(builder
+                .comment("Before letting anyone in, vanilla waits for all 441 spawn chunks to be loaded and ticking, which on a new world means generating them first (10 seconds on a fast PC, much longer on a slow one) and on an existing world means loading them even when nobody stands there. Start once the 7x7 core around spawn is ticking instead; the rest of the spawn chunks keep loading in the background with the same ticket, so spawn chunk farms and anything else that relies on them work exactly as before. Server.")
+                .define("earlyStart", true), v -> vanillaEarlyStart = v);
         gate(builder
                 .comment("Remember the biome picked at each biome cell for the noise biome source. While generating, every chunk asks again for the biomes just outside its own edges, which are the edge biomes its neighbours already worked out, and each answer is a full climate sample plus a search over every biome in the pack. Answers come from the same biome source, so biomes are identical.")
                 .define("cacheBiomeLookups", true), v -> vanillaCacheBiomeLookups = v);
@@ -3000,6 +3013,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Look up Create's goggles check once instead of once per frame. Create: Solar reflects for a method that this Create version does not have, so every single frame it builds and throws a NoSuchMethodException, fills in its stack trace and gives up. The overlay it was going to draw is dead either way, this just stops it costing anything.")
                 .define("memoGogglesLookup", true), v -> createsolarMemoGogglesLookup = v);
+        builder.pop();
+
+        builder.comment("Jerotes Warehouse patches.").push("jerotes");
+        gate(builder
+                .comment("Work out a mob's true faction in one pass. Jerotes asks for it four times per faction check, and every faction check runs for each possible target a mob looks at, so with many mobs around this adds up fast. Each time it looked up the owner twice and built the full faction list twice, only to hand back the mob's own faction name in the end. Now the owner and the saved faction are read once, and the faction list is only built when the mob has no faction name of its own. Same faction as before. Server.")
+                .define("trueFactionOnce", true), v -> jerotesTrueFactionOnce = v);
         builder.pop();
 
         builder.comment("MCreator mod patches.").push("mcreator");

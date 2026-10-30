@@ -182,6 +182,10 @@ public final class GuardedEvents {
                 all.add(i);
                 Method method = methodOf(listener);
                 List<ListenerGuards.Guard> found = method == null ? null : ListenerGuards.analyze(method);
+                if (found == null && method != null && CoOConfig.vanillaSkipServerOnlyListenersOnClient
+                        && ServerOnlyListeners.contains(method)) {
+                    found = List.of(new ListenerGuards.Guard(ListenerGuards.CLIENT_SIDE, ListenerGuards.IS_FALSE, null, null));
+                }
                 if (found != null) {
                     guards[i] = found;
                     loaders[i] = method.getDeclaringClass().getClassLoader();

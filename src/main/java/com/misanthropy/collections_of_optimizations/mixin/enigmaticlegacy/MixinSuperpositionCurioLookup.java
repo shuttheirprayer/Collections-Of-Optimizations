@@ -25,9 +25,8 @@ public abstract class MixinSuperpositionCurioLookup {
             return;
         }
         Set<Item> equipped = CurioPresenceCache.equippedItems(entity);
-        if (equipped == null) {
-            return;
+        if (equipped != null && !equipped.contains(item)) {
+            cir.setReturnValue(false);
         }
-        cir.setReturnValue(equipped.contains(item));
     }
 }

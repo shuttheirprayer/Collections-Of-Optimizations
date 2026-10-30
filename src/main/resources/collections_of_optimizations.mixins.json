@@ -8,6 +8,7 @@
   "mixins": [
     "vanilla.MixinLevelBlockTickChunkMemo",
     "vanilla.MixinNoiseColumnCellReuse",
+    "vanilla.MixinMinecraftServerEarlyStart",
     "vanilla.MixinMultiNoiseBiomeLookupCache",
     "enigmaticlegacy.MixinEnigmaticCreativeTabContents",
     "almostunified.MixinRecipeTransformerDuplicates",
@@ -651,7 +652,8 @@
     "mekanism.MixinRadiationManagerEmptyTable",
     "fromtheshadows.MixinFromTheShadowsServerEvents",
     "hexerei.MixinOwlLoadedChunksSavedData",
-    "endinglibrary.MixinEndingLibraryLevelForceTick"
+    "endinglibrary.MixinEndingLibraryLevelForceTick",
+    "jerotes.MixinEntityFactionFindTrueFaction"
   ],
   "client": [
     "emf.MixinEmfVariableFactoryPatterns",
@@ -802,6 +804,7 @@
     "emf.MixinEMFAnimationEntityContext",
     "emf.MixinNBTMethod",
     "emf.MixinEMFResourceCaching",
+    "emf.MixinASMParserReuse",
     "emf.MixinMathExpressionParserTokens",
     "etf.MixinRandomPropertyException",
     "geckolib.MixinMolangParserNumbers",
