@@ -145,7 +145,7 @@ dependencies {
     implementation fg.deobf("curse.maven:block-swap-468893:4598162")
     implementation fg.deobf("curse.maven:just-dire-things-forge-1533501:8520551")
     implementation fg.deobf("curse.maven:farmers-delight-398521:7953735")
-    implementation fg.deobf("libs:goety:2.5.58.4")
+    implementation fg.deobf("libs:goety:2.5.60.2")
     implementation fg.deobf("libs:goetydelight:1.5.0fix4")
     implementation fg.deobf("curse.maven:geckolib-388172:8285794")
     compileOnly files('libs-compile/mclib-20.jar')

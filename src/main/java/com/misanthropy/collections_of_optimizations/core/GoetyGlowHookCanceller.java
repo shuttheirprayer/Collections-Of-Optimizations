@@ -14,7 +14,7 @@ public final class GoetyGlowHookCanceller implements MixinCanceller {
     private static final Logger LOGGER = LogManager.getLogger("collections_of_optimizations");
 
     private static final String CANCELLED = "com.Polarice3.Goety.mixin.MinecraftMixin";
-    private static final String PINNED_VERSION = "2.5.58.4";
+    private static final String PINNED_VERSION = "2.5.60.2";
 
     private static boolean announced;
 

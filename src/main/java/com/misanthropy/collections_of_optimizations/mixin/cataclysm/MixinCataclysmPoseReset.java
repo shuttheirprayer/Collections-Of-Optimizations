@@ -27,19 +27,21 @@ import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+@Pseudo
 @Mixin(value = {
         Ancient_Remnant_Rework_Model.class, Aptrgangr_Model.class, Ceraunus_Model.class, Cindaria_Model.class, Clawdian_Model.class,
         Draugr_Model.class, Elemental_Spear_Model.class, Elite_Draugr_Model.class, Hippocamtus_Model.class, Ignited_Berserker_Model.class,
         Kobolediator_Model.class, Maledictus_Model.class, Netherite_Ministrosity_Model.class, Netherite_Monstrosity_Model.class,
         Royal_Draugr_Model.class, Scylla_Model.class, Storm_Serpent_Model.class, Symbiocto_Model.class, The_Prowler_Model.class,
         Urchinkin_Model.class, Wave_Model.class
-}, remap = false)
+}, targets = "com.github.L_Ender.cataclysm.client.model.entity.Flare_Bomb_Model", remap = false)
 public abstract class MixinCataclysmPoseReset {
 
     @WrapOperation(

@@ -36,4 +36,22 @@ public abstract class MixinCataclysmMonstrousHelm {
         }
         return original.call(level, except, box);
     }
+
+    @WrapOperation(
+            method = "m_6883_",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;m_45933_(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;"
+            ),
+            require = 0
+    )
+    private List<Entity> coo$scanOnlyWhenBerserkInventory(Level level, Entity except, AABB box, Operation<List<Entity>> original,
+                                                         ItemStack stack, Level world, Entity holder, int slot, boolean selected) {
+        if (CoOConfig.cataclysmLazyMonstrousHelmScan && holder instanceof Player player
+                && !(player.getMaxHealth() * 1.0F / 2.0F >= player.getHealth()
+                && !player.getCooldowns().isOnCooldown((Item) (Object) this))) {
+            return Collections.emptyList();
+        }
+        return original.call(level, except, box);
+    }
 }

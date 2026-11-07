@@ -275,8 +275,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, String> GROUP_EXACT_VERSION = Map.of(
             "radium", "0.14.4+git.53d76d5",
-            "cataclysm", "3.16",
-            "lionfishapi", "2.8",
+            "cataclysm", "3.16,3.31",
+            "lionfishapi", "2.8,3.0",
             "immersiveweathering", "1.20.1-2.0.5",
             "timm", "1.1.0-Forge",
             "touchnmotion", "1.0.4",
@@ -290,7 +290,11 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.ofEntries(
             Map.entry("create.MixinContraptionCollisionUnion", new String[]{"create", "6.0.8"}),
             Map.entry("cbc.MixinCbcAutocannonSeat", new String[]{"createbigcannons", "5.11.4"}),
-            Map.entry("goety.MixinGoetyGlowGate", new String[]{"goety", "2.5.58.4"}),
+            Map.entry("goety.MixinGoetyGlowGate", new String[]{"goety", "2.5.60.2"}),
+            Map.entry("goetydelight.MixinEntityVisualEffects", new String[]{"goetydelight", "1.5.0fix4"}),
+            Map.entry("goetydelight.MixinEntityVisualEffectRenderDispatcher", new String[]{"goetydelight", "1.5.0fix4"}),
+            Map.entry("goetydelight.MixinScreenSpaceDepthEffectPostProcessor", new String[]{"goetydelight", "1.5.0fix4"}),
+            Map.entry("cataclysm.MixinCataclysmMonstrosityBlockBreaking", new String[]{"cataclysm", "3.16"}),
             Map.entry("geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"}),
             Map.entry("subtleeffects.MixinBubbleParticleTint", new String[]{"subtle_effects", "1.15.0"}),
             Map.entry("subtleeffects.MixinChestTickerDryChest", new String[]{"subtle_effects", "1.15.0"}),
@@ -470,7 +474,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
                 return false;
             }
             String exact = GROUP_EXACT_VERSION.get(group);
-            if (modId != null && exact != null && !exact.equals(modVersion(modId))) {
+            if (modId != null && exact != null && !List.of(exact.split(",")).contains(modVersion(modId))) {
                 if (WARNED_GROUPS.add(group)) {
                     LOGGER.warn("Disabling '{}' optimizations: they were verified against '{}' {} but {} is installed",
                             group, modId, exact, modVersion(modId));
@@ -530,6 +534,30 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
         if (ELYSIUM_SOUND_CACHE_MIXIN.equals(mixinClassName)) {
             rewireElysiumSoundHandler(targetClass);
+        }
+        if (mixinClassName.endsWith("HugeMethods") && !"false".equals(System.getProperty("coo.splitHugeMethods"))) {
+            HugeMethodSplitter.split(targetClass);
+        }
+        if (mixinClassName.endsWith("MixinAtomicBitSetExactVarHandle")) {
+            exactVarHandleWrites(targetClass);
+        }
+    }
+
+    private static void exactVarHandleWrites(ClassNode target) {
+        for (MethodNode method : target.methods) {
+            boolean changed = false;
+            for (org.objectweb.asm.tree.AbstractInsnNode insn : method.instructions) {
+                if (insn instanceof org.objectweb.asm.tree.MethodInsnNode call && call.owner.equals("java/lang/invoke/VarHandle")
+                        && call.name.equals("setRelease") && call.desc.equals("([JII)V")
+                        && call.getPrevious() != null && call.getPrevious().getOpcode() == Opcodes.ICONST_0) {
+                    method.instructions.set(call.getPrevious(), new org.objectweb.asm.tree.InsnNode(Opcodes.LCONST_0));
+                    call.desc = "([JIJ)V";
+                    changed = true;
+                }
+            }
+            if (changed) {
+                method.maxStack += 1;
+            }
         }
     }
 

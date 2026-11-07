@@ -5,6 +5,7 @@ import com.Polarice3.Goety.common.blocks.entities.OminousIdolBlockEntity;
 import com.Polarice3.Goety.common.effects.GoetyEffects;
 import com.Polarice3.Goety.common.entities.ally.illager.raider.RaiderServant;
 import com.Polarice3.Goety.common.items.ModItems;
+import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.common.items.magic.CommandFocus;
 import com.Polarice3.Goety.common.items.magic.CommandHorn;
 import com.Polarice3.Goety.common.items.magic.OrderFocus;
@@ -55,6 +56,9 @@ public abstract class MixinGoetyGlowGate {
                     || coo$focus instanceof OrderFocus
                     || player.isHolding(ModItems.TRANSFER_SCROLL.get())
                     || player.isHolding(ModItems.COMMAND_HORN.get())
+                    || player.isHolding(ModItems.GRIMOIRE_OF_GRUDGES.get())
+                    || player.isHolding(ModItems.GRIMOIRE_OF_GOODWILL.get())
+                    || player.isHolding(ModItems.GRIMOIRE_OF_GROUNDING.get())
                     || player.isCrouching()
                     || player.isShiftKeyDown()
                     || ClientEvents.target != null;
@@ -93,6 +97,18 @@ public abstract class MixinGoetyGlowGate {
         }
 
         if (player.isHolding(ModItems.COMMAND_HORN.get()) && CommandHorn.getEntities(player.level(), player).contains(living)) {
+            cir.setReturnValue(true);
+        }
+
+        if (player.isHolding(ModItems.GRIMOIRE_OF_GRUDGES.get()) && SEHelper.getGrudgeEntities(player).contains(living)) {
+            cir.setReturnValue(true);
+        }
+
+        if (player.isHolding(ModItems.GRIMOIRE_OF_GOODWILL.get()) && SEHelper.getAllyEntities(player).contains(living)) {
+            cir.setReturnValue(true);
+        }
+
+        if (player.isHolding(ModItems.GRIMOIRE_OF_GROUNDING.get()) && SEHelper.getGroundedEntities(player).contains(living)) {
             cir.setReturnValue(true);
         }
 

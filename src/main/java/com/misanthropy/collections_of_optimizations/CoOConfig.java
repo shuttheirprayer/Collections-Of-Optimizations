@@ -70,6 +70,7 @@ public final class CoOConfig {
 
     public static boolean xaerolibCacheConfigProfile = true;
     public static boolean xaerolibCacheEnforcementCheck = true;
+    public static boolean xaerolibPersistBlockColors = true;
 
     public static int xaeroworldmapVramPollInterval = 500;
     public static int xaeroworldmapRenderProcessInterval = 4;
@@ -92,6 +93,7 @@ public final class CoOConfig {
     public static boolean immediatelyfastSingleBufferLookup = true;
     public static boolean immediatelyfastReuseFallbackSets = true;
     public static boolean immediatelyfastSkipIdleLayers = true;
+    public static boolean immediatelyfastMemoLayerOrder = true;
 
     public static boolean modernfixFastRepresentedTabs = true;
 
@@ -252,6 +254,7 @@ public final class CoOConfig {
     public static boolean enigmaticlegacyCachedCurioLookup = true;
     public static boolean travelopticsLeanClimbCurioScan = true;
     public static boolean travelopticsLeanCastEffectChecks = true;
+    public static boolean travelopticsReuseModelLocations = true;
     public static boolean celestialenchantmentsSkipUnenchantedTick = true;
     public static boolean celestialenchantmentsLeanSlotEnchScan = true;
     public static boolean celestialcoreLeanItemTransformScan = true;
@@ -512,6 +515,7 @@ public final class CoOConfig {
     public static boolean arselementalFixCurioBagKeybind = true;
     public static boolean pehkuiMemoInteractionBoxScales = true;
     public static boolean pehkuiCacheClientScales = true;
+    public static boolean pehkuiSteadyBaseScale = true;
 
     public static boolean relicsClampEssenceSpeed = true;
     public static boolean morerelicsHoistEquippedCurios = true;
@@ -546,6 +550,9 @@ public final class CoOConfig {
     public static boolean alexscavesCacheShakeScan = true;
     public static boolean alexscavesSingleMagnetQuery = true;
     public static boolean alexscavesRadiumEntityCollisions = true;
+    public static boolean alexscavesSkipDisabledBiomeHook = true;
+    public static boolean alexscavesSkipDeadCaveMaps = true;
+    public static boolean alexscavesCabinLootWithDimensions = true;
 
     public static boolean architecturyDirectEventDispatch = true;
 
@@ -599,6 +606,14 @@ public final class CoOConfig {
     public static boolean vanillaBudgetLightPolls = true;
     public static boolean vanillaDeferAmbientParticles = true;
     public static boolean vanillaScheduleClientBlockEntities = true;
+    public static boolean vanillaSpreadEntityTicks = true;
+    public static boolean vanillaReuseEntityMeshes = true;
+    public static boolean vanillaReuseBlockEntityMeshes = true;
+    public static int vanillaReuseSmallMobPixels = 120;
+    public static boolean vanillaSpreadMoreEntityTicks = true;
+    public static boolean vanillaSpreadBlockEntityTicks = true;
+    public static boolean vanillaSpreadClientTickListeners = false;
+    public static boolean vanillaPreSwapTicks = true;
     public static boolean vanillaCacheResourceLocationString = true;
     public static boolean vanillaClientFireImmuneMemo = true;
     public static boolean vanillaTickingLevelMemo = true;
@@ -807,6 +822,7 @@ public final class CoOConfig {
     public static boolean goetycataclysmSkipGolemUnloadSweep = true;
     public static boolean goetycataclysmFixWantLootingCheck = true;
     public static boolean goetycataclysmLeanNecromancerSummonCheck = true;
+    public static boolean goetycataclysmLeanPoseReset = true;
 
     public static boolean fdbossesSkipArenaProtectionScan = true;
     public static boolean fdbossesSkipKineticFieldCollision = true;
@@ -826,6 +842,7 @@ public final class CoOConfig {
     public static boolean mobgrindingutilsLeanChickenTag = true;
 
     public static boolean transmogIdentityAppearanceCache = true;
+    public static boolean transmogFrameMemo = true;
 
     public static boolean ironsspellbooksLeanCurioEquipCheck = true;
     public static boolean ironsspellbooksClearStaleSyncedData = true;
@@ -1172,6 +1189,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Answer the server-enforcement check once per client tick. Stock runs a second full config read inside every config read.")
                 .define("cacheEnforcementCheck", true), v -> xaerolibCacheEnforcementCheck = v);
+        gate(builder
+                .comment("Keep the map colour Xaero's minimap and world map work out for each block texture in a small file and reuse it next time. Without it, the first time each kind of block shows up in a session the map reads that block's texture out of its mod file on the render thread, a few milliseconds each, which is a stutter when you walk into a new structure. The file starts over by itself when mods or resource packs change.")
+                .define("persistBlockColors", true), v -> xaerolibPersistBlockColors = v);
         builder.pop();
 
         builder.comment("Xaero's World Map patches.").push("xaeroworldmap");
@@ -1259,6 +1279,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("End only the render layers that were actually drawn into instead of walking every fixed buffer on each flush.")
                 .define("skipIdleLayers", true), v -> immediatelyfastSkipIdleLayers = v);
+        gate(builder
+                .comment("Remember the draw order of each batched layer instead of working it out again inside the sort every time a batch is drawn. The order only depends on the layer's texture and name, which never change, and working it out cut texture paths into new strings, so drawing the batched entities of a busy scene made megabytes of garbage a second. Same order as before.")
+                .define("memoLayerOrder", true), v -> immediatelyfastMemoLayerOrder = v);
         builder.pop();
 
         builder.comment("ModernFix patches.").push("modernfix");
@@ -1694,6 +1717,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Check that the entity is a spell casting mob before reading its effect map in the Blackout and Casting handlers.")
                 .define("leanCastEffectChecks", true), v -> travelopticsLeanCastEffectChecks = v);
+        gate(builder
+                .comment("Hand Traveloptics' armour, weapon and mob models the same resource location every time they ask for their model, animation or texture file instead of building and validating a new one on every frame for every piece worn, held or shown. Client.")
+                .define("reuseModelLocations", true), v -> travelopticsReuseModelLocations = v);
         builder.pop();
 
         builder.comment("Celestial Enchantments patches.").push("celestialenchantments");
@@ -2227,6 +2253,9 @@ public final class CoOConfig {
                 .comment("Let Pehkui keep its already existing per tick scale cache on the client too. Pehkui only fills that cache on the server, so every client side scale read walks the whole modifier chain again. WARNING: if a mod changes an entity's scale without going through Pehkui's own setters, the visual size can lag by one tick. Turn this off if you see entities stuck at the wrong size.")
                 .define("cacheClientScales", true), v -> pehkuiCacheClientScales = v);
         gate(builder
+                .comment("When a scale is not changing, return it as it is instead of working out the in-between value of a change that is not happening. Every entity drawn asks for its model width and height scale with the frame's partial tick every frame, and each ask ran the easing function with a boxed float and an Optional even for a mob that was never resized. The value returned is the same number.")
+                .define("steadyBaseScale", true), v -> pehkuiSteadyBaseScale = v);
+        gate(builder
                 .comment("Keep every built in scale type in Pehkui's per entity lookup array. Pehkui only does that for 9 of them, so every other scale read locks a synchronized map, for every entity, every tick, on both sides.")
                 .define("cacheEveryScaleType", true), v -> pehkuiCacheEveryScaleType = v);
         builder.pop();
@@ -2701,6 +2730,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Find nearby attracting and repelling magnets with one point of interest search instead of two for every magnetic entity on every tick. Server.")
                 .define("singleMagnetQuery", true), v -> alexscavesSingleMagnetQuery = v);
+        gate(builder
+                .comment("When every cave biome is set to disabled_completely in alexscaves_biome_generation, skip Alex's Caves' cave biome placement check on every biome lookup in every dimension. It can never place anything then. Worldgen.")
+                .define("skipDisabledBiomeHook", true), v -> alexscavesSkipDisabledBiomeHook = v);
+        gate(builder
+                .comment("End a cave map search right away when its biome is disabled_completely and the map is used outside the Alex's Caves dimensions, instead of sampling up to cave_map_search_attempts spots that can never match. Server.")
+                .define("skipDeadCaveMaps", true), v -> alexscavesSkipDeadCaveMaps = v);
+        gate(builder
+                .comment("With Dimensions of Alex's Caves installed, underground cabin chests keep rolling cave tablet and cave book loot for every cave, even the ones disabled_completely in the overworld, since the caves are still reachable through their dimensions.")
+                .define("cabinLootWithDimensions", true), v -> alexscavesCabinLootWithDimensions = v);
         builder.pop();
 
         builder.comment("Architectury API patches.").push("architectury");
@@ -2986,6 +3024,30 @@ public final class CoOConfig {
         gate(builder
                 .comment("On the client, remember when a block entity Immersive Optimization is slowing down is next allowed to tick and skip it until then, instead of looking it up and asking again every tick. At a high render distance the client holds thousands of ticking block entities and most of them are far enough away to tick only every few ticks, yet each one was visited every tick. They tick on exactly the same ticks as before. Removed block entities leave the list in one pass instead of one shift per removal, at most a second later for far ones. Client.")
                 .define("scheduleClientBlockEntities", true), v -> vanillaScheduleClientBlockEntities = v);
+        gate(builder
+                .comment("Spread the client tick of mobs over the next few frames instead of doing all of them inside the one frame that runs the tick. The client tick already makes one frame out of every twenty several milliseconds longer than the rest, and with many mobs around most of that is mob ticks, so those frames are the 1% lows. A mob that has not had its tick yet is drawn exactly where the tick starts it, so nothing moves differently on screen. Every mob still ticks once per tick, all of them before the next tick starts. The player, the camera, riders and ridden mobs tick as before. Client.")
+                .define("spreadEntityTicks", true), v -> vanillaSpreadEntityTicks = v);
+        gate(builder
+                .comment("When the game runs far faster than a mob's pose needs to change, build each mob's model once every few frames and draw the same model again in between, moved to where the mob and the camera are this frame. At several hundred frames per second most of the frame goes into posing and building the same mobs again and again, and a screen can only show a new pose once per refresh, so each mob is rebuilt at least once per monitor refresh (at least 120 times a second) and only the frames in between reuse it. Below about twice the refresh rate, and with a shader pack, every frame builds every mob as before. Players, hurt or dying mobs, leashed or glowing mobs and any mob whose renderer draws outside the shared buffers are always built every frame. Client.")
+                .define("reuseEntityMeshes", true), v -> vanillaReuseEntityMeshes = v);
+        gate(builder
+                .comment("The same as reuseEntityMeshes for block entities with a renderer, such as chests, banners, signs, statues and notice boards: each is built at least once per monitor refresh and drawn again from that build on the frames in between. Castles and villages hold hundreds of them, and drawing them is most of what a frame does there. Client.")
+                .define("reuseBlockEntityMeshes", true), v -> vanillaReuseBlockEntityMeshes = v);
+        gate(builder
+                .comment("With reuseEntityMeshes on, a mob shorter than this many pixels on your screen gets a new pose half as often, and one under half this height a third as often. It still moves smoothly every frame; only its limbs and animation step a little less often, which is hard to see at that size. Worked out from the mob's size, its distance, your field of view and window height. 0 turns this off. Client.")
+                .defineInRange("reuseSmallMobPixels", 120, 0, 2000), 0, v -> vanillaReuseSmallMobPixels = v);
+        gate(builder
+                .comment("With spreadEntityTicks on, spread the client ticks of dropped items, experience orbs, arrows and thrown items the same way. Each of these is drawn from values its tick interpolates between, so drawing it exactly where its tick starts it shows the same position, spin and bob. After a fight there can be dozens of drops on the ground, each moving on the client every tick. Client.")
+                .define("spreadMoreEntityTicks", true), v -> vanillaSpreadMoreEntityTicks = v);
+        gate(builder
+                .comment("With spreadEntityTicks on, also spread the client ticks of block entities that have no block entity renderer, such as most machines, over the next few frames. Nothing on screen is drawn from their tick state, so ticking them a frame or two later cannot show; their sounds and particles start a few milliseconds later. Block entities with a renderer, like chests and campfires, tick as before. Client.")
+                .define("spreadBlockEntityTicks", true), v -> vanillaSpreadBlockEntityTicks = v);
+        gate(builder
+                .comment("Run the mods' end-of-client-tick and end-of-player-tick handlers on the client over the next few frames instead of all inside the frame that runs the tick. Over a hundred mods hook the end of the client tick or the player tick, and together they add a millisecond or more to that one frame. The handlers run in the same order as before, each once per tick, and all of them finish before the next tick starts; most run one or two frames, a few milliseconds, later than before. Off by default: some mods advance animation clocks there (Punchy's first-person arms, Create's spinning parts, camera effects), and running them late makes those jitter. Client.")
+                .define("spreadClientTickListeners", false), v -> vanillaSpreadClientTickListeners = v);
+        gate(builder
+                .comment("Run the next frame's client tick and queued tasks right before the finished frame is handed to the screen instead of right after. Handing over the frame makes the game wait until the graphics card has drawn it, and the tick that followed left the graphics card idle while it ran. Now the tick runs while the card is still drawing, so the wait and the tick overlap. The tick, its order and what it sees are the same; it only starts a fraction of a millisecond earlier. Client.")
+                .define("preSwapTicks", true), v -> vanillaPreSwapTicks = v);
         gate(builder
                 .comment("Remember the text form of every resource id after it is built once. Overlays, textures, sounds and many mods turn the same ids into text every frame, and each time that built a new string and hashed it again.")
                 .define("cacheResourceLocationString", true), v -> vanillaCacheResourceLocationString = v);
@@ -3580,6 +3642,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip the Draugr Necromancer's minion count while it has nothing to fight. The necromancer's summon goal asks the world for every living entity in a hundred and twenty eight by thirty two by a hundred and twenty eight block box around it and counts the ones it owns, and it does that before checking whether it even has a living target, is not already casting, and is off cooldown, so an idle necromancer pays that whole sweep every other tick for a result it then ignores. With this on the sweep is skipped while the necromancer has no living target or is already casting, which are cases where the goal could never start anyway, and it runs exactly as before otherwise. Turn it off for stock behaviour.")
                 .define("leanNecromancerSummonCheck", true), v -> goetycataclysmLeanNecromancerSummonCheck = v);
+        gate(builder
+                .comment("Reset the pose of the Goety Cataclysm servant models, the Draugr Necromancer, the Flare Bomb and the Storm Serpent with a plain loop. They are copies of the newer Cataclysm models and rebuild a chain of Java streams over every part of the model, every frame, only to put each part back to its starting pose. With this on the same parts are reset the same way by walking the model directly. Client. Turn it off for stock behaviour.")
+                .define("leanPoseReset", true), v -> goetycataclysmLeanPoseReset = v);
         builder.pop();
 
         builder.comment("Qliphoth Awakening (FD Bosses) patches.").push("fdbosses");
@@ -3637,6 +3702,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Look the transmogged appearance up by the tag it is stored in instead of hashing that tag every time. Transmog keeps the appearance item you picked as a full item stack written into the real item's NBT, and every time anything needs to draw that item it asks the mod to turn that NBT back into an item stack. The mod does cache the result, but it keys the cache on the hash code of the appearance NBT, so every single lookup walks the whole appearance compound, tag by tag, to compute that number, boxes it into an Integer and allocates a lambda, and then does it again for the next lookup. A player wearing transmogged armour pays that for every armour slot on every frame, and the item renderer asks three separate times for every item it draws, so a few people in transmogged gear on screen is thousands of full NBT walks a second. Two smaller problems come with it: the cache is one shared access ordered LinkedHashMap touched from the render thread and the server thread with no locking, which is the kind of map that can corrupt itself or spin forever when two threads read it at once, and because the key is only a hash code, two different appearances that happen to hash the same silently render as each other. With this on the lookup is keyed on the stored NBT compound itself, per thread, so a repeat lookup is a single reference compare with no walking, no boxing and no allocation, nothing is shared across threads, and a hash collision cannot swap two appearances any more. The appearance you see is unchanged. Turn it off for stock behaviour.")
                 .define("identityAppearanceCache", true), v -> transmogIdentityAppearanceCache = v);
+        gate(builder
+                .comment("Remember for the rest of the frame whether an equipped item carries a transmog. Every armour layer, held item layer and many other mods ask a mob for its equipment several times per frame, and for each ask the transmog check looked the transmog key up in the item's NBT again; every damageable item has NBT, so in a fight that was a map lookup for every slot of every mob dozens of times a frame. The answer is checked once per item per frame. Client.")
+                .define("frameMemo", true), v -> transmogFrameMemo = v);
         builder.pop();
 
         builder.comment("Iron's Spells 'n Spellbooks patches.").push("ironsspellbooks");

@@ -14,6 +14,32 @@ public abstract class MixinRebindableTickerSchedule implements ScheduledTicker {
     @Unique
     private long coo$due;
 
+    @Unique
+    private long coo$chunkKey = Long.MIN_VALUE;
+
+    @Unique
+    private byte coo$spreadVerdict;
+
+    @Override
+    public byte coo$spreadVerdict() {
+        return this.coo$spreadVerdict;
+    }
+
+    @Override
+    public void coo$spreadVerdict(byte verdict) {
+        this.coo$spreadVerdict = verdict;
+    }
+
+    @Override
+    public long coo$chunkKey() {
+        return this.coo$chunkKey;
+    }
+
+    @Override
+    public void coo$chunkKey(long chunkKey) {
+        this.coo$chunkKey = chunkKey;
+    }
+
     @Override
     public long coo$due() {
         return this.coo$due;
@@ -27,5 +53,7 @@ public abstract class MixinRebindableTickerSchedule implements ScheduledTicker {
     @Inject(method = "rebind", at = @At("HEAD"))
     private void coo$resetDue(TickingBlockEntity ticker, CallbackInfo ci) {
         this.coo$due = 0L;
+        this.coo$chunkKey = Long.MIN_VALUE;
+        this.coo$spreadVerdict = 0;
     }
 }

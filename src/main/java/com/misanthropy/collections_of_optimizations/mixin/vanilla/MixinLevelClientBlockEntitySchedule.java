@@ -2,6 +2,7 @@ package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.ScheduledTicker;
+import com.misanthropy.collections_of_optimizations.core.SpreadBlockEntityTicks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.ChunkPos;
@@ -91,21 +92,32 @@ public abstract class MixinLevelClientBlockEntitySchedule {
                 if (ticker.isRemoved()) {
                     continue;
                 }
-                BlockPos pos = ticker.getPos();
-                if (pos != null) {
-                    long chunk = ChunkPos.asLong(pos);
+                long chunk = scheduled != null ? scheduled.coo$chunkKey() : Long.MIN_VALUE;
+                BlockPos pos = null;
+                if (chunk == Long.MIN_VALUE) {
+                    pos = ticker.getPos();
+                    if (pos != null) {
+                        chunk = ChunkPos.asLong(pos);
+                        if (scheduled != null) {
+                            scheduled.coo$chunkKey(chunk);
+                        }
+                    }
+                }
+                if (chunk != Long.MIN_VALUE) {
                     if (chunk != verdictChunk) {
                         verdictChunk = chunk;
                         byte known = verdicts.get(chunk);
                         if (known == 0) {
-                            verdict = this.shouldTickBlocksAt(pos);
+                            verdict = this.shouldTickBlocksAt(pos != null ? pos : ticker.getPos());
                             verdicts.put(chunk, verdict ? (byte) 1 : (byte) 2);
                         } else {
                             verdict = known == 1;
                         }
                     }
                     if (verdict) {
-                        ticker.tick();
+                        if (!SpreadBlockEntityTicks.defer(level, ticker, scheduled)) {
+                            ticker.tick();
+                        }
                     } else if (scheduled != null) {
                         scheduled.coo$due(ScheduledTicker.nextDue(level, chunk, now));
                     }

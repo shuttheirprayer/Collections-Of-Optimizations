@@ -1,5 +1,9 @@
 package com.misanthropy.collections_of_optimizations.mixin.goety;
 
+import com.Polarice3.Goety.common.entities.hostile.SkullLord;
+import com.Polarice3.Goety.common.entities.hostile.WitherNecromancer;
+import com.Polarice3.Goety.common.entities.hostile.cultists.Crone;
+import com.Polarice3.Goety.common.entities.hostile.cultists.Heresiarch;
 import com.Polarice3.Goety.client.events.ClientEvents;
 import com.Polarice3.Goety.common.entities.boss.Apostle;
 import com.Polarice3.Goety.common.entities.boss.EnderKeeper;
@@ -43,6 +47,10 @@ public abstract class MixinClientEventsBossMusic {
                 || livingEntity instanceof EnderKeeper
                 || livingEntity instanceof HostileRedstoneGolem
                 || livingEntity instanceof Endersent
-                || livingEntity instanceof Wight;
+                || livingEntity instanceof Wight
+                || livingEntity instanceof Crone
+                || livingEntity instanceof Heresiarch
+                || livingEntity instanceof SkullLord
+                || livingEntity instanceof WitherNecromancer;
     }
 }

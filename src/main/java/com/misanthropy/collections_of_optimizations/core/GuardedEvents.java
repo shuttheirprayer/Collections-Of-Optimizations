@@ -68,6 +68,11 @@ public final class GuardedEvents {
             PLANS.put(event.getClass(), plan);
         }
         int[] picked = plan.select(event);
+        if (CoOConfig.vanillaSpreadClientTickListeners && event instanceof TickEvent tick && tick.phase == TickEvent.Phase.END
+                && (tick instanceof TickEvent.ClientTickEvent || (tick instanceof TickEvent.PlayerTickEvent && tick.side == LogicalSide.CLIENT))) {
+            SpreadClientTickListeners.queue(target, exceptionHandler, event, all, picked);
+            return false;
+        }
         int i = 0;
         try {
             for (; i < picked.length; i++) {

@@ -9,7 +9,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 
 @Pseudo
-@Mixin(targets = "io.redspace.ironslib.patreon.transmog.TransmogClientHandler", remap = false)
+@Mixin(targets = {
+        "io.redspace.ironslib.patreon.transmog.TransmogClientHandler",
+        "io.redspace.ironslib.transmog.client.TransmogClientHandler"
+}, remap = false)
 public abstract class MixinTransmogOuterLayerBake {
 
     @WrapMethod(

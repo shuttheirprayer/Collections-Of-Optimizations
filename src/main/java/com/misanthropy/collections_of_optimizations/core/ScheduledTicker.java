@@ -7,6 +7,14 @@ public interface ScheduledTicker {
 
     void coo$due(long due);
 
+    long coo$chunkKey();
+
+    void coo$chunkKey(long chunkKey);
+
+    byte coo$spreadVerdict();
+
+    void coo$spreadVerdict(byte verdict);
+
     static long nextDue(Level level, long chunkKey, long now) {
         if (!(level instanceof ImmersiveBlockEntitySchedule.Holder holder)) {
             return now + 1L;

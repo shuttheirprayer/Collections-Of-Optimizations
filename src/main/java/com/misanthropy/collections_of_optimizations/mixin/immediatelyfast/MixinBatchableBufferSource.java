@@ -1,8 +1,11 @@
 package com.misanthropy.collections_of_optimizations.mixin.immediatelyfast;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.BufferSourceFixedBuffersAccessor;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ReferenceLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import net.minecraft.client.renderer.RenderType;
@@ -34,6 +37,9 @@ public abstract class MixinBatchableBufferSource {
 
     @Shadow
     protected abstract BufferBuilder addNewFallbackBuffer(RenderType layer);
+
+    @Unique
+    private static final Reference2IntOpenHashMap<RenderType> coo$layerOrders = coo$newLayerOrders();
 
     @Unique
     private final ReferenceLinkedOpenHashSet<RenderType> coo$busyLayers = new ReferenceLinkedOpenHashSet<>();
@@ -153,5 +159,29 @@ public abstract class MixinBatchableBufferSource {
         }
         BufferBuilder fixed = ((BufferSourceFixedBuffersAccessor) this).coo$fixedBuffers().get(layer);
         cir.setReturnValue(fixed != null ? Collections.singleton(fixed) : Collections.emptySet());
+    }
+
+    @WrapMethod(method = "getLayerOrder", require = 0)
+    private int coo$memoLayerOrder(RenderType layer, Operation<Integer> original) {
+        if (!CoOConfig.immediatelyfastMemoLayerOrder || layer == null) {
+            return original.call(layer);
+        }
+        Reference2IntOpenHashMap<RenderType> orders = coo$layerOrders;
+        int order = orders.getInt(layer);
+        if (order == Integer.MIN_VALUE) {
+            order = original.call(layer);
+            if (orders.size() >= 4096) {
+                orders.clear();
+            }
+            orders.put(layer, order);
+        }
+        return order;
+    }
+
+    @Unique
+    private static Reference2IntOpenHashMap<RenderType> coo$newLayerOrders() {
+        Reference2IntOpenHashMap<RenderType> orders = new Reference2IntOpenHashMap<>();
+        orders.defaultReturnValue(Integer.MIN_VALUE);
+        return orders;
     }
 }
