@@ -119,6 +119,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("rpl", "ritchiesprojectilelib"),
             Map.entry("cbc", "createbigcannons"),
             Map.entry("witherreincarnated", "witherreincarnated"),
+            Map.entry("roacw", "roacw"),
             Map.entry("subtleeffects", "subtle_effects"),
             Map.entry("touchnmotion", "touch_n_motion"),
             Map.entry("immersiveweathering", "immersive_weathering"),
@@ -280,7 +281,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "immersiveweathering", "1.20.1-2.0.5",
             "timm", "1.1.0-Forge",
             "touchnmotion", "1.0.4",
-            "witherreincarnated", "1.0.5"
+            "witherreincarnated", "1.0.5",
+            "roacw", "1.2.4"
     );
 
     private static final Map<String, String[]> MIXIN_MIN_VERSION = Map.of(

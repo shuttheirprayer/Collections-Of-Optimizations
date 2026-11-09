@@ -1,5 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.witherreincarnated;
 
+import com.alexander.witherreincarnated.events.HandleAnimationsEvent;
+import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.WrState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
@@ -21,7 +23,11 @@ public abstract class MixinWrWitherTracking {
     @Inject(method = "onRemovedFromWorld", at = @At("TAIL"), remap = false)
     private void coo$witherRemoved(CallbackInfo ci) {
         if ((Object) this instanceof WitherBoss wither) {
-            WrState.witherRemoved(wither.level().isClientSide);
+            boolean clientSide = wither.level().isClientSide;
+            WrState.witherRemoved(clientSide);
+            if (clientSide && CoOConfig.wrFixAnimationLeak) {
+                HandleAnimationsEvent.witherAnimations.remove(wither);
+            }
         }
     }
 }

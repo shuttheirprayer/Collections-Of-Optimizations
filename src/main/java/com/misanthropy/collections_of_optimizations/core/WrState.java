@@ -30,6 +30,10 @@ public final class WrState {
         }
     }
 
+    public static void clientLevelGone() {
+        clientWithers = 0;
+    }
+
     public static boolean noServerWithers() {
         return CoOConfig.wrSkipIdleWitherScans && serverWithers == 0;
     }

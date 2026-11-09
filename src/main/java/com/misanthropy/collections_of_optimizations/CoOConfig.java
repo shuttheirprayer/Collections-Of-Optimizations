@@ -405,6 +405,8 @@ public final class CoOConfig {
     public static boolean rplSkipIdleChunkTick = true;
     public static boolean wrFastPossessionChecks = true;
     public static boolean wrSkipIdleWitherScans = true;
+    public static boolean wrFixAnimationLeak = true;
+    public static boolean roacwSkipIdleFireSync = true;
 
     public static boolean pehkuiLeanScaleTick = true;
     public static boolean pehkuiSnapshotTickTypes = true;
@@ -2232,8 +2234,17 @@ public final class CoOConfig {
                 .comment("Answer \"is this mob possessed\" from a remembered reference instead of looking the capability up again. The mod asks this on every team check, ally check, attack check and wander check of every mob. Mobs with nothing going on also skip the possession tick.")
                 .define("fastPossessionChecks", true), v -> wrFastPossessionChecks = v);
         gate(builder
-                .comment("While no Wither is loaded, skip the box search every mob runs to look for a Wither to flee from, and the client's scan of every entity for Wither music.")
+                .comment("While no Wither is loaded, skip the box search every mob runs to look for a Wither to flee from, and the client's scans of every entity for Wither music and for the Wither glow it draws every frame.")
                 .define("skipIdleWitherScans", true), v -> wrSkipIdleWitherScans = v);
+        gate(builder
+                .comment("Let go of a Wither's animation state once the client stops tracking it. The mod keeps every Wither it has ever animated in a map it never empties, and each one holds on to the whole world it was in, so after a fight and a dimension change or a trip back to the title screen the old world stays in memory. With this on a Wither is dropped from that map when it leaves the client world, and the map is emptied when you leave the world. Client.")
+                .define("fixAnimationLeak", true), v -> wrFixAnimationLeak = v);
+        builder.pop();
+
+        builder.comment("Remnants Of A Cruel World patches.").push("roacw");
+        gate(builder
+                .comment("Skip the shadowflame effect sync for mobs that have no effects and had none last tick. Every living entity used to build a fresh set of its effect ids every tick on the server just to find out nothing changed. Mobs with effects take the full path, so the client sees the same packets. Server.")
+                .define("skipIdleFireSync", true), v -> roacwSkipIdleFireSync = v);
         builder.pop();
 
         builder.comment("Pehkui patches.").push("pehkui");
