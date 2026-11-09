@@ -5,12 +5,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class GeneratedPackIndex {
 

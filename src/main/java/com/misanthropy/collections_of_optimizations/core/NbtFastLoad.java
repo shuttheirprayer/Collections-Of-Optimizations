@@ -5,13 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtAccounter;
-import net.minecraft.nbt.StreamTagVisitor;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.TagType;
-import net.minecraft.nbt.TagTypes;
+import net.minecraft.nbt.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

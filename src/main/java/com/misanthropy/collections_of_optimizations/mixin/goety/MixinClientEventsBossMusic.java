@@ -1,14 +1,14 @@
 package com.misanthropy.collections_of_optimizations.mixin.goety;
 
-import com.Polarice3.Goety.common.entities.hostile.SkullLord;
-import com.Polarice3.Goety.common.entities.hostile.WitherNecromancer;
-import com.Polarice3.Goety.common.entities.hostile.cultists.Crone;
-import com.Polarice3.Goety.common.entities.hostile.cultists.Heresiarch;
 import com.Polarice3.Goety.client.events.ClientEvents;
 import com.Polarice3.Goety.common.entities.boss.Apostle;
 import com.Polarice3.Goety.common.entities.boss.EnderKeeper;
 import com.Polarice3.Goety.common.entities.boss.Vizier;
+import com.Polarice3.Goety.common.entities.hostile.SkullLord;
 import com.Polarice3.Goety.common.entities.hostile.Wight;
+import com.Polarice3.Goety.common.entities.hostile.WitherNecromancer;
+import com.Polarice3.Goety.common.entities.hostile.cultists.Crone;
+import com.Polarice3.Goety.common.entities.hostile.cultists.Heresiarch;
 import com.Polarice3.Goety.common.entities.hostile.ender.Endersent;
 import com.Polarice3.Goety.common.entities.hostile.illagers.HostileRedstoneGolem;
 import com.Polarice3.Goety.common.entities.hostile.illagers.HostileRedstoneMonstrosity;

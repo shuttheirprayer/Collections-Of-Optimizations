@@ -3,6 +3,7 @@ package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.ScheduledTicker;
 import com.misanthropy.collections_of_optimizations.core.SpreadBlockEntityTicks;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.ChunkPos;
@@ -15,8 +16,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.List;

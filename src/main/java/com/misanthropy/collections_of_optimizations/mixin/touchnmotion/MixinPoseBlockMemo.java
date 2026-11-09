@@ -5,11 +5,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.LeanRay;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.function.Consumer;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import strm.touchnmotion.ModelSpace;
+
+import java.util.function.Consumer;
 
 @Mixin(value = ModelSpace.class, remap = false)
 public abstract class MixinPoseBlockMemo {

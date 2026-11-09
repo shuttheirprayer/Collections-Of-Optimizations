@@ -1,26 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.cataclysm;
 
-import com.github.L_Ender.cataclysm.client.model.entity.Ancient_Remnant_Rework_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Aptrgangr_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Ceraunus_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Cindaria_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Clawdian_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Draugr_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Elemental_Spear_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Elite_Draugr_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Hippocamtus_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Ignited_Berserker_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Kobolediator_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Maledictus_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Netherite_Ministrosity_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Netherite_Monstrosity_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Royal_Draugr_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Scylla_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Storm_Serpent_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Symbiocto_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.The_Prowler_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Urchinkin_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Wave_Model;
+import com.github.L_Ender.cataclysm.client.model.entity.*;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;

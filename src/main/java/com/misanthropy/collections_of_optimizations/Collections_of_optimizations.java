@@ -1,33 +1,6 @@
 package com.misanthropy.collections_of_optimizations;
 
-import com.misanthropy.collections_of_optimizations.core.ArsElementalCurioBagKey;
-import com.misanthropy.collections_of_optimizations.core.CacRedPandaTracker;
-import com.misanthropy.collections_of_optimizations.core.CameraShakeScanCache;
-import com.misanthropy.collections_of_optimizations.core.ClientLevelRelease;
-import com.misanthropy.collections_of_optimizations.core.VehicleCount;
-import com.misanthropy.collections_of_optimizations.core.ElysiumSoundTransformers;
-import com.misanthropy.collections_of_optimizations.core.EmfStatuePause;
-import com.misanthropy.collections_of_optimizations.core.CoOEmbeddiumOptions;
-import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
-import com.misanthropy.collections_of_optimizations.core.ArsAdditionsPortalScanCache;
-import com.misanthropy.collections_of_optimizations.core.FdBossesPresence;
-import com.misanthropy.collections_of_optimizations.core.GeomancyGrandmasterTracker;
-import com.misanthropy.collections_of_optimizations.core.GhostPlayerPurge;
-import com.misanthropy.collections_of_optimizations.core.GoetyDelightLogItems;
-import com.misanthropy.collections_of_optimizations.core.L2LibraryTrackedEffects;
-import com.misanthropy.collections_of_optimizations.core.LeakProbe;
-import com.misanthropy.collections_of_optimizations.core.MahouInsightTargetPurge;
-import com.misanthropy.collections_of_optimizations.core.CurioPresenceCache;
-import com.misanthropy.collections_of_optimizations.core.CuriosSlotCache;
-import com.misanthropy.collections_of_optimizations.core.IafDenRegistry;
-import com.misanthropy.collections_of_optimizations.core.MapTintCache;
-import com.misanthropy.collections_of_optimizations.core.CreateRuntimeDataCache;
-import com.misanthropy.collections_of_optimizations.core.NbtFastLoad;
-import com.misanthropy.collections_of_optimizations.core.RecipeCacheGeneration;
-import com.misanthropy.collections_of_optimizations.core.SkyArenaAltarMapPurge;
-import com.misanthropy.collections_of_optimizations.core.StalePlayerMaps;
-import com.misanthropy.collections_of_optimizations.core.SsoDashGuard;
-import com.misanthropy.collections_of_optimizations.core.SummonityMinionCache;
+import com.misanthropy.collections_of_optimizations.core.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -35,8 +8,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import com.misanthropy.collections_of_optimizations.core.WarmClasses;
-import com.misanthropy.collections_of_optimizations.core.LeakTrackerPruner;
 
 @Mod(Collections_of_optimizations.MODID)
 public class Collections_of_optimizations {

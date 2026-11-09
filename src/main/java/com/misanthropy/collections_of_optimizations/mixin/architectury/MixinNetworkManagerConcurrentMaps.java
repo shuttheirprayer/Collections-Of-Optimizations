@@ -5,9 +5,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.forge.NetworkManagerImpl;
 import dev.architectury.networking.transformers.PacketTransformer;
-import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
+
+import java.util.List;
 
 @Mixin(value = NetworkManagerImpl.class, remap = false)
 public abstract class MixinNetworkManagerConcurrentMaps {

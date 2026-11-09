@@ -8,14 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.shapes.ArrayVoxelShape;
-import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.CubeVoxelShape;
-import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

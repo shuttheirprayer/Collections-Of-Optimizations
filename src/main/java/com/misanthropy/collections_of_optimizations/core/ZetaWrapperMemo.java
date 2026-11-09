@@ -1,12 +1,8 @@
 package com.misanthropy.collections_of_optimizations.core;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+
+import java.util.*;
 import java.util.function.Function;
 
 public final class ZetaWrapperMemo {

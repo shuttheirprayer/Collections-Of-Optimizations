@@ -1,6 +1,7 @@
 package com.misanthropy.collections_of_optimizations.core;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormatElement;
@@ -9,7 +10,6 @@ import net.caffeinemc.mods.sodium.api.util.NormI8;
 import net.caffeinemc.mods.sodium.api.vertex.attributes.CommonVertexAttribute;
 import net.caffeinemc.mods.sodium.api.vertex.buffer.VertexBufferWriter;
 import net.caffeinemc.mods.sodium.api.vertex.format.VertexFormatDescription;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

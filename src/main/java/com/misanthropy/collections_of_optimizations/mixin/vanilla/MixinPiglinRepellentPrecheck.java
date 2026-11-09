@@ -4,13 +4,14 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.SectionPrecheck;
-import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.sensing.PiglinSpecificSensor;
 import org.spongepowered.asm.mixin.Mixin;
+
+import java.util.Optional;
 
 @Mixin(PiglinSpecificSensor.class)
 public abstract class MixinPiglinRepellentPrecheck {

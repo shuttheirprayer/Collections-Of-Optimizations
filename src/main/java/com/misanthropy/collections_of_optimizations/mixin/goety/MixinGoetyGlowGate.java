@@ -5,14 +5,13 @@ import com.Polarice3.Goety.common.blocks.entities.OminousIdolBlockEntity;
 import com.Polarice3.Goety.common.effects.GoetyEffects;
 import com.Polarice3.Goety.common.entities.ally.illager.raider.RaiderServant;
 import com.Polarice3.Goety.common.items.ModItems;
-import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.common.items.magic.CommandFocus;
 import com.Polarice3.Goety.common.items.magic.CommandHorn;
 import com.Polarice3.Goety.common.items.magic.OrderFocus;
 import com.Polarice3.Goety.common.items.magic.TransferScroll;
+import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.utils.WandUtil;
 import com.misanthropy.collections_of_optimizations.core.ClientTickStamp;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -26,6 +25,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(Minecraft.class)
 public abstract class MixinGoetyGlowGate {

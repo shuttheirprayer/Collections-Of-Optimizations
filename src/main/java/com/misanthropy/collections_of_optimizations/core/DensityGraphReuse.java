@@ -4,11 +4,7 @@ import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.util.CubicSpline;
-import net.minecraft.world.level.levelgen.DensityFunction;
-import net.minecraft.world.level.levelgen.DensityFunctions;
-import net.minecraft.world.level.levelgen.NoiseRouter;
-import net.minecraft.world.level.levelgen.NoiseSettings;
-import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.*;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -16,11 +12,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.LongToIntFunction;
 

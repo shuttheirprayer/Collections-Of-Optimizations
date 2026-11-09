@@ -1,7 +1,6 @@
 package com.misanthropy.collections_of_optimizations.core;
 
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.ClipContextFluidAccessor;
-import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -15,6 +14,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.Nullable;
+
+import java.util.UUID;
 
 public final class LeanRay {
 

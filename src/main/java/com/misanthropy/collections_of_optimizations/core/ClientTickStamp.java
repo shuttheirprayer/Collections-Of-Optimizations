@@ -1,10 +1,10 @@
 package com.misanthropy.collections_of_optimizations.core;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public final class ClientTickStamp {
 

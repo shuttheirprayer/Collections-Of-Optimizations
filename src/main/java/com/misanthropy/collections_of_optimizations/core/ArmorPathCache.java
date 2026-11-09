@@ -2,11 +2,7 @@ package com.misanthropy.collections_of_optimizations.core;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class ArmorPathCache {
 

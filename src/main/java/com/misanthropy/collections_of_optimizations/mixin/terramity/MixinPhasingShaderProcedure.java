@@ -1,8 +1,8 @@
 package com.misanthropy.collections_of_optimizations.mixin.terramity;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.mcreator.terramity.procedures.PhasingShaderProcedure;
 import net.minecraft.client.Minecraft;

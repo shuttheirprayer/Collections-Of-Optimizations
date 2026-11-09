@@ -1,8 +1,8 @@
 package com.misanthropy.collections_of_optimizations.mixin.oddaccessories;
 
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Mob;

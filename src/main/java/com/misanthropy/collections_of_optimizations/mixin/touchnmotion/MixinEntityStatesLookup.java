@@ -1,18 +1,15 @@
 package com.misanthropy.collections_of_optimizations.mixin.touchnmotion;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.Supplier;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import strm.touchnmotion.interaction.EntityStates;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 @Mixin(value = EntityStates.class, remap = false)
 public abstract class MixinEntityStatesLookup<T> {

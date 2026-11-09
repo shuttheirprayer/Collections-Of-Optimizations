@@ -3,10 +3,11 @@ package com.misanthropy.collections_of_optimizations.mixin.tooltipoverhaul;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
-import java.util.List;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Unique;
+
+import java.util.List;
 
 @Pseudo
 @Mixin(targets = "dev.xylonity.tooltipoverhaul.client.frame.CustomFrameData", remap = false)

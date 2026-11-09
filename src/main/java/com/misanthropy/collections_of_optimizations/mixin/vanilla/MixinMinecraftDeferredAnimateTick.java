@@ -5,6 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,6 +19,12 @@ public abstract class MixinMinecraftDeferredAnimateTick {
 
     @Shadow
     public ClientLevel level;
+
+    @Shadow
+    public MultiPlayerGameMode gameMode;
+
+    @Shadow
+    public LocalPlayer player;
 
     @Unique
     private ClientLevel coo$animateLevel;
@@ -63,7 +71,8 @@ public abstract class MixinMinecraftDeferredAnimateTick {
         ClientLevel target = this.coo$animateLevel;
         this.coo$animateTicks = 0;
         this.coo$animateLevel = null;
-        if (target == null || target != this.level) {
+        // disconnect nulls gameMode, then runs runTick(false) while level is still set
+        if (target == null || target != this.level || this.gameMode == null || this.player == null) {
             return;
         }
         for (int index = 0; index < ticks; index++) {

@@ -22,13 +22,7 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Mixin(value = CurioInventoryCapability.CurioInventoryWrapper.class, remap = false)
 public abstract class MixinCurioInventoryCachedPurge implements ICuriosItemHandler {

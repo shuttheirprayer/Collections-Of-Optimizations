@@ -3,11 +3,7 @@ package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import it.unimi.dsi.fastutil.longs.Long2ByteMap;
 import net.minecraft.server.level.TickingTracker;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 
 @Mixin(TickingTracker.class)
 public abstract class MixinTickingTrackerMemo {

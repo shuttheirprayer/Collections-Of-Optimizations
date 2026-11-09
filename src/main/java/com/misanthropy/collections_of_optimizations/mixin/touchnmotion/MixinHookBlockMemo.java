@@ -4,11 +4,12 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.LeanRay;
-import java.util.UUID;
-import java.util.function.Function;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import strm.touchnmotion.TouchNMotionHook;
+
+import java.util.UUID;
+import java.util.function.Function;
 
 @Mixin(value = TouchNMotionHook.class, remap = false)
 public abstract class MixinHookBlockMemo {

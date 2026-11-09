@@ -1,11 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.pehkui;
 
 import com.misanthropy.collections_of_optimizations.core.PehkuiClampBounds;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import virtuoel.pehkui.api.ScaleData;
 import virtuoel.pehkui.util.ClampingScaleModifier;
 

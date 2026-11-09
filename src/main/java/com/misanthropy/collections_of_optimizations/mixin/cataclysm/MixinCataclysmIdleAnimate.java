@@ -1,10 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.cataclysm;
 
-import com.github.L_Ender.cataclysm.client.model.entity.Amethyst_Crab_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Ancient_Remnant_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Ender_Guardian_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.Ignis_Model;
-import com.github.L_Ender.cataclysm.client.model.entity.The_Leviathan_Model;
+import com.github.L_Ender.cataclysm.client.model.entity.*;
 import com.github.L_Ender.lionfishapi.client.model.Animations.ModelAnimator;
 import com.github.L_Ender.lionfishapi.server.animation.IAnimatedEntity;
 import com.misanthropy.collections_of_optimizations.CoOConfig;

@@ -1,12 +1,12 @@
 package com.misanthropy.collections_of_optimizations.mixin.citadel;
 
+import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.CitadelModelVertices;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.caffeinemc.mods.sodium.api.vertex.buffer.VertexBufferWriter;
-import com.github.alexthe666.citadel.client.model.basic.BasicModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;

@@ -6,8 +6,6 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.VanillaOverrideChecks;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,6 +13,9 @@ import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 @Mixin(Entity.class)
 public abstract class MixinEntityFireScanGate {

@@ -1,22 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.summonity;
 
-import com.fevzi.summonity.entity.SummonedCopperGolemEntity;
-import com.fevzi.summonity.entity.SummonedCrystalWispEntity;
-import com.fevzi.summonity.entity.SummonedGnomeEntity;
-import com.fevzi.summonity.entity.SummonedImpEntity;
-import com.fevzi.summonity.entity.SummonedMagicMirrorEntity;
-import com.fevzi.summonity.entity.SummonedMiniatureSunEntity;
-import com.fevzi.summonity.entity.SummonedParrotEntity;
-import com.fevzi.summonity.entity.SummonedPrismaticLanternEntity;
-import com.fevzi.summonity.entity.SummonedSanguineBatEntity;
-import com.fevzi.summonity.entity.SummonedSculkMiteEntity;
-import com.fevzi.summonity.entity.SummonedSimpleTurretEntity;
-import com.fevzi.summonity.entity.SummonedSlimeEntity;
-import com.fevzi.summonity.entity.SummonedSpiderEntity;
-import com.fevzi.summonity.entity.SummonedStardustDragonEntity;
-import com.fevzi.summonity.entity.SummonedUltraSnifferEntity;
-import com.fevzi.summonity.entity.SummonedVirentiumCubeEntity;
-import com.fevzi.summonity.entity.SummonedWarriorsArsenalEntity;
+import com.fevzi.summonity.entity.*;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;

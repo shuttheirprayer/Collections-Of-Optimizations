@@ -74,6 +74,7 @@ public final class CoOConfig {
 
     public static int xaeroworldmapVramPollInterval = 500;
     public static int xaeroworldmapRenderProcessInterval = 4;
+    public static boolean xaeroworldmapMarkLayersOnce = true;
     public static boolean tooltipoverhaulCacheFrameTagKeys = true;
     public static boolean cablefacadesSkipEmptyLookup = true;
     public static boolean cablefacadesSkipGuardWhenEmpty = true;
@@ -452,6 +453,7 @@ public final class CoOConfig {
     public static boolean goetyMemoCurioFilter = true;
     public static boolean goetySkipBossMusicTargetLookup = true;
     public static boolean goetyCacheFogWightScan = true;
+    public static boolean goetyTickListEnchantBeams = true;
     public static boolean goetyCacheShakeScan = true;
     public static boolean goetySameLevelOwnerLookup = true;
 
@@ -632,6 +634,7 @@ public final class CoOConfig {
     public static boolean vanillaLeanKeyframeAnimation = true;
     public static boolean vanillaUniformSectionLookup = true;
     public static boolean vanillaAxisAlignedRotation = true;
+    public static boolean vanillaReuseModelPartRotation = true;
     public static boolean vanillaLeanBlockPosRange = true;
     public static boolean vanillaReplayVillagerLayers = true;
     public static boolean vanillaMemoBlockTickChunk = true;
@@ -1209,6 +1212,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the map tile upload pass at most this often in milliseconds instead of once per rendered frame, so its per frame time budget stops scaling with framerate. The world map screen is never throttled. 0 disables.")
                 .defineInRange("renderProcessInterval", 4, 0, 200), 0, v -> xaeroworldmapRenderProcessInterval = v);
+        gate(builder
+                .comment("Mark a map region's other cave layers as outdated once per frame instead of once for every chunk written into it. In singleplayer every region is world save data, so stock looks up and flags the same region in every loaded cave layer for each chunk the map writer visits, which is about half of the writer's render thread time and grows with every cave depth you have mapped. The flags only ever get set, so the map is identical. Client.")
+                .define("markLayersOnce", true), v -> xaeroworldmapMarkLayersOnce = v);
         gate(builder
                 .comment("Wait out the world map screen's frame budget by parking instead of spinning. While the map screen is open Xaero busy loops on System.nanoTime until 1.6ms of the frame has passed, which burns a whole core for most of every map frame. Pacing is unchanged, the thread just idles instead.")
                 .define("idleMapFrameWait", true), v -> xaeroworldmapIdleMapFrameWait = v);
@@ -2468,6 +2474,9 @@ public final class CoOConfig {
                 .comment("Run the fog listener's Wight#findWight scan once per tick instead of once per posted RenderFog event. Client.")
                 .define("cacheFogWightScan", true), v -> goetyCacheFogWightScan = v);
         gate(builder
+                .comment("Find the mobs with an enchanting tether once per tick instead of every frame. Goety walks every entity in the world and looks up each one's enchanter every frame to draw tether beams that almost never exist. A tether that starts this tick shows up on the next one. Client.")
+                .define("tickListEnchantBeams", true), v -> goetyTickListEnchantBeams = v);
+        gate(builder
                 .comment("Answer repeated CuriosFinder#findCurio(LivingEntity, Predicate) lookups from a per-tick per-entity memo.")
                 .define("memoCurioFilter", true), v -> goetyMemoCurioFilter = v);
         gate(builder
@@ -2969,6 +2978,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Rotate a pose stack around a single axis with the short form of the multiplication instead of the general quaternion product. Nearly every rotation an entity, item or model part applies is around X, Y or Z alone, and JOML does about three times the arithmetic for those. Same result up to floating point rounding. Client.")
                 .define("axisAlignedRotation", true), v -> vanillaAxisAlignedRotation = v);
+        gate(builder
+                .comment("Give every model part one reusable rotation instead of a new quaternion each time it is posed. Vanilla allocates one per rotated part of every entity model every frame, and Embeddium still runs that code for each part it draws. The quaternion is fully overwritten before use and never kept, so the result is identical. Client.")
+                .define("reuseModelPartRotation", true), v -> vanillaReuseModelPartRotation = v);
         gate(builder
                 .comment("Walk BlockPos.betweenClosed and Cursor3D with three counters instead of two integer divisions per position. Cursor3D is what every entity uses each tick to find the block it stands on, and what mob pathfinding uses for its collision checks. Same positions in the same order. An inverted BlockPos range yields nothing instead of looping forever.")
                 .define("leanBlockPosRange", true), v -> vanillaLeanBlockPosRange = v);

@@ -1,11 +1,11 @@
 package com.misanthropy.collections_of_optimizations.mixin.photon;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.lowdragmc.photon.client.gameobject.emitter.IParticleEmitter;
 import com.lowdragmc.photon.client.gameobject.emitter.data.RendererSetting;
 import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleConfig;
 import com.lowdragmc.photon.client.gameobject.particle.TileParticle;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.PhotonScratch;
 import com.mojang.blaze3d.vertex.VertexConsumer;

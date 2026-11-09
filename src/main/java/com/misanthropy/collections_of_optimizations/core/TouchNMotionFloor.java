@@ -1,9 +1,5 @@
 package com.misanthropy.collections_of_optimizations.core;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
-import java.lang.reflect.Field;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -17,6 +13,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import strm.touchnmotion.blockuse.ModBlock;
 import strm.touchnmotion.create.ejector.EjectorLid;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Field;
 
 public final class TouchNMotionFloor {
 

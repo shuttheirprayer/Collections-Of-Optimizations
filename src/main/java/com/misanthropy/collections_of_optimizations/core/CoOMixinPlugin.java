@@ -1,26 +1,17 @@
 package com.misanthropy.collections_of_optimizations.core;
 
-import net.minecraftforge.forgespi.language.IModInfo;
-import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.fml.loading.LoadingModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.*;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CoOMixinPlugin implements IMixinConfigPlugin {
 
@@ -334,6 +325,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("vanilla.MixinClientLevelBiomeBlend", new String[]{"betterbiomeblend", "betterbiomereblend"}),
 
             Map.entry("vanilla.MixinPoseStackAxisRotation", new String[]{"lomka"}),
+            Map.entry("vanilla.MixinModelPartRotationReuse", new String[]{"sleepium"}),
             Map.entry("vanilla.MixinBlockPosBetweenClosed", new String[]{"lomka"}),
             Map.entry("vanilla.MixinPalettedContainerUniform", new String[]{"lomka"})
     );

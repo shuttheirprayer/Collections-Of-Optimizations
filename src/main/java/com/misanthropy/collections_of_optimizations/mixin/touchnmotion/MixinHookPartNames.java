@@ -2,13 +2,14 @@ package com.misanthropy.collections_of_optimizations.mixin.touchnmotion;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.PartNameCache;
-import java.util.Map;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import strm.touchnmotion.TouchNMotionHook;
 import traben.entity_model_features.models.parts.EMFModelPartRoot;
 import traben.entity_model_features.models.parts.EMFModelPartVanilla;
+
+import java.util.Map;
 
 @Mixin(value = TouchNMotionHook.class, remap = false)
 public abstract class MixinHookPartNames {

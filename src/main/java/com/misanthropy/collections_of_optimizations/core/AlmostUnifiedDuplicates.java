@@ -9,13 +9,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class AlmostUnifiedDuplicates {
 

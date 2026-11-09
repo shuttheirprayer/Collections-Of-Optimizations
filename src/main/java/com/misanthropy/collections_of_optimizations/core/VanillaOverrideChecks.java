@@ -1,11 +1,12 @@
 package com.misanthropy.collections_of_optimizations.core;
 
-import java.lang.reflect.Method;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ai.goal.RemoveBlockGoal;
 import net.minecraft.world.level.LevelReader;
+
+import java.lang.reflect.Method;
+import java.util.Set;
 
 public final class VanillaOverrideChecks {
 

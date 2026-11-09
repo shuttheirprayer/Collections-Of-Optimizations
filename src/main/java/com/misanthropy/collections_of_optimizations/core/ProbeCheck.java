@@ -1,12 +1,13 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import net.minecraft.world.phys.BlockHitResult;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import net.minecraft.world.phys.BlockHitResult;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public final class ProbeCheck {
 

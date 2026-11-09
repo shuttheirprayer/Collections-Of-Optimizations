@@ -10,9 +10,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.theillusivec4.curios.api.SlotResult;
-import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.common.capability.CurioInventoryCapability;
 
 import java.util.Map;
 import java.util.Optional;

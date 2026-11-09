@@ -8,12 +8,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 public final class DomesticationHealers {
     private static final Map<Level, Set<LivingEntity>> HEALERS = new WeakHashMap<>();

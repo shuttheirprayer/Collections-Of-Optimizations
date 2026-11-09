@@ -13,15 +13,16 @@ import dev.ftb.mods.ftbchunks.client.map.MapRegion;
 import dev.ftb.mods.ftblibrary.math.XZ;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(value = FTBChunksClient.class, remap = false)
 public abstract class MixinFTBChunksClient {
