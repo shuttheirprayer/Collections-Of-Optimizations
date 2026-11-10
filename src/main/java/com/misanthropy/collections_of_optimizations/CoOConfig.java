@@ -32,6 +32,8 @@ public final class CoOConfig {
     public static boolean curiosCacheEntitySlotLookup = true;
     public static boolean curiosFastEquippedItemMiss = true;
     public static boolean curiosFastFindFirstMiss = true;
+    public static boolean curiosLastingMobPresence = true;
+    public static boolean doespotatotickRememberUpdateFix = true;
     public static boolean curiosReuseCurioMapView = true;
     public static boolean curiosReconcileCachedSlotModifiers = true;
     public static boolean curiosThreadSafeCaches = true;
@@ -279,6 +281,7 @@ public final class CoOConfig {
     public static boolean structurifyFastStructureSetLookup = true;
     public static boolean structurifySkipDisabledStructureChecks = true;
     public static boolean structurifyLeanHeightCache = true;
+    public static boolean structureessentialsCheckFinalStateOnce = true;
     public static boolean structurifyLeanOverlapSections = true;
     public static boolean structurifyCacheStructureSetEntries = true;
     public static boolean structurifySkipStartCheckWrap = true;
@@ -290,8 +293,10 @@ public final class CoOConfig {
     public static boolean bossesriseNarrowCinematicScan = true;
     public static boolean bossesriseLeanVfxScan = true;
     public static boolean soulsweaponsLeanDespawnTimer = true;
+    public static boolean soulsweaponsRememberNoDespawnTimer = true;
     public static boolean soulsweaponsCacheModPresence = true;
     public static boolean soulsweaponsSkipIdlePostureMax = true;
+    public static boolean soulsweaponsSkipIdleBuildupTick = true;
     public static boolean konweaponSkipItemAnimationCopies = true;
     public static boolean immersiveaircraftBatchOverlay = true;
     public static boolean ftbchunksSkipHiddenMinimapWork = true;
@@ -1075,6 +1080,9 @@ public final class CoOConfig {
                 .comment("Answer ICuriosItemHandler#findFirstCurio(Item) from the same per-tick set instead of walking every slot handler.")
                 .define("fastFindFirstMiss", true), v -> curiosFastFindFirstMiss = v);
         gate(builder
+                .comment("Keep a mob's set of worn curios until its curio inventory actually changes instead of rebuilding it every tick. Zombies, skeletons and other mobs that Artifacts gives curio slots to had the set rebuilt on every tick. Players still rebuild every tick.")
+                .define("lastingMobPresence", true), v -> curiosLastingMobPresence = v);
+        gate(builder
                 .comment("Hand out one reusable unmodifiable view of an entity's curio slot map instead of wrapping the map again on every single call.")
                 .define("reuseCurioMapView", true), v -> curiosReuseCurioMapView = v);
         gate(builder
@@ -1799,6 +1807,11 @@ public final class CoOConfig {
                 .define("cacheBookItemLookup", true), v -> patchouliCacheBookItemLookup = v);
         builder.pop();
 
+        builder.comment("Structure Essentials patches.").push("structureessentials");
+        gate(builder
+                .comment("Structure Essentials checks the final block of every jigsaw connector each time a structure piece is copied, by parsing the same block text again, which happens thousands of times while structures are laid out. With this on each distinct text is checked once; a broken one still fails the same way every time.")
+                .define("checkFinalStateOnce", true), v -> structureessentialsCheckFinalStateOnce = v);
+        builder.pop();
         builder.comment("Structurify patches.").push("structurify");
         gate(builder
                 .comment("Resolve Structurify's per structure set config lookup in one hash lookup.")
@@ -1846,11 +1859,23 @@ public final class CoOConfig {
                 .comment("Read the mod's despawn timer without writing to every entity that does not have one.")
                 .define("leanDespawnTimer", true), v -> soulsweaponsLeanDespawnTimer = v);
         gate(builder
+                .comment("Remember that an entity has no despawn timer until the mod sets one, instead of looking it up in the entity's saved data on every tick.")
+                .define("rememberNoDespawnTimer", true), v -> soulsweaponsRememberNoDespawnTimer = v);
+        gate(builder
                 .comment("Remember which mods are installed instead of asking the loader again on every call. Soulslike Weaponry asks whether Better Combat or Epic Fight is installed from inside its Player#getItemBySlot hook, so it runs for every equipment lookup on every player.")
                 .define("cacheModPresence", true), v -> soulsweaponsCacheModPresence = v);
         gate(builder
                 .comment("Skip the max posture calculation for mobs with no posture damage. Soulslike Weaponry works out every mob's max posture from its scaled hitbox every tick, but a mob at 0 posture can never break.")
                 .define("skipIdlePostureMax", true), v -> soulsweaponsSkipIdlePostureMax = v);
+        gate(builder
+                .comment("Skip Soulslike Weaponry's posture, bleed and frost check for a mob that has none of the three built up. Stock looks up the mob's stats seven times, three entity tags and its saved data on every tick of every living thing. The check still runs in full on the tick where the mod's own frost timer fires, so nothing about the mod changes. Players are never skipped.")
+                .define("skipIdleBuildupTick", true), v -> soulsweaponsSkipIdleBuildupTick = v);
+        builder.pop();
+
+        builder.comment("Does Potato Tick? patches.").push("doespotatotick");
+        gate(builder
+                .comment("Remember that an entity already has the mod's one-time update fix instead of reading the marker from its saved data on every tick.")
+                .define("rememberUpdateFix", true), v -> doespotatotickRememberUpdateFix = v);
         builder.pop();
 
         builder.comment("Kind of Nice Weapon patches.").push("konweapon");

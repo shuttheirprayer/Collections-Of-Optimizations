@@ -49,6 +49,7 @@ public final class SpreadEntityTicks {
             owner = level;
         }
         ticker = consumer;
+        entity.setOldPosAndRot();
         ((Pending) entity).coo$spreadPending(true);
         QUEUE.add(entity);
         return true;

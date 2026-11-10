@@ -56,6 +56,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("gnetum", "gnetum"),
             Map.entry("tooltipoverhaul", "tooltipoverhaul"),
             Map.entry("cablefacades", "cable_facades"),
+            Map.entry("structureessentials", "structureessentials"),
             Map.entry("oculus", "oculus"),
             Map.entry("citadel", "citadel"),
             Map.entry("asyncparticles", "asyncparticles"),
@@ -335,6 +336,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             "ftbchunksperformancefix", Set.of("ftbchunks.MixinFTBChunksClient", "ftbchunks.MixinMapRegionImageGen",
                     "ftbchunks.MixinRenderMapImageTask"),
             "papi", Set.of("jei.MixinRecipeTransferManager"),
+            "quark", Set.of("apothicattributes.MixinApothReplacedTooltipModifiers"),
             "bons_and_furious", BonsAndFuriousOverlap.MIXINS
     );
 

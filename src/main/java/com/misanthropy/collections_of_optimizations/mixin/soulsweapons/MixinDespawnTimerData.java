@@ -1,6 +1,7 @@
 package com.misanthropy.collections_of_optimizations.mixin.soulsweapons;
 
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.EntityNbtMemo;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.EntityPersistentDataAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +30,24 @@ public abstract class MixinDespawnTimerData {
             return;
         }
         CompoundTag data = ((EntityPersistentDataAccessor) entity).coo$persistentData();
-        cir.setReturnValue(data == null ? 0 : data.getInt(DespawnTimerData.DESPAWN_ID));
+        if (data == null) {
+            cir.setReturnValue(0);
+            return;
+        }
+        EntityNbtMemo memo = (EntityNbtMemo) entity;
+        if (CoOConfig.soulsweaponsRememberNoDespawnTimer && memo.coo$noDespawnTimerTag() == data) {
+            cir.setReturnValue(0);
+            return;
+        }
+        int ticks = data.getInt(DespawnTimerData.DESPAWN_ID);
+        if (ticks == 0) {
+            memo.coo$noDespawnTimerTag(data);
+        }
+        cir.setReturnValue(ticks);
+    }
+
+    @Inject(method = {"addDespawnTicks", "setDespawnTicks"}, at = @At("HEAD"), require = 0)
+    private static void coo$forgetNoDespawnTimer(Entity entity, int amount, CallbackInfoReturnable<Integer> cir) {
+        ((EntityNbtMemo) entity).coo$noDespawnTimerTag(null);
     }
 }

@@ -51,8 +51,8 @@ public abstract class MixinCableFacadesLeanStateHooks {
         if (CoOConfig.cablefacadesSkipGuardWhenEmpty && !(getter instanceof ServerLevel) && !CableFacadePresence.any()) {
             return null;
         }
-        if (CoOConfig.cablefacadesCacheServerFacadeData && getter instanceof ServerLevel serverLevel && CableFacadeServerData.noFacades(serverLevel)) {
-            return null;
+        if (CoOConfig.cablefacadesCacheServerFacadeData && getter instanceof ServerLevel serverLevel) {
+            return CableFacadeServerData.lookup(serverLevel, pos);
         }
         if (coo$facadeGuard.get()) {
             return null;

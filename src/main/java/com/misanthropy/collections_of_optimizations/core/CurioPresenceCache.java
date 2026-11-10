@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import com.misanthropy.collections_of_optimizations.CoOConfig;
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -92,14 +93,14 @@ public final class CurioPresenceCache {
         Set<Item> cached = holder.coo$curioPresence();
         if (cached != null) {
             long cachedStamp = holder.coo$curioPresenceStamp();
-            if (cachedStamp == stamp || cached == NO_INVENTORY && cachedStamp == noInventoryStamp) {
+            if (cachedStamp == stamp || cachedStamp == noInventoryStamp) {
                 return cached;
             }
         }
 
         Set<Item> built = build(entity);
         if (built != null) {
-            boolean lasting = built == NO_INVENTORY && !(entity instanceof Player) && !entity.level().isClientSide;
+            boolean lasting = (built == NO_INVENTORY || CoOConfig.curiosLastingMobPresence) && !(entity instanceof Player) && !entity.level().isClientSide;
             holder.coo$storeCurioPresence(built, lasting ? noInventoryStamp : stamp);
         }
         return built;
