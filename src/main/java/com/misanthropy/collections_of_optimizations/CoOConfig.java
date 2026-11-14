@@ -68,6 +68,7 @@ public final class CoOConfig {
     public static boolean cofhCacheTranslucentRenderers = true;
 
     public static boolean createDedupeBigOutlineProbes = true;
+    public static boolean createReleaseContraptionRenderLevels = true;
     public static int createBigOutlinePickInterval = 5;
 
     public static boolean xaerolibCacheConfigProfile = true;
@@ -114,6 +115,7 @@ public final class CoOConfig {
     public static boolean emfReuseCompiledAnimations = true;
     public static boolean mekanismSkipEmptyRadiationScan = true;
     public static boolean etfStacklessPropertyExceptions = true;
+    public static boolean etfWarmTextures = true;
 
     public static boolean shouldersurfingSkipIdleCrosshairPick = true;
     public static double shouldersurfingCameraSweepStep = 0.125;
@@ -132,6 +134,8 @@ public final class CoOConfig {
     public static boolean vanillaSkipIdenticalRegistrySnapshot = true;
     public static boolean vanillaFastBiomeTreeSort = true;
     public static boolean vanillaFlatBiomeSearch = true;
+    public static boolean vanillaWeakBiomeSearchSlot = true;
+    public static boolean vanillaReuseBiomeListEncoding = true;
     public static boolean vanillaGeometricHolderGrowth = true;
     public static boolean vanillaIndexedObjectHolders = true;
     public static boolean vanillaSkipOrderIndependentSort = true;
@@ -305,6 +309,7 @@ public final class CoOConfig {
     public static boolean ftbchunksCoalesceMinimapUploads = true;
 
     public static boolean jeiWeakUnsupportedContainers = true;
+    public static boolean jeiReleaseFakeMenus = true;
     public static boolean radiumPartEntityCollisions = true;
     public static boolean radiumMemoEntityTouchableFlag = true;
     public static boolean radiumNoThrowMethodOverrideScan = true;
@@ -329,6 +334,7 @@ public final class CoOConfig {
     public static boolean vanillaSkipEmptyDisabledFlags = true;
     public static boolean vanillaFastAttributeInstanceLookup = true;
     public static boolean forgeStatusPingChannelGroups = true;
+    public static boolean forgeReuseRegistrySnapshots = true;
     public static boolean forgeRenderLayerMemo = true;
     public static boolean forgePlainTranslationFormat = true;
     public static boolean forgeArmorTexturePathCache = true;
@@ -399,6 +405,7 @@ public final class CoOConfig {
     public static boolean integratedapiSkipEmptyBeardifier = true;
     public static boolean echelonCacheTierAttributeUuids = true;
     public static boolean elysiumapiMemoClimateSample = true;
+    public static boolean elysiumapiResolveBiomeOnce = true;
     public static boolean elysiumapiCacheSoundTransformers = true;
     public static boolean balmMemoDynamicModelKeys = true;
     public static boolean balmCacheConfigIdentifier = true;
@@ -449,6 +456,7 @@ public final class CoOConfig {
 
     public static boolean zetaLeanStructureReplacement = true;
     public static boolean zetaShareEventWrappers = true;
+    public static boolean zetaClusterBoundsFirst = true;
 
     public static boolean goetyCacheCapabilityOptional = true;
     public static boolean goetySkipCapabilityFallback = true;
@@ -557,6 +565,7 @@ public final class CoOConfig {
     public static boolean alexscavesMemoRareBiomeQuads = true;
     public static boolean alexscavesMemoClimateSample = true;
     public static boolean alexscavesCacheShakeScan = true;
+    public static boolean alexscavesBiomeSampleTickCache = true;
     public static boolean alexscavesSingleMagnetQuery = true;
     public static boolean alexscavesRadiumEntityCollisions = true;
     public static boolean alexscavesSkipDisabledBiomeHook = true;
@@ -581,6 +590,7 @@ public final class CoOConfig {
     public static int itemEntityRenderCap = 1;
     public static boolean vanillaMemoGlyphFontSet = true;
     public static boolean vanillaMemoOutlineStyle = true;
+    public static boolean vanillaSkipEmptyOutlineOverlay = true;
     public static boolean vanillaFasterStructureLocation = true;
     public static boolean vanillaTrimTemplateTopAir = true;
     public static boolean vanillaFixBoatFallDamage = false;
@@ -600,12 +610,16 @@ public final class CoOConfig {
     public static boolean vanillaMultifaceWithoutStreams = true;
     public static boolean vanillaShareTemplatePositions = true;
     public static boolean flywheelParkWorkers = true;
+    public static boolean flywheelWarmPrograms = true;
     public static boolean mowzieShareChamberColumns = true;
     public static boolean xaeroworldmapLazyTileHeights = true;
     public static boolean xaeroworldmapSkipUploadBenchmark = true;
     public static boolean vanillaSkipEmptyOwnerUuidParse = true;
     public static boolean vanillaCacheStaticHardwareReport = true;
     public static boolean vanillaIndexZipPacks = true;
+    public static boolean vanillaIndexDelegatingPacks = true;
+    public static boolean vanillaFastZipPackPaths = true;
+    public static boolean vanillaWarmHeavyClassInit = true;
     public static boolean vanillaMemoSkyColour = true;
     public static boolean vanillaGuardedEvents = true;
     public static boolean vanillaSkipServerOnlyListenersOnClient = true;
@@ -623,6 +637,8 @@ public final class CoOConfig {
     public static boolean vanillaSpreadBlockEntityTicks = true;
     public static boolean vanillaSpreadClientTickListeners = false;
     public static boolean vanillaPreSwapTicks = true;
+    public static boolean vanillaFlushBeforeSwap = true;
+    public static boolean vanillaFramebufferBlit = true;
     public static boolean vanillaCacheResourceLocationString = true;
     public static boolean vanillaClientFireImmuneMemo = true;
     public static boolean vanillaTickingLevelMemo = true;
@@ -1124,6 +1140,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Wake Flywheel's worker threads by parking and unparking them instead of a shared lock. With the lock, the render thread had to wait for a low priority worker that was holding it while chunk generation kept every core busy, which showed up as 50 to 90 ms hitches while flying. Takes effect on the next launch.")
                 .define("parkWorkers", true), v -> flywheelParkWorkers = v);
+        gate(builder
+                .comment("Remember which Flywheel shader programs the game had to build (chests, bells, Create machines and so on) and build them again right after start-up, one per tick, starting on the title screen. Flywheel only builds a program the first time something needs it, and each one froze the game for about 20 ms, so walking into a village or a structure stuttered once per new kind of block. The list is kept in config/collections_of_optimizations/warm-flywheel.txt. Client.")
+                .define("warmPrograms", true), v -> flywheelWarmPrograms = v);
         builder.pop();
 
         builder.comment("Block Swap patches.").push("blockswap");
@@ -1178,6 +1197,9 @@ public final class CoOConfig {
         builder.pop();
 
         builder.comment("Create patches.").push("create");
+        gate(builder
+                .comment("Free each contraption's client render world when the contraption goes away. Every moving contraption the client renders gets its own small copy of a world, and Flywheel builds a visualization manager for it the moment a block entity is placed in that copy. Flywheel only lets go of a manager when its world unloads, and these copies never unload, so every contraption you have ever seen stays in memory with its blocks, its block entities, the real world it points to and the manager's buffers, until the next resource reload. With this on the copy is treated as unloaded when its contraption entity leaves the client, which is exactly what Flywheel does for a real world. Client.")
+                .define("releaseContraptionRenderLevels", true), v -> createReleaseContraptionRenderLevels = v);
         gate(builder
                 .comment("Read each block position at most once per big outline pick. Stock tests a 3x3x3 neighbourhood at every raycast step, so neighbouring steps re-read the same positions.")
                 .define("dedupeBigOutlineProbes", true), v -> createDedupeBigOutlineProbes = v);
@@ -1915,6 +1937,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop JEI keeping every old world in memory after you respawn or change dimension. When JEI looks for a recipe transfer button it asks the open menu for its type, and the player inventory menu has none and answers with an error, so JEI notes that menu in a list of menus to stop asking about. That list holds on to the menu for the whole session, the menu holds your player, and your player holds the entire client world with its chunks and entities. Every respawn and every dimension change makes a new player, so each one leaves another full world stuck in memory until you log out. With this on the list forgets a menu as soon as nothing else uses it, which is the moment it could never be asked about again anyway, so the transfer buttons behave exactly the same. Takes effect the next time JEI starts. Turn it off for stock behaviour.")
                 .define("weakUnsupportedContainers", true), v -> jeiWeakUnsupportedContainers = v);
+        gate(builder
+                .comment("Stop JEI keeping your first player, and with it the first world, in memory for the whole session. JEI works out anvil costs and grindstone results with a fake anvil and a fake grindstone that it builds once around the player it saw first. Every respawn and dimension change makes a new player, but the fake menus keep the old one, and JEI never lets go of the grindstone one at all, not even when you log out. With this on both are dropped on respawn, dimension change and logout, and JEI builds them again around the current player the next time it needs them, so the recipes and costs are the same. Client.")
+                .define("releaseFakeMenus", true), v -> jeiReleaseFakeMenus = v);
         builder.pop();
 
         builder.comment("Radium patches. These fix or speed up Radium itself and only apply to the exact Radium build they were checked against.").push("radium");
@@ -1939,6 +1964,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Build the server list ping without rescanning every network channel once per mod. Every five seconds the server rebuilds the information shown in the multiplayer server list, and for each installed mod Forge walks the whole list of network channels to find the ones that belong to it. With hundreds of mods and hundreds of channels that is a small hitch on the server thread every five seconds, all to produce the same answer each time. With this on the channels are sorted by mod once per rebuild and each mod reads its own group, in the same order as before, so the ping the server sends is byte for byte the same. Turn it off for stock behaviour.")
                 .define("statusPingChannelGroups", true), v -> forgeStatusPingChannelGroups = v);
+        gate(builder
+                .comment("Stop rebuilding Forge's registry id table from scratch on every world save. Each autosave, /save and world close writes the id of every block, item, entity, sound and so on into level.dat, and Forge first builds a sorted copy of every saved registry to write it from, tens of thousands of sorted inserts on the server thread, although the ids almost never change while a world is open. With this on each registry checks everything that copy is made from (every id with its value and name, in order, the aliases, the blocked ids and the overrides) against the copy it built at the last save, and uses that copy again when all of it is the same. Any change rebuilds it on that save, so level.dat comes out exactly the same. The copies sent to joining players are always built fresh. Server.")
+                .define("reuseRegistrySnapshots", true), v -> forgeReuseRegistrySnapshots = v);
         gate(builder
                 .comment("Remember which render layers each block uses instead of looking them up again for every block in every chunk rebuild. Any block model that does not name its own render type asks Forge for its layers, and each answer costs two lookups in the block registry and the layer table. With this on the answer is kept on the block itself and thrown away the moment any mod changes a block's layers, leaves are always looked up fresh because they depend on your graphics settings, and shader packs that pick their own layers are still asked first. Client. Turn it off for stock behaviour.")
                 .define("renderLayerMemo", true), v -> forgeRenderLayerMemo = v);
@@ -2229,6 +2257,9 @@ public final class CoOConfig {
                 .comment("Answer a repeated climate sample for the same position from a one entry cache.")
                 .define("memoClimateSample", true), v -> elysiumapiMemoClimateSample = v);
         gate(builder
+                .comment("With TerraBlender installed, ElysiumAPI works out every overworld and nether biome lookup itself to see whether one of its biome replacers applies, and when none does it lets the lookup carry on, so TerraBlender works out the same biome a second time: the climate sample, the region choice and the biome tree search all run twice. ElysiumAPI also asked the mod loader whether TerraBlender is installed, copied its replacer registry into a new list and built a new random generator and set on every lookup. With this on the biome is worked out once, with the same TerraBlender call, and handed back directly, and the replacers are checked without the throwaway objects. Same biomes, same replacements. Server.")
+                .define("resolveBiomeOnce", true), v -> elysiumapiResolveBiomeOnce = v);
+        gate(builder
                 .comment("Remember which Elysium sound transformer applies to each block. Elysium searched its whole transformer registry with a fresh stream every time any block was asked for its sound, which happens constantly while chunks are meshed and entities walk. The answer is worked out again after a world change or a tag reload.")
                 .define("cacheSoundTransformers", true), v -> elysiumapiCacheSoundTransformers = v);
         builder.pop();
@@ -2468,6 +2499,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Build one Zeta event wrapper per dispatch instead of one per listener.")
                 .define("shareEventWrappers", true), v -> zetaShareEventWrappers = v);
+        gate(builder
+                .comment("Quark's big stone clusters and underground styles visit every cluster source in the surrounding five by five chunks for every chunk generated, and for each one read the block and run its replace rules for every block of the chunk across the cluster's height, before checking whether the block is inside the cluster's ellipsoid at all. Most sources cannot reach the chunk and most of the box is outside the ellipsoid. Skip a chunk outright when even its closest column is outside the ellipsoid, and check the ellipsoid first for the rest, with the same arithmetic, so the block read only happens where the cluster can reach. Everything inside keeps the original order, so the same blocks are placed.")
+                .define("clusterBoundsFirst", true), v -> zetaClusterBoundsFirst = v);
         builder.pop();
 
         builder.comment("Dungeon Crawl patches.").push("dungeoncrawl");
@@ -2770,6 +2804,9 @@ public final class CoOConfig {
                 .comment("Look for screen shaking mobs once per tick instead of once per frame.")
                 .define("cacheShakeScan", true), v -> alexscavesCacheShakeScan = v);
         gate(builder
+                .comment("Look up the biomes around the camera once per tick for Alex's Caves' sky, fog and light colours. It asked for the same 216 biome spots six times every tick, one round per colour. The colours come out exactly the same. Client.")
+                .define("biomeSampleTickCache", true), v -> alexscavesBiomeSampleTickCache = v);
+        gate(builder
                 .comment("Alex's Caves replaces the whole entity movement collision step to add magnet block collisions, which also throws away Radium's faster entity collision lookup. Every moving entity then checks every nearby entity, item drops included, on both client and server. Keep Alex's Caves' step but ask Radium for the entity collisions, the same way Radium does for unmodified movement. Same collisions, far fewer entity checks.")
                 .define("radiumEntityCollisions", true), v -> alexscavesRadiumEntityCollisions = v);
         gate(builder
@@ -2842,6 +2879,12 @@ public final class CoOConfig {
                 .comment("Search the biome lookup trees from flat number arrays instead of walking linked node objects. Same visiting order and same answers as vanilla, every tree checks itself against the vanilla search when it is built and keeps the vanilla search if they ever disagree.")
                 .define("flatBiomeSearch", true), v -> vanillaFlatBiomeSearch = v);
         gate(builder
+                .comment("Let a closed world's biome data go. Every biome lookup tree remembers, for each thread, the last biome it found, and that memory holds the biome, which reaches the whole world generation registry of its world. The game's worker threads outlive the world, so after you close a singleplayer world they keep its registries in memory until they happen to look up a biome again. With this on the memory points at the biome weakly. A tree holds all of its biomes, so while the tree can still be searched the memory is never cleared and every lookup starts from the same biome as before, ties included; once the tree is gone the biome and its registries can be freed. Takes effect for trees built after the config loads.")
+                .define("weakBiomeSearchSlot", true), v -> vanillaWeakBiomeSearchSlot = v);
+        gate(builder
+                .comment("Packs whose overworld or nether keeps its biome list inside level.dat (thousands of entries in big packs) encode that whole list again on the server thread at every autosave, /save and world close, entry by entry through the game's codecs. While the list is the very same list holding the very same entries, written against the same biome registry, hand back a copy of the encoding made at the last save instead. The first two reuses are also encoded fresh and compared, and any difference turns this off for good, so level.dat holds exactly the same data. Server.")
+                .define("reuseBiomeListEncoding", true), v -> vanillaReuseBiomeListEncoding = v);
+        gate(builder
                 .comment("Forge grows each registry's holder list by exactly one slot per registered entry, copying the whole list every time. Grow it in bigger steps instead. The list holds the same entries, only its spare room differs.")
                 .define("geometricHolderGrowth", true), v -> vanillaGeometricHolderGrowth = v);
         gate(builder
@@ -2877,6 +2920,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Reuse the recoloured text style while drawing outlined text instead of building a new one for every glyph of every outline pass.")
                 .define("memoOutlineStyle", true), v -> vanillaMemoOutlineStyle = v);
+        gate(builder
+                .comment("Every frame the game blends the glowing-outline image over the whole screen, even when nothing glows and the image is still fully transparent from its clear. That changes no pixel but still costs the GPU a full-screen pass. Skip only that one draw call when the image was cleared to fully transparent and nothing has bound it since. Every GL state change around the draw still happens, so the screen and the GL state are exactly what they would have been. Steps aside while a shader pack is in use. Client.")
+                .define("skipEmptyOutlineOverlay", true), v -> vanillaSkipEmptyOutlineOverlay = v);
         gate(builder
                 .comment("Skip the back to front quad sort for render types whose result cannot depend on draw order: additive, lightning or glint blending that writes colour but not depth, like vanilla's eyes layer. Vanilla leaves eyes unsorted, but many mods build their own glow layer from it with sorting switched on and then draw a whole model into it, so with forty Aptrgangr on screen Cataclysm's cm_eyes layer was sorted every frame for nothing. Adding light is the same in any order, so the picture is identical. Client.")
                 .define("skipOrderIndependentSort", true), v -> vanillaSkipOrderIndependentSort = v);
@@ -2943,6 +2989,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Index each zipped resource pack or data pack once so listing a folder inside it only walks the files under that folder. Vanilla walks every file in the zip for every listing, and a reload lists every folder of every namespace the zip has, so a big pack with many namespaces is walked thousands of times per reload. Same files in the same order.")
                 .define("indexZipPacks", true), v -> vanillaIndexZipPacks = v);
+        gate(builder
+                .comment("Answer which mod jar holds a file from one lookup across every jar that shares the namespace, instead of asking each jar in turn. Forge puts all mod resources into one pack and checks a file against every mod that ships assets in that namespace, about 150 jars for minecraft, so every texture, model or sound a mod probes for and does not find costs a search in each of them. Entity Texture Features probes a few dozen files the first time it sees a mob texture, which froze the game for 20 to 40 ms when walking into a village. The jar that answers is still asked for the file, so results are the same. Needs indexModFiles.")
+                .define("indexDelegatingPacks", true), v -> vanillaIndexDelegatingPacks = v);
+        gate(builder
+                .comment("Build the path of a file inside a zipped resource pack by joining three strings instead of running String.format, which every lookup into every zipped pack did. Same path.")
+                .define("fastZipPackPaths", true), v -> vanillaFastZipPackPaths = v);
+        gate(builder
+                .comment("Run the slow one-time setup of a few client classes at the title screen instead of in the middle of play. Supplementaries word-wraps its whole Bee Movie easter egg text the first time any of its signs is drawn, which froze the game for about 20 ms when walking up to the first sign. Client.")
+                .define("warmHeavyClassInit", true), v -> vanillaWarmHeavyClassInit = v);
         gate(builder
                 .comment("Work out the sky colour once per camera position per frame. Fog setup, the sky renderer and shader uniform packs each ask for it separately and every call samples 27 biomes.")
                 .define("memoSkyColour", true), v -> vanillaMemoSkyColour = v);
@@ -3096,6 +3151,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the next frame's client tick and queued tasks right before the finished frame is handed to the screen instead of right after. Handing over the frame makes the game wait until the graphics card has drawn it, and the tick that followed left the graphics card idle while it ran. Now the tick runs while the card is still drawing, so the wait and the tick overlap. The tick, its order and what it sees are the same; it only starts a fraction of a millisecond earlier. Client.")
                 .define("preSwapTicks", true), v -> vanillaPreSwapTicks = v);
+        gate(builder
+                .comment("Hand the finished frame's last drawing commands to the graphics card on their own, right before the frame is shown and right before the client tick that runs there. The driver otherwise keeps them back and sends them together with the request to show the frame, and on AMD cards that left the card waiting at the end of every frame. The picture is exactly the same. Client.")
+                .define("flushBeforeSwap", true), v -> vanillaFlushBeforeSwap = v);
+        gate(builder
+                .comment("Copy the finished picture to the window with the graphics card's own copy instead of drawing it as a full-screen picture with a shader. Only when the picture and the window are the same size, which is the normal case. Same pixels. Client.")
+                .define("framebufferBlit", true), v -> vanillaFramebufferBlit = v);
         gate(builder
                 .comment("Remember the text form of every resource id after it is built once. Overlays, textures, sounds and many mods turn the same ids into text every frame, and each time that built a new string and hashed it again.")
                 .define("cacheResourceLocationString", true), v -> vanillaCacheResourceLocationString = v);
@@ -3396,6 +3457,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop the missing property error from copying a call stack. When a texture or model rule file leaves out a property, Entity Texture Features builds that property by reading it from the file and throwing its own error if the key is not there, and the code that asked catches it, discards it and moves on, which happens for every property type of every rule in every file. A big pack throws over ten thousand of those at launch and each one copies the loading thread's call stack, which nothing ever reads, because the only thing the mod does with the error is log its message. With this on the same error with the same message is thrown without capturing a stack. Client.")
                 .define("stacklessPropertyExceptions", true), v -> etfStacklessPropertyExceptions = v);
+        gate(builder
+                .comment("Remember which mob textures Entity Texture Features has looked at and prepare them again at the title screen on the next launch, a couple of milliseconds per tick, instead of the first time each mob comes into view. Preparing a texture looks up its random, emissive, blinking and enchanted variants in every resource pack, which froze the game for 20 to 60 ms when walking into a village or a fight full of mob types not seen yet this session. The list is config/collections_of_optimizations/warm-etf.txt. Client.")
+                .define("warmTextures", true), v -> etfWarmTextures = v);
         builder.pop();
 
         builder.comment("Async Particles patches.").push("asyncparticles");

@@ -346,7 +346,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     );
 
     private static final Map<String, String[]> MIXIN_REQUIRES = Map.ofEntries(
-            Map.entry("elysiumapi.MixinElysiumTerrablenderHelper", new String[]{"terrablender"}),
+            Map.entry("elysiumapi.MixinMultiNoiseBiomeSourceTerrablender", new String[]{"terrablender"}),
 
             Map.entry("goetyrevelation.MixinATAHelper", new String[]{"curios"}),
 

@@ -17,8 +17,10 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public final class ClientLevelRelease {
 
@@ -30,6 +32,7 @@ public final class ClientLevelRelease {
     private static final Map<Object, String> SERVER_HOLDERS = Collections.synchronizedMap(new WeakHashMap<>());
 
     private static Field simplySwordsGloamWorld;
+    private static Field[] jeiFakeMenus = new Field[0];
 
     private ClientLevelRelease() {
     }
@@ -42,7 +45,29 @@ public final class ClientLevelRelease {
         if (ModList.get().isLoaded("simplyswords")) {
             simplySwordsGloamWorld = staticField("net.sweenus.simplyswords.client.renderer.ObserverStatusVisualRenderer", "gloamWorld");
         }
+        if (ModList.get().isLoaded("jei")) {
+            jeiFakeMenus = Stream.of(
+                    staticField("mezz.jei.library.plugins.vanilla.anvil.AnvilHelper", "ANVIL_MENU"),
+                    staticField("mezz.jei.library.plugins.vanilla.grindstone.GrindstoneHelper", "GRINDSTONE_MENU")
+            ).filter(Objects::nonNull).toArray(Field[]::new);
+        }
         MinecraftForge.EVENT_BUS.addListener(ClientLevelRelease::onLoggingOut);
+        if (jeiFakeMenus.length > 0) {
+            MinecraftForge.EVENT_BUS.addListener(ClientLevelRelease::onClone);
+        }
+    }
+
+    private static void onClone(ClientPlayerNetworkEvent.Clone event) {
+        releaseJeiFakeMenus();
+    }
+
+    private static void releaseJeiFakeMenus() {
+        if (!CoOConfig.jeiReleaseFakeMenus) {
+            return;
+        }
+        for (Field field : jeiFakeMenus) {
+            release(field, null);
+        }
     }
 
     public static void trackServerHolder(Object holder, String field) {
@@ -100,6 +125,7 @@ public final class ClientLevelRelease {
         if (simplySwordsGloamWorld != null) {
             release(simplySwordsGloamWorld, null);
         }
+        releaseJeiFakeMenus();
     }
 
     private static Field staticField(String owner, String name) {

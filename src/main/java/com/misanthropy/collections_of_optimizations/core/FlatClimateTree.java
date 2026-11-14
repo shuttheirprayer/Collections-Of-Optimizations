@@ -159,7 +159,9 @@ public final class FlatClimateTree {
         }
         long[] out = new long[1];
         int leaf = childCount[0] == 0 ? 0 : search(0, t, start, startDistance, out);
-        last.set(nodes[leaf]);
+        if (nodes[leaf] != previous) {
+            last.set(nodes[leaf]);
+        }
         return values[leaf];
     }
 

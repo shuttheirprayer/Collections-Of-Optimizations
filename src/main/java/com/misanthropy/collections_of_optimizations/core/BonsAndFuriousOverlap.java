@@ -101,6 +101,8 @@ public final class BonsAndFuriousOverlap {
             "vanilla.MixinCursor3DCounting",
             "vanilla.MixinCustomPayloadHeapCopy",
             "vanilla.MixinEntityFireScanGate",
+            "vanilla.MixinForgeHooksSnapshotSave",
+            "vanilla.MixinForgeRegistrySnapshotReuse",
             "vanilla.MixinFogRendererBiomeFog",
             "vanilla.MixinGameEventDispatcherLookup",
             "vanilla.MixinGoalSelectorDisabledFlags",
@@ -110,13 +112,15 @@ public final class BonsAndFuriousOverlap {
             "vanilla.MixinHolderReferenceTagNumbers",
             "vanilla.MixinItemBlockRenderTypesMemo",
             "vanilla.MixinMobSunBurnWetCheck",
+            "vanilla.MixinMultiNoiseBiomeSourceEncodeCache",
             "vanilla.MixinNoiseBasedChunkGeneratorColumnHeights",
             "vanilla.MixinNoiseChunkDensityReuse",
             "vanilla.MixinNoiseChunkSurfaceShare",
             "vanilla.MixinPiglinRepellentPrecheck",
             "vanilla.MixinRemoveBlockGoalPrecheck",
             "vanilla.MixinServerLevelStructureState",
-            "vanilla.MixinServerStatusPingChannelGroups"
+            "vanilla.MixinServerStatusPingChannelGroups",
+            "zeta.MixinClusterBasedGeneratorBoundsFirst"
     );
 
     private BonsAndFuriousOverlap() {

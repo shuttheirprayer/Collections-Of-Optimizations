@@ -25,6 +25,7 @@ public abstract class MixinMinecraftPreSwapTicks {
 
     @Inject(method = "runTick", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/Window;updateDisplay()V"))
     private void coo$tickBeforeSwap(boolean renderLevel, CallbackInfo ci) {
+        com.misanthropy.collections_of_optimizations.core.FlushBeforeSwap.tick();
         if (!renderLevel || !PreSwapTicks.active()) {
             return;
         }

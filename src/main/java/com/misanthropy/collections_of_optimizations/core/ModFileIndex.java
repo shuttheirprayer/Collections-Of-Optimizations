@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.LongConsumer;
 
 public final class ModFileIndex {
 
@@ -54,6 +55,10 @@ public final class ModFileIndex {
             prefix.append(part).append('/');
         }
         tree(top).list(prefix.toString().getBytes(StandardCharsets.UTF_8), namespace.length() + 1, output);
+    }
+
+    public void hashes(String top, String namespace, LongConsumer output) {
+        tree(top).hashes((namespace + "/").getBytes(StandardCharsets.UTF_8), output);
     }
 
     private Paths tree(String top) {
@@ -191,6 +196,20 @@ public final class ModFileIndex {
         boolean contains(byte[] key) {
             int at = lowerBound(key);
             return at < size() && compare(at, key) == 0;
+        }
+
+        void hashes(byte[] prefix, LongConsumer output) {
+            for (int i = lowerBound(prefix); i < size(); i++) {
+                int start = starts[i];
+                int end = starts[i + 1];
+                if (end - start < prefix.length || Arrays.mismatch(blob, start, start + prefix.length, prefix, 0, prefix.length) != -1) {
+                    return;
+                }
+                long hash = PackPathHash.of(blob, start, end);
+                if (hash != 0L) {
+                    output.accept(hash);
+                }
+            }
         }
 
         void list(byte[] prefix, int skip, Consumer<String> output) {
