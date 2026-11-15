@@ -104,7 +104,9 @@ public class Collections_of_optimizations {
         ClientLevelRelease.register();
         if (FMLEnvironment.dist == Dist.CLIENT) {
             WarmClasses.register();
-            com.misanthropy.collections_of_optimizations.core.FlywheelWarm.register();
+            if (ModList.get().getModContainerById("flywheel").filter(mod -> mod.getModInfo().getVersion().getMajorVersion() >= 1).isPresent()) {
+                com.misanthropy.collections_of_optimizations.core.FlywheelWarm.register();
+            }
             com.misanthropy.collections_of_optimizations.core.WarmInit.register();
             if (ModList.get().isLoaded("entity_texture_features")) {
                 com.misanthropy.collections_of_optimizations.core.EtfWarm.register();

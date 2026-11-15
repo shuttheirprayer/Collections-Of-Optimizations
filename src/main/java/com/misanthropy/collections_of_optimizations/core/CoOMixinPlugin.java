@@ -278,7 +278,9 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
     );
 
     private static final Map<String, String[]> MIXIN_MIN_VERSION = Map.of(
-            "fancymenu.MixinGuiGraphicsPoseStack", new String[]{"fancymenu", "3.9.0"}
+            "fancymenu.MixinGuiGraphicsPoseStack", new String[]{"fancymenu", "3.9.0"},
+            "create.ContraptionClientAccessor", new String[]{"create", "6.0.7"},
+            "create.MixinContraptionEntityRenderLevelRelease", new String[]{"create", "6.0.7"}
     );
 
     private static final Map<String, String[]> MIXIN_EXACT_VERSION = Map.ofEntries(
