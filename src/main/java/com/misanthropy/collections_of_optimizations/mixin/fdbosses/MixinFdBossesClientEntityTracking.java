@@ -1,31 +1,30 @@
 package com.misanthropy.collections_of_optimizations.mixin.fdbosses;
 
 import com.misanthropy.collections_of_optimizations.core.FdBossesPresence;
-import net.minecraft.world.level.entity.EntityAccess;
-import net.minecraft.world.level.entity.TransientEntitySectionManager;
+import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(TransientEntitySectionManager.class)
+@Mixin(targets = "net.minecraft.client.multiplayer.ClientLevel$EntityCallbacks")
 public abstract class MixinFdBossesClientEntityTracking {
 
     @Inject(
-            method = "startTracking",
+            method = "onTrackingStart(Lnet/minecraft/world/entity/Entity;)V",
             at = @At("HEAD"),
             require = 0
     )
-    private void coo$fdBossesClientTrackStart(EntityAccess entity, CallbackInfo ci) {
+    private void coo$fdBossesClientTrackStart(Entity entity, CallbackInfo ci) {
         FdBossesPresence.onTrackingStart(entity, true);
     }
 
     @Inject(
-            method = "stopTracking",
+            method = "onTrackingEnd(Lnet/minecraft/world/entity/Entity;)V",
             at = @At("HEAD"),
             require = 0
     )
-    private void coo$fdBossesClientTrackEnd(EntityAccess entity, CallbackInfo ci) {
+    private void coo$fdBossesClientTrackEnd(Entity entity, CallbackInfo ci) {
         FdBossesPresence.onTrackingEnd(entity, true);
     }
 }

@@ -112,7 +112,10 @@ public final class EntityMeshReuse {
             }
         }
         Cache cache = ((Holder) entity).coo$meshCache();
-        if (replayOrRecord(cache, k, entity.getId() * 7, poseStack, x, y, z, buffers, light,
+        if (replay(cache, k, entity.getId() * 7, poseStack, x, y, z, buffers, light)) {
+            return;
+        }
+        if (record(cache, poseStack, x, y, z, buffers, light,
                 recorder -> original.render(entity, x, y, z, yaw, partialTick, poseStack, recorder, light))
                 && UNSAFE.add(entity.getType())) {
             LOGGER.info("Entity mesh reuse off for {}: its renderer draws outside the buffer source", EntityType.getKey(entity.getType()));
@@ -127,20 +130,27 @@ public final class EntityMeshReuse {
             return;
         }
         Cache cache = ((Holder) blockEntity).coo$meshCache();
-        if (replayOrRecord(cache, k, Long.hashCode(blockEntity.getBlockPos().asLong()) * 7, poseStack, 0.0, 0.0, 0.0, buffers, 0, original)
-                && UNSAFE_BLOCK_ENTITIES.add(blockEntity.getType())) {
+        if (replay(cache, k, Long.hashCode(blockEntity.getBlockPos().asLong()) * 7, poseStack, 0.0, 0.0, 0.0, buffers, 0)) {
+            return;
+        }
+        if (record(cache, poseStack, 0.0, 0.0, 0.0, buffers, 0, original) && UNSAFE_BLOCK_ENTITIES.add(blockEntity.getType())) {
             LOGGER.info("Block entity mesh reuse off for {}: its renderer draws outside the buffer source", BlockEntityType.getKey(blockEntity.getType()));
         }
     }
 
-    private static boolean replayOrRecord(Cache cache, int k, int seed, PoseStack poseStack, double x, double y, double z,
-                                          MultiBufferSource buffers, int light, Consumer<MultiBufferSource> original) {
+    private static boolean replay(Cache cache, int k, int seed, PoseStack poseStack, double x, double y, double z,
+                                  MultiBufferSource buffers, int light) {
         int phase = Math.floorMod(frame + seed, k);
         if (cache.valid && phase != 0 && frame - cache.frame < k && cache.buffers == buffers && cache.light == light
                 && cache.replay(poseStack, x, y, z, buffers)) {
             replays++;
-            return false;
+            return true;
         }
+        return false;
+    }
+
+    private static boolean record(Cache cache, PoseStack poseStack, double x, double y, double z,
+                                  MultiBufferSource buffers, int light, Consumer<MultiBufferSource> original) {
         cache.begin(poseStack, x, y, z, buffers, light);
         recording = cache;
         RECORDER.start(cache, buffers);
@@ -170,6 +180,10 @@ public final class EntityMeshReuse {
             return false;
         }
         return !(entity instanceof Mob mob) || !mob.isLeashed();
+    }
+
+    public static MultiBufferSource recorderFor(MultiBufferSource source) {
+        return recording != null && source == RECORDER.delegate ? RECORDER : source;
     }
 
     public static void directDraw() {

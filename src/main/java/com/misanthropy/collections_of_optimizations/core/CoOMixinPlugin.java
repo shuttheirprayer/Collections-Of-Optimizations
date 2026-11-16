@@ -309,6 +309,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
     private static final Map<String, String[]> MIXIN_CONFLICTS = Map.ofEntries(
             Map.entry("vanilla.MixinBeardifierReach", new String[]{"generator_accelerator"}),
+            Map.entry("vanilla.MixinRenderTargetLeakFree", new String[]{"gpumemleakfix"}),
             Map.entry("immersiveweathering.MixinAreaCheck", new String[]{"iwt"}),
             Map.entry("immersiveweathering.MixinBlockGrowthHandler", new String[]{"iwt"}),
             Map.entry("vanilla.MixinLevelDryRaycast", new String[]{"valkyrienskies"}),

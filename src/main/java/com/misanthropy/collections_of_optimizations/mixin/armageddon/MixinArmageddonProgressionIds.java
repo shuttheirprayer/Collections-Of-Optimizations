@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class MixinArmageddonProgressionIds {
 
     @WrapOperation(
-            method = "execute",
+            method = "execute*",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/resources/ResourceLocation;parse(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"
@@ -44,7 +44,7 @@ public abstract class MixinArmageddonProgressionIds {
     }
 
     @WrapOperation(
-            method = "execute",
+            method = "execute*",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/resources/ResourceLocation;toString()Ljava/lang/String;"

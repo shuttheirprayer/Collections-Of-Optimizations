@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.sliceanddice;
 
+import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.core.SliceAndDiceWetAir;
@@ -14,8 +15,12 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = Entity.class, priority = 1500, remap = false)
 public abstract class MixinSadEntityWetAirExtinguish {
 
+    @TargetHandler(
+            mixin = "com.possible_triangle.sliceanddice.mixins.EntityMixin",
+            name = "baseTick"
+    )
     @WrapOperation(
-            method = "/.*\\$sliceanddice\\$baseTick$/",
+            method = "@MixinSquared:Handler",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;m_8055_(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"

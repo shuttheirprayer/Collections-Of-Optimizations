@@ -639,6 +639,7 @@ public final class CoOConfig {
     public static boolean vanillaPreSwapTicks = true;
     public static boolean vanillaFlushBeforeSwap = true;
     public static boolean vanillaFramebufferBlit = true;
+    public static boolean vanillaFreeLeakedRenderTargets = true;
     public static boolean vanillaCacheResourceLocationString = true;
     public static boolean vanillaClientFireImmuneMemo = true;
     public static boolean vanillaTickingLevelMemo = true;
@@ -3157,6 +3158,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Copy the finished picture to the window with the graphics card's own copy instead of drawing it as a full-screen picture with a shader. Only when the picture and the window are the same size, which is the normal case. Same pixels. Client.")
                 .define("framebufferBlit", true), v -> vanillaFramebufferBlit = v);
+        gate(builder
+                .comment("Give back the graphics memory of an off-screen picture that a mod threw away without releasing it. Normally that memory stays taken until the game closes. Only frees what the graphics card confirms belongs to that picture, and writes a line to the log naming it. Costs nothing while no mod leaks. Client.")
+                .define("freeLeakedRenderTargets", true), v -> vanillaFreeLeakedRenderTargets = v);
         gate(builder
                 .comment("Remember the text form of every resource id after it is built once. Overlays, textures, sounds and many mods turn the same ids into text every frame, and each time that built a new string and hashed it again.")
                 .define("cacheResourceLocationString", true), v -> vanillaCacheResourceLocationString = v);

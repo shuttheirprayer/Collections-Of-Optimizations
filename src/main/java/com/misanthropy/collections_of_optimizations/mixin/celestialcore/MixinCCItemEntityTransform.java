@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.celestialcore;
 
+import com.bawnorton.mixinsquared.TargetHandler;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.core.CelestialCoreTransformScan;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -12,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = ItemEntity.class, priority = 1500, remap = false)
 public abstract class MixinCCItemEntityTransform {
 
-    @Inject(method = "celestial_core$tick$recipe", at = @At("HEAD"), cancellable = true, require = 0)
+    @TargetHandler(mixin = "com.xiaoyue.celestial_core.mixin.ItemEntityMixin", name = "celestial_core$tick$recipe")
+    @Inject(method = "@MixinSquared:Handler", at = @At("HEAD"), cancellable = true, require = 0)
     private void coo$skipTransformationScan(CallbackInfo ci) {
         if (!CoOConfig.celestialcoreLeanItemTransformScan) {
             return;
@@ -27,7 +29,8 @@ public abstract class MixinCCItemEntityTransform {
         }
     }
 
-    @Inject(method = "celestial_core$tick$recipe", at = @At("RETURN"), require = 0)
+    @TargetHandler(mixin = "com.xiaoyue.celestial_core.mixin.ItemEntityMixin", name = "celestial_core$tick$recipe")
+    @Inject(method = "@MixinSquared:Handler", at = @At("RETURN"), require = 0)
     private void coo$clearTransformationScan(CallbackInfo ci) {
         CelestialCoreTransformScan.disarm();
     }
