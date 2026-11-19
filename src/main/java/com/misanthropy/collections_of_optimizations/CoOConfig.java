@@ -64,6 +64,7 @@ public final class CoOConfig {
     public static boolean bettercombatOffhandOnlyTwoHandedCheck = true;
 
     public static boolean citadelFastModelRender = true;
+    public static boolean citadelSkipNonLavaFluidRenderEvent = true;
 
     public static boolean cofhCacheTranslucentRenderers = true;
 
@@ -127,6 +128,7 @@ public final class CoOConfig {
     public static boolean geckolibPrimitiveEasing = true;
     public static boolean geckolibKeyframeLocals = true;
     public static boolean geckolibParseMolangNumbersWithoutExceptions = true;
+    public static boolean geckolibShareAnimationData = true;
     public static boolean ldlibSkipMissingMetadataThrow = true;
     public static int geckolibHoldDistantPosePixels = 0;
     public static int fancymenuInternetProbeSeconds = 600;
@@ -134,6 +136,9 @@ public final class CoOConfig {
     public static boolean vanillaSkipIdenticalRegistrySnapshot = true;
     public static boolean vanillaFastBiomeTreeSort = true;
     public static boolean vanillaFlatBiomeSearch = true;
+    public static boolean vanillaReuseGradientRandom = true;
+    public static boolean immersiveEngineeringSkipIdleConnectionPass = true;
+    public static boolean punchyCacheBlacklistMatch = true;
     public static boolean vanillaWeakBiomeSearchSlot = true;
     public static boolean vanillaReuseBiomeListEncoding = true;
     public static boolean vanillaGeometricHolderGrowth = true;
@@ -453,6 +458,7 @@ public final class CoOConfig {
     public static boolean perceptionShareDefaultTrailData = true;
 
     public static boolean quarkSkipPigLitterTagChurn = true;
+    public static boolean quarkLazyCapturedAttributes = true;
 
     public static boolean zetaLeanStructureReplacement = true;
     public static boolean zetaShareEventWrappers = true;
@@ -1036,6 +1042,9 @@ public final class CoOConfig {
 
     public static boolean projectiledamageSkipAppliedWeaponModifiers = true;
 
+    public static boolean mgnflowersReuseFlowerNoise = true;
+    public static boolean mgnflowersKeepLushFlowersInOpenAir = true;
+
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         define(builder);
@@ -1189,6 +1198,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Draw Citadel model boxes (Alex's Mobs, Alex's Caves and every other Citadel model) through Embeddium's bulk vertex writer, the same path Embeddium gives vanilla models. Stock allocates a vector per quad and per vertex and pushes every vertex through the per-vertex BufferBuilder path, which is several times slower and much slower again with a shader pack.")
                 .define("fastModelRender", true), v -> citadelFastModelRender = v);
+        gate(builder
+                .comment("Stop Citadel firing an event for every water block the chunk builder meshes. Citadel builds a new event object and sends it through the whole Forge event bus every time the game asks which render layer a fluid block goes in, so a mod could swap it. In this pack only Alex's Mobs listens, and it only ever changes lava while you have Lava Vision. With this on the event still fires for lava exactly as before, but is skipped for every other fluid while Alex's Mobs is the only listener. If any other mod starts listening it fires for everything again. Client side only. Turn it off for stock behaviour.")
+                .define("skipNonLavaFluidRenderEvent", true), v -> citadelSkipNonLavaFluidRenderEvent = v);
         builder.pop();
 
         builder.comment("CoFH Core patches.").push("cofh");
@@ -1285,6 +1297,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop reading animation files throwing a stack trace for every formula. GeckoLib reads each keyframe value in an animation file by first trying to turn the text into a number and, when that fails because the value is a Molang formula such as math.sin(query.anim_time), catching the NumberFormatException and parsing it as a formula instead. A model pack reads thousands of formulas at launch and every failed number parse copies the loading thread's call stack. With this on the text is only handed to the number parser when its first character, after any spaces and sign, could start a number at all, a digit, a dot, or the N and I of NaN and Infinity, and everything else gets one shared exception with no stack that the same catch block handles in the same way. Anything the real number parser accepts still goes through it unchanged. Client.")
                 .define("parseMolangNumbersWithoutExceptions", true), v -> geckolibParseMolangNumbersWithoutExceptions = v);
+        gate(builder
+                .comment("Keep one copy of equal keyframe data instead of one per keyframe. GeckoLib reads every keyframe of every animation file into its own objects: a number object per axis, a keyframe object per axis and an empty easing list per keyframe. A big pack ends up with over two million of each, most of them equal (zero, the same angle, the same step), and all of it stays in memory for the whole session, which makes the collector start its cleanup cycles sooner. With this on equal numbers and equal keyframes without easing arguments are created once and shared while animation files load. They are never changed after loading, so every pose is what it was. The lookup tables are dropped a few seconds after loading ends. Client.")
+                .define("shareAnimationData", true), v -> geckolibShareAnimationData = v);
         gate(builder
                 .comment("Let mobs that are only a few pixels tall on your screen redo their animation once per game tick instead of on every frame. 0 turns this off, which is the default. Any other number is the on screen height in pixels below which a mob counts as small, worked out from its size, its distance, your field of view, zoom and window height, so it follows spyglasses and resolution instead of a fixed block distance. 24 is about where a two block tall mob sits at 60 blocks at 1080p. A small mob reuses its own pose from earlier in the same tick, never another mob's, so nothing ever pops into the wrong pose, and it moves on to the next pose as soon as the next tick starts, so it is at most one tick behind. Bosses, players, the entity you are looking through, anything riding or being ridden, mobs in the middle of an animation change or a triggered animation, and animations with sound, particle or script keyframes are always animated every frame, so no sound or effect is ever skipped. Head turning and other per frame tweaks a mod adds on top still run every frame. This is the useful part of GeckoLib Animation Optimizer done without its bug where distant mobs of the same kind borrow each other's poses, and it stands down if that mod is installed.")
                 .defineInRange("holdDistantPosePixels", 0, 0, 256), 0, v -> geckolibHoldDistantPosePixels = v);
@@ -1471,6 +1486,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Return Biolith's cached biome list without entering its lock. Biolith synchronizes on the biome source on every single biome lookup, and world generation runs those lookups on several threads at once.")
                 .define("reuseBiomeEntries", true), v -> biolithReuseBiomeEntries = v);
+        builder.pop();
+
+        builder.comment("Immersive Engineering patches.").push("immersiveengineering");
+        gate(builder
+                .comment("Skip Immersive Engineering's failed wire connection overlay when there are no failed connections to show. It set up a fresh set of render buffers and started two empty draw batches every frame for nothing.")
+                .define("skipIdleConnectionPass", true), v -> immersiveEngineeringSkipIdleConnectionPass = v);
         builder.pop();
 
         builder.comment("TerraBlender patches.").push("terrablender");
@@ -2057,6 +2078,9 @@ public final class CoOConfig {
                 .comment("Remember whether an item is on Punchy's hand blacklist instead of building a fresh set of names and matching every blacklist rule against it several times a tick and every frame. Dropped as soon as the blacklist is saved. Client.")
                 .define("memoBlacklistMatch", true), v -> punchyMemoBlacklistMatch = v);
         gate(builder
+                .comment("Remember Punchy's item blacklist answer for the exact stack in each hand, and its spear charge check for each animation type. With TaCZ installed the per-item memo above stays off because guns are matched by their data, so Punchy rebuilt the key list, cut strings and compiled wildcard patterns for both hands every frame. The answer is reused only while the same stack with the same data is held.")
+                .define("cacheBlacklistMatch", true), v -> punchyCacheBlacklistMatch = v);
+        gate(builder
                 .comment("Remember each item's registry id for Punchy's tuning lookups. Punchy asks the item registry for the id of the held item many times per frame and per tick while it picks a profile, an animation and a tuning entry, and every one of those asks goes through Forge's registry wrapper, which builds a throwaway Optional each time. Item ids never change once the game has loaded, so with this on the id is looked up once per item and reused.")
                 .define("cacheItemIds", true), v -> punchyCacheItemIds = v);
         gate(builder
@@ -2491,6 +2515,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop attaching a persistent data compound to every animal in the world.")
                 .define("skipPigLitterTagChurn", true), v -> quarkSkipPigLitterTagChurn = v);
+        gate(builder
+                .comment("Do not give every item stack its own empty map. Quark adds a field to every item stack that holds the attribute lines it captured for its tooltips, and fills it with a new HashMap when the stack is created. Only a stack whose tooltip is being drawn ever uses it, and the tooltip code replaces the map with a fresh one first. A big pack keeps over 700,000 item stacks alive (recipes, loot tables, quest and recipe viewers), so that is 700,000 empty maps, plus one more for every stack the game copies. With this on the map is only created when Quark first asks for it. Tooltips are what they were.")
+                .define("lazyCapturedAttributes", true), v -> quarkLazyCapturedAttributes = v);
         builder.pop();
 
         builder.comment("Zeta patches. Zeta is Quark's module and event framework.").push("zeta");
@@ -2880,6 +2907,9 @@ public final class CoOConfig {
                 .comment("Search the biome lookup trees from flat number arrays instead of walking linked node objects. Same visiting order and same answers as vanilla, every tree checks itself against the vanilla search when it is built and keeps the vanilla search if they ever disagree.")
                 .define("flatBiomeSearch", true), v -> vanillaFlatBiomeSearch = v);
         gate(builder
+                .comment("Reuse one random number generator per thread for the surface rules' gradient bands (the bedrock, deepslate and similar fades). Vanilla builds a new generator, three objects, for every block it checks there, only to read one number from it. The reused one is reseeded the same way and gives the same number, checked against vanilla at startup.")
+                .define("reuseGradientRandom", true), v -> vanillaReuseGradientRandom = v);
+        gate(builder
                 .comment("Let a closed world's biome data go. Every biome lookup tree remembers, for each thread, the last biome it found, and that memory holds the biome, which reaches the whole world generation registry of its world. The game's worker threads outlive the world, so after you close a singleplayer world they keep its registries in memory until they happen to look up a biome again. With this on the memory points at the biome weakly. A tree holds all of its biomes, so while the tree can still be searched the memory is never cleared and every lookup starts from the same biome as before, ties included; once the tree is gone the biome and its registries can be freed. Takes effect for trees built after the config loads.")
                 .define("weakBiomeSearchSlot", true), v -> vanillaWeakBiomeSearchSlot = v);
         gate(builder
@@ -3149,6 +3179,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run the mods' end-of-client-tick and end-of-player-tick handlers on the client over the next few frames instead of all inside the frame that runs the tick. Over a hundred mods hook the end of the client tick or the player tick, and together they add a millisecond or more to that one frame. The handlers run in the same order as before, each once per tick, and all of them finish before the next tick starts; most run one or two frames, a few milliseconds, later than before. Off by default: some mods advance animation clocks there (Punchy's first-person arms, Create's spinning parts, camera effects), and running them late makes those jitter. Client.")
                 .define("spreadClientTickListeners", false), v -> vanillaSpreadClientTickListeners = v);
+        gate(builder
+                .comment("Fancy World Animations draws every swinging lantern and chain in the loaded world from scratch each frame. Write those blocks straight into the block buffer in its own layout, all at once at the end, instead of one quad at a time through the generic model path. The picture is identical. Not used with a shader pack. Client.")
+                .define("fastFancyWorldAnimations", true), v -> com.misanthropy.collections_of_optimizations.core.FwaFastQuads.enabled = v);
+        gate(builder
+                .comment("Fancy World Animations swings every lantern and chain up to 256 blocks away, which costs most of the frame in villages and castles. Lanterns and chains farther than this many blocks are drawn as normal still blocks with the rest of the terrain, which costs nothing per frame; closer ones swing as before. At this distance the swing is about a pixel. 0 swings all of them. Client.")
+                .defineInRange("fancyWorldAnimationsSwingDistance", 64, 0, 256), 0, v -> {
+                    com.misanthropy.collections_of_optimizations.core.FwaLod.enabled = v > 0;
+                    com.misanthropy.collections_of_optimizations.core.FwaLod.distance = v;
+                });
         gate(builder
                 .comment("Run the next frame's client tick and queued tasks right before the finished frame is handed to the screen instead of right after. Handing over the frame makes the game wait until the graphics card has drawn it, and the tick that followed left the graphics card idle while it ran. Now the tick runs while the card is still drawing, so the wait and the tick overlap. The tick, its order and what it sees are the same; it only starts a fraction of a millisecond earlier. Client.")
                 .define("preSwapTicks", true), v -> vanillaPreSwapTicks = v);
@@ -4352,6 +4391,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Skip re-applying the bow's attribute modifiers when they are already on the shooter. Every time an arrow is added to a server level while its owner holds a bow or crossbow, Projectile Damage removes and re-adds every attribute modifier of that weapon on the owner, even though vanilla already applied them when the weapon was equipped. Each remove and add marks the attribute dirty, throws away its cached value and queues an attribute sync packet for synced attributes, so a volley from a multishot crossbow or a rapid fire bow does that once per arrow. With this on the re-apply only runs when at least one of the weapon's modifiers is missing or has a different amount or operation, which still covers the case it exists for, like a bow in one hand and a crossbow in the other fighting over the same projectile damage modifier. Arrow damage does not change. Turn it off for stock behaviour.")
                 .define("skipAppliedWeaponModifiers", true), v -> projectiledamageSkipAppliedWeaponModifiers = v);
+        builder.pop();
+
+        builder.comment("MGN's Flowers patches.").push("mgnflowers");
+        gate(builder
+                .comment("Build the noise that picks which tall allium or tall tulip grows where once instead of once per flower. The meadow allium patches and the flower forest tall tulip patches rebuild the same fixed seed noise from scratch for every flower they try to place, up to 96 times per patch. The noise only depends on the patch's own settings, so with this on it is built once per patch type and shared, and every flower comes out exactly the same. Server.")
+                .define("reuseFlowerNoise", true), v -> mgnflowersReuseFlowerNoise = v);
+        gate(builder
+                .comment("Keep the lush cave flowers in open air. The lush cave flower patch only checks the block under the spot it picked, so it also plants grottal blooms and lampblossoms inside dirt and moss underground and in lush cave pools, deleting the stone or water that was there and leaving glowing flowers buried in the walls, and its glowing tall tulips keep growing up into a low cave ceiling, replacing the ceiling blocks with more tulip on top of the flower head. With this on the flowers only go where the patch meant them to, on air, grass or moss carpet, and a tall tulip stops at its head under a low ceiling. Only changes chunks generated from now on. Server. Turn it off for stock behaviour.")
+                .define("keepLushFlowersInOpenAir", true), v -> mgnflowersKeepLushFlowersInOpenAir = v);
         builder.pop();
     }
 

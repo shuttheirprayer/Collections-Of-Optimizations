@@ -46,7 +46,12 @@ public abstract class MixinClientLevelDisplayTick {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientLevel;getBiome(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/Holder;"),
             require = 0
     )
-    private Holder<Biome> coo$reuseDisplayBiome(ClientLevel level, BlockPos pos, Operation<Holder<Biome>> original) {
+    private Holder<Biome> coo$reuseDisplayBiome(ClientLevel level, BlockPos pos, Operation<Holder<Biome>> original,
+                                                @com.llamalad7.mixinextras.sugar.Local(argsOnly = true) RandomSource random) {
+        if (CoOConfig.subtleeffectsDisplayTickPlan && SubtleEffectsDisplayTick.shareDisplayBiome) {
+            this.coo$displayBiome = null;
+            return SubtleEffectsDisplayTick.displayBiome(level, pos, random);
+        }
         Holder<Biome> biome = this.coo$displayBiome;
         if (biome != null) {
             this.coo$displayBiome = null;

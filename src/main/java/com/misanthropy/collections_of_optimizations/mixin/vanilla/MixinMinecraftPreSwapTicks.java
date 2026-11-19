@@ -30,6 +30,7 @@ public abstract class MixinMinecraftPreSwapTicks {
             return;
         }
         int ticks = this.timer.advanceTime(Util.getMillis());
+        com.misanthropy.collections_of_optimizations.core.FrameWorkBudget.ticksDue(ticks);
         ((BlockableEventLoopTasksAccessor) this).coo$runAllTasks();
         int count = Math.min(10, ticks);
         for (int i = 0; i < count; i++) {
@@ -46,6 +47,8 @@ public abstract class MixinMinecraftPreSwapTicks {
             PreSwapTicks.ticked = false;
             return 0;
         }
-        return original.call(timer, millis);
+        int ticks = original.call(timer, millis);
+        com.misanthropy.collections_of_optimizations.core.FrameWorkBudget.ticksDue(ticks);
+        return ticks;
     }
 }

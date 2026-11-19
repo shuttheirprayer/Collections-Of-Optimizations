@@ -19,6 +19,7 @@ public final class FlatClimateTree {
     private static final Logger LOGGER = LogManager.getLogger("collections_of_optimizations");
     private static final int PARAMETERS = 7;
     private static final int CHECKED_TARGETS = 512;
+    private static final ThreadLocal<long[]> SCRATCH = ThreadLocal.withInitial(() -> new long[PARAMETERS + 1]);
 
     public static final FlatClimateTree UNUSABLE = new FlatClimateTree();
 
@@ -144,7 +145,14 @@ public final class FlatClimateTree {
     }
 
     public Object search(Climate.TargetPoint target) {
-        long[] t = parameters(target);
+        long[] t = SCRATCH.get();
+        t[0] = target.temperature();
+        t[1] = target.humidity();
+        t[2] = target.continentalness();
+        t[3] = target.erosion();
+        t[4] = target.depth();
+        t[5] = target.weirdness();
+        t[6] = 0L;
         Object previous = last.get();
         int start = -1;
         long startDistance = Long.MAX_VALUE;
@@ -157,8 +165,7 @@ public final class FlatClimateTree {
         } else if (previous != null) {
             return null;
         }
-        long[] out = new long[1];
-        int leaf = childCount[0] == 0 ? 0 : search(0, t, start, startDistance, out);
+        int leaf = childCount[0] == 0 ? 0 : search(0, t, start, startDistance);
         if (nodes[leaf] != previous) {
             last.set(nodes[leaf]);
         }
@@ -169,7 +176,7 @@ public final class FlatClimateTree {
         return new long[]{t.temperature(), t.humidity(), t.continentalness(), t.erosion(), t.depth(), t.weirdness(), 0L};
     }
 
-    private int search(int node, long[] t, int best, long bestDistance, long[] out) {
+    private int search(int node, long[] t, int best, long bestDistance) {
         long i = bestDistance;
         int leaf = best;
         int end = firstChild[node] + childCount[node];
@@ -182,8 +189,8 @@ public final class FlatClimateTree {
                     found = child;
                     k = j;
                 } else {
-                    found = search(child, t, leaf, i, out);
-                    k = out[0];
+                    found = search(child, t, leaf, i);
+                    k = t[PARAMETERS];
                 }
                 if (i > k) {
                     i = k;
@@ -191,7 +198,7 @@ public final class FlatClimateTree {
                 }
             }
         }
-        out[0] = i;
+        t[PARAMETERS] = i;
         return leaf;
     }
 

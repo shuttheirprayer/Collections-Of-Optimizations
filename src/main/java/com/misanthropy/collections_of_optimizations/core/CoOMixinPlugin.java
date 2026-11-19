@@ -43,7 +43,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("apothicattributes", "attributeslib"),
             Map.entry("arsnouveau", "ars_nouveau"),
             Map.entry("arselemental", "ars_elemental"),
-            Map.entry("goetydelight", "goetydelight"),
+                Map.entry("goetydelight", "goetydelight"),
             Map.entry("regionsunexplored", "regions_unexplored"),
             Map.entry("endinglibrary", "ending_library"),
             Map.entry("goetyrevelation", "goety_revelation"),
@@ -54,6 +54,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("kubejs", "kubejs"),
             Map.entry("ldlib", "ldlib"),
             Map.entry("gnetum", "gnetum"),
+            Map.entry("fwa", "fwa"),
             Map.entry("tooltipoverhaul", "tooltipoverhaul"),
             Map.entry("cablefacades", "cable_facades"),
             Map.entry("structureessentials", "structureessentials"),
@@ -64,6 +65,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("xaerominimap", "xaerominimap"),
             Map.entry("w2w2", "w2w2"),
             Map.entry("terrablender", "terrablender"),
+            Map.entry("immersiveengineering", "immersiveengineering"),
             Map.entry("terramity", "terramity"),
             Map.entry("armageddon", "armageddon_mod"),
             Map.entry("borninchaos", "born_in_chaos_v1"),
@@ -257,7 +259,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("sliceanddice", "sliceanddice"),
             Map.entry("projectiledamage", "projectile_damage"),
             Map.entry("fallentraits", "fallen_traits"),
-            Map.entry("timm", "timm")
+            Map.entry("timm", "timm"),
+            Map.entry("mgnflowers", "mgnflowers")
     );
 
     private static final Map<String, Integer> GROUP_MIN_MAJOR = Map.of(
@@ -292,6 +295,8 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("goetydelight.MixinScreenSpaceDepthEffectPostProcessor", new String[]{"goetydelight", "1.5.0fix4"}),
             Map.entry("cataclysm.MixinCataclysmMonstrosityBlockBreaking", new String[]{"cataclysm", "3.16"}),
             Map.entry("geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"}),
+            Map.entry("geckolib.MixinBakedAnimationsAdapterShare", new String[]{"geckolib", "4.8.4"}),
+            Map.entry("quark.MixinItemStackCapturedAttributes", new String[]{"quark", "4.0-462"}),
             Map.entry("subtleeffects.MixinBubbleParticleTint", new String[]{"subtle_effects", "1.15.0"}),
             Map.entry("subtleeffects.MixinChestTickerDryChest", new String[]{"subtle_effects", "1.15.0"}),
             Map.entry("subtleeffects.MixinClientLevelDisplayTick", new String[]{"subtle_effects", "1.15.0"}),
@@ -388,6 +393,9 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("citadel.MixinAdvancedModelBoxFastRender", new String[]{"embeddium"}),
 
             Map.entry("citadel.MixinBasicModelPartFastRender", new String[]{"embeddium"}),
+
+            Map.entry("fwa.MixinFwaFastQuads", new String[]{"embeddium"}),
+
 
             Map.entry("ironsspellbooks.MixinIsbCurioEquipCheck", new String[]{"curios"}),
 

@@ -1,5 +1,7 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import net.minecraftforge.eventbus.api.IEventListener;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.ListenerList;
 import net.minecraftforge.eventbus.api.Event;
@@ -19,6 +21,17 @@ public final class LionfishEventProbe {
     public static ListenerList listOf(Class<? extends Event> type) {
         try {
             return EventListenerHelper.getListenerList(type);
+        } catch (Throwable throwable) {
+            return null;
+        }
+    }
+
+    public static IEventListener[] listeners(ListenerList list) {
+        if (list == null || BUS_ID < 0) {
+            return null;
+        }
+        try {
+            return list.getListeners(BUS_ID);
         } catch (Throwable throwable) {
             return null;
         }

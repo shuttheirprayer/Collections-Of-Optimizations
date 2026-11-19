@@ -6,15 +6,18 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 
 public final class BiomeLookupCache {
-    private static final int BITS = 18;
+    private static final int BITS = 15;
     private static final int MASK = (1 << BITS) - 1;
     private static final int XZ_LIMIT = 1 << 23;
     private static final int Y_LIMIT = 1 << 11;
 
-    private record Entry(Climate.Sampler sampler, long key, Holder<Biome> value) {
-    }
+    private final ThreadLocal<Table> tables = ThreadLocal.withInitial(Table::new);
 
-    private final Entry[] entries = new Entry[1 << BITS];
+    private static final class Table {
+        final long[] keys = new long[1 << BITS];
+        final Object[] samplers = new Object[1 << BITS];
+        final Object[] values = new Object[1 << BITS];
+    }
 
     public static boolean cacheable(int x, int y, int z) {
         return x > -XZ_LIMIT && x < XZ_LIMIT && z > -XZ_LIMIT && z < XZ_LIMIT && y > -Y_LIMIT && y < Y_LIMIT;
@@ -24,14 +27,20 @@ public final class BiomeLookupCache {
         return ((long) (x & 0xFFFFFF) << 36) | ((long) (y & 0xFFF) << 24) | (z & 0xFFFFFF);
     }
 
+    @SuppressWarnings("unchecked")
     public Holder<Biome> get(Climate.Sampler sampler, int x, int y, int z) {
         long key = key(x, y, z);
-        Entry entry = entries[(int) HashCommon.mix(key) & MASK];
-        return entry != null && entry.key == key && entry.sampler == sampler ? entry.value : null;
+        int slot = (int) HashCommon.mix(key) & MASK;
+        Table t = tables.get();
+        return t.keys[slot] == key && t.samplers[slot] == sampler ? (Holder<Biome>) t.values[slot] : null;
     }
 
     public void put(Climate.Sampler sampler, int x, int y, int z, Holder<Biome> value) {
         long key = key(x, y, z);
-        entries[(int) HashCommon.mix(key) & MASK] = new Entry(sampler, key, value);
+        int slot = (int) HashCommon.mix(key) & MASK;
+        Table t = tables.get();
+        t.keys[slot] = key;
+        t.samplers[slot] = sampler;
+        t.values[slot] = value;
     }
 }

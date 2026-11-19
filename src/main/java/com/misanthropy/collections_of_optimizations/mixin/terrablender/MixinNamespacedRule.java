@@ -1,8 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.terrablender;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.CachedNamespacedRule;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -16,7 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.Map;
 
 @Mixin(targets = "terrablender.worldgen.surface.NamespacedSurfaceRuleSource$NamespacedRule", remap = false)
-public abstract class MixinNamespacedRule {
+public abstract class MixinNamespacedRule implements CachedNamespacedRule {
 
     @Shadow
     @Final
@@ -36,12 +34,8 @@ public abstract class MixinNamespacedRule {
     @Unique
     private SurfaceRules.SurfaceRule coo$cachedRule;
 
-    @WrapMethod(method = "tryApply", remap = true, require = 0)
-    private BlockState coo$cacheNamespaceLookup(int x, int y, int z, Operation<BlockState> original) {
-        if (!CoOConfig.terrablenderCacheNamespaceRule) {
-            return original.call(x, y, z);
-        }
-
+    @Override
+    public BlockState coo$apply(int x, int y, int z) {
         Holder<Biome> biome = ((SurfaceContextAccessor) (Object) this.context).coo$getBiome().get();
         if (biome != this.coo$cachedBiome) {
             this.coo$cachedBiome = biome;

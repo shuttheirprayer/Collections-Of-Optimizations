@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import com.misanthropy.collections_of_optimizations.CoOConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,6 +23,9 @@ public final class ClientTickStamp {
     private static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             stamp++;
+            if ((stamp & 127) == 0 && CoOConfig.geckolibShareAnimationData) {
+                GeckoShare.trim();
+            }
         }
     }
 

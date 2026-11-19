@@ -57,6 +57,17 @@ public final class LeanRay {
         return PER_THREAD.get();
     }
 
+    private static final ClassValue<Boolean> STOCK_SHAPE = new ClassValue<>() {
+        @Override
+        protected Boolean computeValue(Class<?> type) {
+            return type.getName().startsWith("net.minecraft.world.phys.shapes.");
+        }
+    };
+
+    public static boolean stockShape(VoxelShape shape) {
+        return STOCK_SHAPE.get(shape.getClass());
+    }
+
     public static boolean handles(double fromX, double fromY, double fromZ, double toX, double toY, double toZ) {
         return Double.compare(fromX, toX) != 0 || Double.compare(fromY, toY) != 0 || Double.compare(fromZ, toZ) != 0;
     }

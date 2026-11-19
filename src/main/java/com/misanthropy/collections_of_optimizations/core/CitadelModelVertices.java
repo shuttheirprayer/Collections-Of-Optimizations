@@ -81,7 +81,9 @@ public final class CitadelModelVertices {
                             color, data[base + 3], data[base + 4], overlay, light, normal);
                     ptr += ModelVertex.STRIDE;
                 }
-                writer.push(stack, buffer, batch, ModelVertex.FORMAT);
+                try (MemoryStack frame = stack.push()) {
+                    writer.push(frame, buffer, batch, ModelVertex.FORMAT);
+                }
             }
         }
     }

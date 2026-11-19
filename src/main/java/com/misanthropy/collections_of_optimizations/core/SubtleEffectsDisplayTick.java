@@ -156,7 +156,7 @@ public final class SubtleEffectsDisplayTick {
         if ((fireflies || effects) && !state.isCollisionShapeFullBlock(level, cursor)) {
             fluid = level.getFluidState(cursor);
             if (fluid.isEmpty()) {
-                biome = biomeAt(cursor);
+                biome = memoBiome(cursor);
                 int info = biomeInfo(biome);
                 if (fireflies && firefly(info, flags)) {
                     pos = cursor.immutable();
@@ -215,6 +215,28 @@ public final class SubtleEffectsDisplayTick {
                 pos = cursor.immutable();
             }
             SparkProviderManager.tick(level, random, block, state, pos);
+        }
+        return biome;
+    }
+
+    public static volatile boolean shareDisplayBiome = true;
+    private static long memoAt;
+    private static Holder<Biome> memo;
+
+    public static Holder<Biome> displayBiome(Level level, BlockPos pos, RandomSource random) {
+        if (random != passRandom || level != passLevel || level.getGameTime() != passTime) {
+            beginPass(level, random);
+        }
+        return memoBiome(pos);
+    }
+
+    private static Holder<Biome> memoBiome(BlockPos pos) {
+        long at = pos.asLong();
+        Holder<Biome> biome = memo;
+        if (biome == null || memoAt != at) {
+            biome = biomeAt(pos);
+            memo = biome;
+            memoAt = at;
         }
         return biome;
     }
@@ -460,6 +482,7 @@ public final class SubtleEffectsDisplayTick {
     }
 
     public static void release() {
+        memo = null;
         passLevel = null;
         plainsLevel = null;
         plains = null;
@@ -473,6 +496,7 @@ public final class SubtleEffectsDisplayTick {
 
     @SuppressWarnings("unchecked")
     private static void beginPass(Level level, RandomSource random) {
+        memo = null;
         passRandom = random;
         passTime = level.getGameTime();
         passLevel = level;

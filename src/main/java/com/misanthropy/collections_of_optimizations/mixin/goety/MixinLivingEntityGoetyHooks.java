@@ -52,6 +52,11 @@ public abstract class MixinLivingEntityGoetyHooks extends Entity {
         return original || (effect == MobEffects.POISON && getActiveEffectsMap().containsKey(GoetyEffects.ACID_VENOM.get()));
     }
 
+    @ModifyReturnValue(method = "getEffect", at = @At("RETURN"))
+    private MobEffectInstance coo$acidVenomPoisonInstance(MobEffectInstance original, MobEffect effect) {
+        return original == null && effect == MobEffects.POISON ? getActiveEffectsMap().get(GoetyEffects.ACID_VENOM.get()) : original;
+    }
+
     @ModifyReturnValue(method = "getMobType", at = @At("RETURN"))
     private MobType coo$lichIsUndead(MobType original) {
         return LichdomHelper.isLich(this) ? MobType.UNDEAD : original;

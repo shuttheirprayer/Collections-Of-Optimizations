@@ -1,9 +1,12 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import com.misanthropy.collections_of_optimizations.mixin.vanilla.HeightRangePlacementAccessor;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.PlacementFilterInvoker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
@@ -54,31 +57,63 @@ public final class FeaturePlacement {
                 index++;
                 continue;
             }
-            Walk walk = new Walk(modifiers, index + 1, feature, context, random);
+            Class<?> type = modifier.getClass();
+            if (type == InSquarePlacement.class) {
+                int x = random.nextInt(16) + pos.getX();
+                int z = random.nextInt(16) + pos.getZ();
+                pos = new BlockPos(x, pos.getY(), z);
+                index++;
+                continue;
+            }
+            if (type == HeightRangePlacement.class) {
+                pos = pos.atY(((HeightRangePlacementAccessor) modifier).coo$height().sample(random, context));
+                index++;
+                continue;
+            }
+            Walks walks = WALKS.get();
+            int depth = walks.depth;
+            Walk walk = depth < walks.pool.length ? walks.pool[depth] : new Walk();
+            if (walk == null) {
+                walk = new Walk();
+                walks.pool[depth] = walk;
+            }
+            walk.set(modifiers, index + 1, feature, context, random);
+            walks.depth = depth + 1;
             try (Stream<BlockPos> positions = modifier.getPositions(context, random, pos)) {
                 positions.sequential().forEach(walk);
+                return walk.placed;
+            } finally {
+                walks.depth = depth;
+                walk.set(null, 0, null, null, null);
             }
-            return walk.placed;
         }
         return feature.place(context.getLevel(), context.generator(), random, pos);
     }
 
+    private static final ThreadLocal<Walks> WALKS = ThreadLocal.withInitial(Walks::new);
+
+    private static final class Walks {
+        final Walk[] pool = new Walk[32];
+        int depth;
+    }
+
     private static final class Walk implements Consumer<BlockPos> {
 
-        private final List<PlacementModifier> modifiers;
-        private final int next;
-        private final ConfiguredFeature<?, ?> feature;
-        private final PlacementContext context;
-        private final RandomSource random;
+        private List<PlacementModifier> modifiers;
+        private int next;
+        private ConfiguredFeature<?, ?> feature;
+        private PlacementContext context;
+        private RandomSource random;
         private boolean placed;
 
-        private Walk(List<PlacementModifier> modifiers, int next, ConfiguredFeature<?, ?> feature, PlacementContext context,
-                     RandomSource random) {
+        private void set(List<PlacementModifier> modifiers, int next, ConfiguredFeature<?, ?> feature, PlacementContext context,
+                         RandomSource random) {
             this.modifiers = modifiers;
             this.next = next;
             this.feature = feature;
             this.context = context;
             this.random = random;
+            this.placed = false;
         }
 
         @Override

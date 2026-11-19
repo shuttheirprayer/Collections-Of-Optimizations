@@ -17,6 +17,7 @@ public abstract class MixinMinecraftFrameDeferred {
 
     @Inject(method = "runTick", at = @At("HEAD"))
     private void coo$runFrameDeferred(boolean renderLevel, CallbackInfo ci) {
+        com.misanthropy.collections_of_optimizations.core.FrameWorkBudget.frameStart();
         FrameDeferred.run(this.level);
     }
 

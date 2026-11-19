@@ -30,7 +30,7 @@ public abstract class MixinLevelDryRaycast implements BlockGetter {
                 if (LeanRay.handles(from.x, from.y, from.z, to.x, to.y, to.z)) {
                     LeanRay ray = LeanRay.get();
                     BlockHitResult fast = ray.cast(this, context, null, true, from.x, from.y, from.z, to.x, to.y, to.z)
-                            ? ray.result() : coo$miss(context);
+                            ? coo$leanHit(context, ray, from, to) : coo$miss(context);
                     if (ProbeCheck.ON) {
                         ProbeCheck.compare("Level.clip", fast, BlockGetter.traverseBlocks(from, to, context, this::coo$dryStep, MixinLevelDryRaycast::coo$miss));
                     }
@@ -40,6 +40,16 @@ public abstract class MixinLevelDryRaycast implements BlockGetter {
             return BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context, this::coo$dryStep, MixinLevelDryRaycast::coo$miss);
         }
         return BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context, this::coo$stockStep, MixinLevelDryRaycast::coo$miss);
+    }
+
+    @Unique
+    private BlockHitResult coo$leanHit(ClipContext context, LeanRay ray, Vec3 from, Vec3 to) {
+        BlockPos pos = ray.blockPos();
+        BlockState state = ray.hitState;
+        VoxelShape shape = context.getBlockShape(state, this, pos);
+        if (LeanRay.stockShape(shape)) return ray.result();
+        BlockHitResult exact = this.clipWithInteractionOverride(from, to, pos, shape, state);
+        return exact != null ? exact : ray.result();
     }
 
     @Unique
