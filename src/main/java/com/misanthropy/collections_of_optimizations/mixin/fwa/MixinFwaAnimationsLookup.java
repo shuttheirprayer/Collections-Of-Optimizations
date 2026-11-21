@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class MixinFwaAnimationsLookup {
 
     @Shadow @Final
-    public ConcurrentHashMap<Long, ConcurrentHashMap<BlockPos, Animation>> animations;
+    private ConcurrentHashMap<Long, Animations.Bucket> perSectionMap;
 
     @Unique
     private volatile byte[] coo$sections = new byte[16384];
@@ -35,7 +35,7 @@ public abstract class MixinFwaAnimationsLookup {
 
     @Inject(method = "add", at = @At("HEAD"))
     private void coo$markSection(BlockPos pos, Animation animation, CallbackInfo ci) {
-        synchronized (this.animations) {
+        synchronized (this.perSectionMap) {
             byte[] sections = this.coo$sections;
             int slot = coo$slot(SectionPos.asLong(pos));
             if (sections[slot] != 0) {
@@ -48,7 +48,7 @@ public abstract class MixinFwaAnimationsLookup {
             byte[] fresh = new byte[16384];
             int marked = 1;
             fresh[slot] = 1;
-            for (Long key : this.animations.keySet()) {
+            for (Long key : this.perSectionMap.keySet()) {
                 int other = coo$slot(key);
                 if (fresh[other] == 0) {
                     fresh[other] = 1;
@@ -66,8 +66,8 @@ public abstract class MixinFwaAnimationsLookup {
         if (this.coo$sections[coo$slot(key)] == 0) {
             return null;
         }
-        ConcurrentHashMap<BlockPos, Animation> section = this.animations.get(key);
-        return section == null ? null : section.get(blockPos);
+        Animations.Bucket bucket = this.perSectionMap.get(key);
+        return bucket == null ? null : bucket.get(blockPos);
     }
 
     @Overwrite
@@ -76,7 +76,7 @@ public abstract class MixinFwaAnimationsLookup {
         if (this.coo$sections[coo$slot(key)] == 0) {
             return false;
         }
-        ConcurrentHashMap<BlockPos, Animation> section = this.animations.get(key);
-        return section != null && section.containsKey(blockPos);
+        Animations.Bucket bucket = this.perSectionMap.get(key);
+        return bucket != null && bucket.containsKey(blockPos);
     }
 }
