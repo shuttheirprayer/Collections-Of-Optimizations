@@ -661,6 +661,7 @@ public final class CoOConfig {
     public static boolean vanillaCacheModelPartLookups = true;
     public static boolean vanillaLeanKeyframeAnimation = true;
     public static boolean vanillaUniformSectionLookup = true;
+    public static int vanillaDebugScreenRefreshMs = 100;
     public static boolean vanillaAxisAlignedRotation = true;
     public static boolean vanillaReuseModelPartRotation = true;
     public static boolean vanillaLeanBlockPosRange = true;
@@ -3083,6 +3084,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Run keyframe animations with plain loops. Vanilla allocates two capturing lambdas per animated bone and one more per animation channel, every entity every frame, which is a large part of the garbage the render thread produces. Output is identical, but a mod injecting into the middle of KeyframeAnimations.animate will not run while this is on.")
                 .define("leanKeyframeAnimation", true), v -> vanillaLeanKeyframeAnimation = v);
+        gate(builder
+                .comment("Milliseconds between refreshes of the text on the F3 debug screen. Vanilla rebuilds every line on every frame drawn, which means looking up chunks, entities and the integrated server and formatting dozens of strings, and the mods that add their own lines run again each time too. The text is rebuilt at most this often instead and the last copy is shown in between, so lines from other mods stay and keep updating. The FPS line only changes once a second anyway. 0 rebuilds on every frame. Client.")
+                .defineInRange("debugScreenRefreshMs", 100, 0, 1000), 0, v -> vanillaDebugScreenRefreshMs = v);
         gate(builder
                 .comment("Answer block and biome lookups in a chunk section that holds a single value with one type check and a field read instead of two interface calls through the palette and the bit storage. Air, deep stone and open water sections are all single value sections and they are the most common kind, so a large share of the lookups world generation, lighting, pathfinding and mob spawning make land here. Output is identical.")
                 .define("uniformSectionLookup", true), v -> vanillaUniformSectionLookup = v);

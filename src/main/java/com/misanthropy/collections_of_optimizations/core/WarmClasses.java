@@ -34,9 +34,14 @@ public final class WarmClasses {
     private static boolean recording;
     private static long recordStart;
     private static int worldTicks;
-    private static Object stream;
+    private static java.lang.invoke.MethodHandle loaded;
+    private static ClassLoader[] loaders = new ClassLoader[0];
+    private static int[] read = new int[0];
+    private static int[] inWorld;
+    private static int[] afterPreload;
     private static final ConcurrentLinkedQueue<String> SEEN = new ConcurrentLinkedQueue<>();
     private static final Set<String> HOT = java.util.concurrent.ConcurrentHashMap.newKeySet();
+    private static final Set<String> GONE = java.util.concurrent.ConcurrentHashMap.newKeySet();
     private static List<String> known = List.of();
     private static Set<String> knownHot = Set.of();
 
@@ -111,6 +116,8 @@ public final class WarmClasses {
             try {
                 Class.forName(name, false, loader);
                 loaded++;
+            } catch (ClassNotFoundException | NoClassDefFoundError gone) {
+                GONE.add(name);
             } catch (Throwable ignored) {
             }
         }
@@ -122,76 +129,128 @@ public final class WarmClasses {
         if (event.phase != TickEvent.Phase.END || !started) {
             return;
         }
-        if (Minecraft.getInstance().level != null && !stopPreload && ++worldTicks >= WORLD_TICKS_BEFORE_STOP) {
-            stopPreload = true;
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level != null && worldTicks < WORLD_TICKS_BEFORE_STOP + 20) {
+            worldTicks++;
+            if (worldTicks == WORLD_TICKS_BEFORE_STOP) {
+                stopPreload = true;
+            }
+            if (worldTicks == WORLD_TICKS_BEFORE_STOP + 20 && recording) {
+                afterPreload = sizes();
+            }
+        }
+        if (recording && inWorld == null && (minecraft.level != null || minecraft.getSingleplayerServer() != null || minecraft.getConnection() != null)) {
+            inWorld = sizes();
         }
         if (recording && System.nanoTime() - recordStart > RECORD_NANOS) {
-            stopRecording();
             save();
+            recording = false;
         }
     }
 
     private static void onShutdown(GameShuttingDownEvent event) {
         stopPreload = true;
-        stopRecording();
         save();
+        recording = false;
     }
 
     private static void startRecording() {
         try {
-            jdk.jfr.consumer.RecordingStream rs = new jdk.jfr.consumer.RecordingStream();
-            rs.enable("jdk.ClassLoad").withoutStackTrace();
-            rs.onEvent("jdk.ClassLoad", e -> {
-                jdk.jfr.consumer.RecordedClass type = e.getClass("loadedClass");
-                if (type == null) {
-                    return;
-                }
-                String name = type.getName();
-                if (!loadable(name)) {
-                    return;
-                }
-                jdk.jfr.consumer.RecordedThread thread = e.getThread();
-                String threadName = thread == null ? null : thread.getJavaName();
-                if (THREAD_NAME.equals(threadName)) {
-                    return;
-                }
-                SEEN.add(name);
-                if ("Render thread".equals(threadName) || "Server thread".equals(threadName)) {
-                    HOT.add(name);
-                }
-            });
-            rs.startAsync();
-            stream = rs;
+            java.lang.reflect.Field unsafeField = sun.misc.Unsafe.class.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            sun.misc.Unsafe unsafe = (sun.misc.Unsafe) unsafeField.get(null);
+            java.lang.reflect.Field lookupField = java.lang.invoke.MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+            java.lang.invoke.MethodHandles.Lookup lookup = (java.lang.invoke.MethodHandles.Lookup) unsafe.getObject(
+                    unsafe.staticFieldBase(lookupField), unsafe.staticFieldOffset(lookupField));
+            try {
+                loaded = lookup.findGetter(ClassLoader.class, "classes", ArrayList.class);
+            } catch (NoSuchFieldException e) {
+                loaded = lookup.findGetter(ClassLoader.class, "classes", java.util.Vector.class);
+            }
+            Set<ClassLoader> found = new LinkedHashSet<>();
+            found.add(Minecraft.class.getClassLoader());
+            found.add(WarmClasses.class.getClassLoader());
+            found.add(MinecraftForge.class.getClassLoader());
+            found.add(FMLPaths.class.getClassLoader());
+            found.add(LogManager.class.getClassLoader());
+            found.add(com.google.common.collect.ImmutableList.class.getClassLoader());
+            found.add(ClassLoader.getSystemClassLoader());
+            found.add(ClassLoader.getPlatformClassLoader());
+            found.remove(null);
+            loaders = found.toArray(new ClassLoader[0]);
+            read = sizes();
             recording = true;
             recordStart = System.nanoTime();
         } catch (Throwable t) {
+            loaders = new ClassLoader[0];
             LOGGER.info("Class warmup recording is unavailable on this Java runtime, the warmup list is not updated");
         }
     }
 
-    private static void stopRecording() {
+    private static int[] sizes() {
+        int[] out = new int[loaders.length];
+        for (int i = 0; i < out.length; i++) {
+            try {
+                List<?> list = (List<?>) loaded.invoke(loaders[i]);
+                synchronized (list) {
+                    out[i] = list.size();
+                }
+            } catch (Throwable t) {
+                out[i] = Integer.MAX_VALUE;
+            }
+        }
+        return out;
+    }
+
+    private static void collect() {
         if (!recording) {
             return;
         }
-        recording = false;
-        try {
-            ((jdk.jfr.consumer.RecordingStream) stream).close();
-        } catch (Throwable ignored) {
+        Set<String> preloaded = new java.util.HashSet<>(known);
+        for (int i = 0; i < loaders.length; i++) {
+            Object[] fresh;
+            try {
+                List<?> list = (List<?>) loaded.invoke(loaders[i]);
+                synchronized (list) {
+                    if (read[i] >= list.size()) {
+                        continue;
+                    }
+                    fresh = list.subList(read[i], list.size()).toArray();
+                }
+            } catch (Throwable t) {
+                continue;
+            }
+            int newFrom = inWorld == null ? Integer.MAX_VALUE : inWorld[i];
+            int anyFrom = afterPreload == null ? Integer.MAX_VALUE : afterPreload[i];
+            for (int k = 0; k < fresh.length; k++) {
+                String name = ((Class<?>) fresh[k]).getName();
+                if (!loadable(name)) {
+                    continue;
+                }
+                SEEN.add(name);
+                int index = read[i] + k;
+                if (index >= anyFrom || index >= newFrom && !preloaded.contains(name)) {
+                    HOT.add(name);
+                }
+            }
+            read[i] += fresh.length;
         }
-        stream = null;
     }
 
     private static synchronized void save() {
+        collect();
         if (SEEN.isEmpty()) {
             return;
         }
         Set<String> merged = new LinkedHashSet<>(known);
+        merged.removeAll(GONE);
         String name;
         while ((name = SEEN.poll()) != null) {
             merged.add(name);
         }
         Set<String> hot = new java.util.HashSet<>(knownHot);
         hot.addAll(HOT);
+        hot.removeAll(GONE);
         List<String> ordered = hotFirst(new ArrayList<>(merged), hot);
         if (ordered.size() > MAX_CLASSES) {
             ordered = new ArrayList<>(ordered.subList(0, MAX_CLASSES));

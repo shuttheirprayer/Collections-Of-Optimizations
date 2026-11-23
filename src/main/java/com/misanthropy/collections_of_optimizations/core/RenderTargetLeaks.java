@@ -35,9 +35,10 @@ public final class RenderTargetLeaks {
         int depthType = attachedAs(GL30C.GL_DEPTH_ATTACHMENT, depth);
         GlStateManager._glBindFramebuffer(GL30C.GL_READ_FRAMEBUFFER, boundRead);
 
-        if (colorType == GL11C.GL_TEXTURE && color != main.getColorTextureId()) {
-            TextureUtil.releaseTextureId(color);
+        if (colorType != GL11C.GL_TEXTURE || color == main.getColorTextureId()) {
+            return;
         }
+        TextureUtil.releaseTextureId(color);
         if (depthType == GL11C.GL_TEXTURE && depth != main.getDepthTextureId()) {
             TextureUtil.releaseTextureId(depth);
         } else if (depthType == GL30C.GL_RENDERBUFFER) {
