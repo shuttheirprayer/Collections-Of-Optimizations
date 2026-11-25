@@ -257,6 +257,7 @@ dependencies {
     compileOnly files('libs-compile/create-1.20.1-6.0.8.jar')
     compileOnly files('libs-compile/flywheel-forge-1.20.1-1.0.5.jar')
     compileOnly files('libs-compile/gnetum-2.5.0+1.20.1-forge.jar')
+    compileOnly files('libs-compile/flerovium-forge-1.20.1-1.2.19-all.jar')
     compileOnly files('libs-compile/createsolar-1.2.6-1.20.1.jar')
     compileOnly files('libs-compile/moonlight-1.20-2.16.34-forge.jar')
     compileOnly files('libs-compile/supplementaries-1.20-3.1.43-forge.jar')
