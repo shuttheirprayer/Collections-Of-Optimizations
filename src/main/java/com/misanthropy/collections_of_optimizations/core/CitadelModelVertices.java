@@ -17,7 +17,7 @@ import java.util.function.BiConsumer;
 public final class CitadelModelVertices {
     private static final int FLOATS_PER_VERTEX = 8;
     private static final int VERTICES_PER_PUSH = 64;
-    private static final PoseStack.Pose IDENTITY = new PoseStack().last();
+    static final PoseStack.Pose IDENTITY = new PoseStack().last();
 
     private final float[] vertices;
     private final int vertexCount;
@@ -88,8 +88,8 @@ public final class CitadelModelVertices {
         }
     }
 
-    private static final class Recorder implements VertexConsumer {
-        private final FloatArrayList data = new FloatArrayList();
+    static final class Recorder implements VertexConsumer {
+        final FloatArrayList data = new FloatArrayList();
 
         @Override
         public void vertex(float x, float y, float z, float red, float green, float blue, float alpha, float u, float v, int overlay, int light, float normalX, float normalY, float normalZ) {
