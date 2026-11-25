@@ -1,6 +1,9 @@
 package com.misanthropy.collections_of_optimizations.mixin.vanilla;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.misanthropy.collections_of_optimizations.CoOConfig;
+import com.misanthropy.collections_of_optimizations.core.IrisState;
 import com.misanthropy.collections_of_optimizations.core.RenderLayerMemo;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.core.Holder;
@@ -24,6 +27,17 @@ public abstract class MixinItemBlockRenderTypesMemo {
 
     @Shadow(remap = false) @Final
     private static Map<Holder.Reference<Block>, ChunkRenderTypeSet> BLOCK_RENDER_TYPES;
+
+    @WrapMethod(method = "getRenderLayers", remap = false)
+    private static ChunkRenderTypeSet coo$memoWithoutShaders(BlockState state, Operation<ChunkRenderTypeSet> original) {
+        if (CoOConfig.forgeRenderLayerMemo && !IrisState.shaderPackInUse()) {
+            RenderLayerMemo memo = ((RenderLayerMemo.Holder) state.getBlock()).coo$renderLayerMemo();
+            if (memo != null && memo.stamp == RenderLayerMemo.version) {
+                return memo.layers;
+            }
+        }
+        return original.call(state);
+    }
 
     @Inject(method = "getRenderLayers", at = @At("HEAD"), cancellable = true, remap = false, require = 0)
     private static void coo$memoRenderLayers(BlockState state, CallbackInfoReturnable<ChunkRenderTypeSet> cir) {
