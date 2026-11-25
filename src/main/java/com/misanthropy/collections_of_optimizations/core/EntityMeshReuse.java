@@ -12,6 +12,7 @@ import net.caffeinemc.mods.sodium.api.vertex.buffer.VertexBufferWriter;
 import net.caffeinemc.mods.sodium.api.vertex.format.VertexFormatDescription;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.OutlineBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
@@ -50,6 +51,8 @@ public final class EntityMeshReuse {
     public static long records;
 
     private static final int CHUNK = 256;
+    private static final int SMALL_HZ = 30;
+    private static final int HURT = 1 << 30;
     private static final int SLOTS = 12;
     private static final int M_POS = 1, M_COLOR = 2, M_UV = 4, M_OVERLAY = 8, M_LIGHT = 16, M_NORMAL = 32, M_BULK = 64;
 
@@ -64,6 +67,8 @@ public final class EntityMeshReuse {
     private static double frameNanos = 1.0E9 / 60.0;
     private static boolean shaders;
     private static int interval = 1;
+    private static int smallest = 1;
+    private static boolean off = true;
     private static int refreshRate = 240;
     private static int flushDepth;
     private static Cache recording;
@@ -92,13 +97,15 @@ public final class EntityMeshReuse {
         }
         int hz = poseHz > 0 ? poseHz : refreshRate;
         int k = (int) (1.0E9 / hz / frameNanos);
-        interval = !enabled || shaders || MEMORY == null ? 1 : Math.max(1, Math.min(k, maxInterval));
+        off = !enabled || shaders || MEMORY == null;
+        interval = off ? 1 : Math.max(1, Math.min(k, maxInterval));
+        smallest = off ? 1 : (int) (1.0E9 / SMALL_HZ / frameNanos);
     }
 
     public static void render(EntityRenderDispatcher dispatcher, Entity entity, double x, double y, double z, float yaw, float partialTick,
                               PoseStack poseStack, MultiBufferSource buffers, int light, Renderer original) {
         int k = interval;
-        if (k <= 1 || recording != null || !CoOConfig.vanillaReuseEntityMeshes || !eligible(dispatcher, entity)) {
+        if (off || k <= 1 && smallest <= 1 || recording != null || !CoOConfig.vanillaReuseEntityMeshes || buffers instanceof OutlineBufferSource || !eligible(dispatcher, entity)) {
             original.render(entity, x, y, z, yaw, partialTick, poseStack, buffers, light);
             return;
         }
@@ -107,15 +114,22 @@ public final class EntityMeshReuse {
             double distance = Math.sqrt(x * x + y * y + z * z);
             float pixels = (float) (entity.getBbHeight() / Math.max(distance, 0.5) * 0.5 * RenderSystem.getProjectionMatrix().m11()
                     * Minecraft.getInstance().getWindow().getHeight());
-            if (pixels < smallPixels) {
+            if (k > 1 && pixels < smallPixels) {
                 k = Math.min(k * (pixels < smallPixels * 0.5F ? 3 : 2), maxSmallInterval);
+            } else if (pixels < smallPixels * 0.5F) {
+                k = Math.max(1, Math.min(smallest, pixels < smallPixels * 0.25F ? 3 : 2));
             }
         }
-        Cache cache = ((Holder) entity).coo$meshCache();
-        if (replay(cache, k, entity.getId() * 7, poseStack, x, y, z, buffers, light)) {
+        if (k <= 1) {
+            original.render(entity, x, y, z, yaw, partialTick, poseStack, buffers, light);
             return;
         }
-        if (record(cache, poseStack, x, y, z, buffers, light,
+        Cache cache = ((Holder) entity).coo$meshCache();
+        int key = entity instanceof LivingEntity living && (living.hurtTime > 0 || living.deathTime > 0) ? light | HURT : light;
+        if (replay(cache, k, entity.getId() * 7, poseStack, x, y, z, buffers, key)) {
+            return;
+        }
+        if (record(cache, poseStack, x, y, z, buffers, key,
                 recorder -> original.render(entity, x, y, z, yaw, partialTick, poseStack, recorder, light))
                 && UNSAFE.add(entity.getType())) {
             LOGGER.info("Entity mesh reuse off for {}: its renderer draws outside the buffer source", EntityType.getKey(entity.getType()));
@@ -172,11 +186,7 @@ public final class EntityMeshReuse {
         if (entity instanceof Player || UNSAFE.contains(entity.getType())) {
             return false;
         }
-        Minecraft mc = Minecraft.getInstance();
-        if (entity == mc.getCameraEntity() || dispatcher.shouldRenderHitBoxes() || mc.shouldEntityAppearGlowing(entity)) {
-            return false;
-        }
-        if (entity instanceof LivingEntity living && (living.hurtTime > 0 || living.deathTime > 0)) {
+        if (entity == Minecraft.getInstance().getCameraEntity() || dispatcher.shouldRenderHitBoxes()) {
             return false;
         }
         return !(entity instanceof Mob mob) || !mob.isLeashed();
@@ -348,6 +358,9 @@ public final class EntityMeshReuse {
             boolean turn = normal >= 0 && (Math.abs(n00 - 1.0F) > 1.0E-6F || Math.abs(n11 - 1.0F) > 1.0E-6F || Math.abs(n22 - 1.0F) > 1.0E-6F
                     || Math.abs(n01) > 1.0E-6F || Math.abs(n02) > 1.0E-6F || Math.abs(n10) > 1.0E-6F
                     || Math.abs(n12) > 1.0E-6F || Math.abs(n20) > 1.0E-6F || Math.abs(n21) > 1.0E-6F);
+            int lastPacked = 0;
+            int lastTurned = 0;
+            boolean hasLast = false;
             while (remaining > 0) {
                 int count = Math.min(remaining, CHUNK);
                 MEMORY.copyMemory(bytes, source, null, target, (long) count * stride);
@@ -362,11 +375,16 @@ public final class EntityMeshReuse {
                     MemoryUtil.memPutFloat(p + 8, a02 * px + a12 * py + a22 * pz + a32);
                     if (turn) {
                         int packed = MemoryUtil.memGetInt(vertex + normal);
-                        float nx = NormI8.unpackX(packed);
-                        float ny = NormI8.unpackY(packed);
-                        float nz = NormI8.unpackZ(packed);
-                        int turned = NormI8.pack(n00 * nx + n10 * ny + n20 * nz, n01 * nx + n11 * ny + n21 * nz, n02 * nx + n12 * ny + n22 * nz);
-                        MemoryUtil.memPutInt(vertex + normal, (turned & 0x00FFFFFF) | (packed & 0xFF000000));
+                        if (!hasLast || packed != lastPacked) {
+                            float nx = NormI8.unpackX(packed);
+                            float ny = NormI8.unpackY(packed);
+                            float nz = NormI8.unpackZ(packed);
+                            int turned = NormI8.pack(n00 * nx + n10 * ny + n20 * nz, n01 * nx + n11 * ny + n21 * nz, n02 * nx + n12 * ny + n22 * nz);
+                            lastTurned = (turned & 0x00FFFFFF) | (packed & 0xFF000000);
+                            lastPacked = packed;
+                            hasLast = true;
+                        }
+                        MemoryUtil.memPutInt(vertex + normal, lastTurned);
                     }
                 }
                 if (writer != null) {
