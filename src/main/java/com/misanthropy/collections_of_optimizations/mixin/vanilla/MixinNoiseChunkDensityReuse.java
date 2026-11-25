@@ -31,7 +31,7 @@ public abstract class MixinNoiseChunkDensityReuse {
         if (!CoOConfig.vanillaReuseNoiseChunkDensityGraph) {
             return original.call(router, visitor);
         }
-        DensityGraphReuse.FirstPass pass = DensityGraphReuse.firstPass(randomState, visitor);
+        DensityGraphReuse.FirstPass pass = DensityGraphReuse.firstPass(randomState, router, visitor);
         if (pass == null) {
             return original.call(router, visitor);
         }

@@ -34,6 +34,9 @@ public final class NoiseColumnCells {
         chunk.advanceCellX(0);
         int slot = cells.next;
         cells.next = (slot + 1) % SLOTS;
+        if (cells.chunks[slot] != null) {
+            cells.chunks[slot].stopInterpolation();
+        }
         cells.owners[slot] = owner;
         cells.states[slot] = state;
         cells.settings[slot] = noiseSettings;

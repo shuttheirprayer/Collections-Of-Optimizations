@@ -18,33 +18,40 @@ import java.util.function.LongToIntFunction;
 
 public final class DensityGraphReuse {
 
-    private enum Kind { SIMPLE, REBUILD, CLAMP, MAPPED, MUL_OR_ADD, HOLDER, MARKER, CACHE, OTHER }
+    private enum Kind { SIMPLE, REBUILD, CLAMP, MAPPED, MUL_OR_ADD, HOLDER, MARKER, CACHE, COLUMN, OTHER }
 
     private static final String VANILLA = "net.minecraft.world.level.levelgen.DensityFunctions$";
     private static final String LARION = "com.misanthropy.linggango.larionforgeport.density_function_types.";
     private static final String LITHOFORM = "com.misanthropy.lithoform.density_function_types.";
+    private static final String BOWL = "com.misanthropy.lithoform.bowl.";
+    private static final String COLUMNS = "com.misanthropy.fastchunkgen.opts.worldgen.vanilla.common.";
 
     private static final Set<String> REBUILD = Set.of(
             VANILLA + "Ap2", VANILLA + "BlendDensity", VANILLA + "RangeChoice", VANILLA + "ShiftedNoise",
             VANILLA + "WeirdScaledSampler", VANILLA + "Spline", VANILLA + "Noise", VANILLA + "Shift",
             VANILLA + "ShiftA", VANILLA + "ShiftB",
             LARION + "Division", LARION + "Signum", LARION + "Sine", LARION + "Sqrt",
-            LITHOFORM + "Division", LITHOFORM + "Signum", LITHOFORM + "Sine", LITHOFORM + "Sqrt");
+            LITHOFORM + "Division", LITHOFORM + "Signum", LITHOFORM + "Sine", LITHOFORM + "Sqrt",
+            BOWL + "BowlOffset", BOWL + "BowlMask", BOWL + "Special3D", BOWL + "SpecialDry");
+
+    private static final Set<String> CHUNK_LOCAL = Set.of(COLUMNS + "ColumnNoise", COLUMNS + "PointNoise");
 
     private static final Set<String> READS_Y = Set.of(
             VANILLA + "YClampedGradient", VANILLA + "Shift", VANILLA + "WeirdScaledSampler",
+            BOWL + "Special3D", BOWL + "SpecialDry",
             "net.minecraft.world.level.levelgen.synth.BlendedNoise");
 
     private static final Set<String> FLAT = Set.of(
             VANILLA + "Constant", VANILLA + "BlendAlpha", VANILLA + "BlendOffset", VANILLA + "EndIslandDensityFunction",
             VANILLA + "ShiftA", VANILLA + "ShiftB", LARION + "XCoord", LARION + "ZCoord",
-            LITHOFORM + "XCoord", LITHOFORM + "ZCoord");
+            LITHOFORM + "XCoord", LITHOFORM + "ZCoord", BOWL + "MouthGate");
 
     private static final Set<String> TRANSPARENT = Set.of(
             VANILLA + "Ap2", VANILLA + "MulOrAdd", VANILLA + "Mapped", VANILLA + "Clamp", VANILLA + "RangeChoice",
             VANILLA + "BlendDensity", VANILLA + "Spline", VANILLA + "HolderHolder", VANILLA + "Marker",
             LARION + "Division", LARION + "Signum", LARION + "Sine", LARION + "Sqrt",
-            LITHOFORM + "Division", LITHOFORM + "Signum", LITHOFORM + "Sine", LITHOFORM + "Sqrt");
+            LITHOFORM + "Division", LITHOFORM + "Signum", LITHOFORM + "Sine", LITHOFORM + "Sqrt",
+            BOWL + "BowlOffset", BOWL + "BowlMask");
 
     private static final ClassValue<Kind> KIND = new ClassValue<>() {
         @Override
@@ -76,9 +83,8 @@ public final class DensityGraphReuse {
         void coo$setDensityPlan(Plan plan);
     }
 
-    public static Plan plan(RandomState randomState) {
+    public static Plan plan(RandomState randomState, NoiseRouter router) {
         PlanHolder holder = (PlanHolder) (Object) randomState;
-        NoiseRouter router = randomState.router();
         Plan plan = holder.coo$densityPlan();
         if (plan != null && plan.router == router) {
             return plan;
@@ -93,13 +99,16 @@ public final class DensityGraphReuse {
         }
     }
 
-    public static FirstPass firstPass(RandomState randomState, DensityFunction.Visitor visitor) {
-        Plan plan = plan(randomState);
+    public static FirstPass firstPass(RandomState randomState, NoiseRouter router, DensityFunction.Visitor visitor) {
+        Plan plan = plan(randomState, router);
         return plan.reuseWorthwhile ? new FirstPass(plan, visitor) : null;
     }
 
     public static SurfaceTable surfaceTable(RandomState randomState, NoiseSettings settings) {
-        Plan plan = plan(randomState);
+        Plan plan = ((PlanHolder) (Object) randomState).coo$densityPlan();
+        if (plan == null) {
+            plan = plan(randomState, randomState.router());
+        }
         return plan.surfaceShareable ? plan.tables.computeIfAbsent(settings, key -> new SurfaceTable()) : null;
     }
 
@@ -166,18 +175,47 @@ public final class DensityGraphReuse {
         return size;
     }
 
+    private static final ThreadLocal<Maps[]> FREE_MAPS = ThreadLocal.withInitial(() -> new Maps[1]);
+
+    private static final class Maps {
+        final IdentityHashMap<DensityFunction, DensityFunction> holders = new IdentityHashMap<>();
+        final IdentityHashMap<DensityFunction, Boolean> selfMapped = new IdentityHashMap<>();
+        final IdentityHashMap<DensityFunction, DensityFunction> markerKeys = new IdentityHashMap<>();
+        final IdentityHashMap<DensityFunction, Boolean> identical = new IdentityHashMap<>();
+        final IdentityHashMap<DensityFunction, Boolean> equal = new IdentityHashMap<>();
+
+        void release() {
+            this.holders.clear();
+            this.selfMapped.clear();
+            this.markerKeys.clear();
+            this.identical.clear();
+            this.equal.clear();
+            FREE_MAPS.get()[0] = this;
+        }
+    }
+
     public static final class FirstPass implements DensityFunction.Visitor {
         private final Plan plan;
+        private final Maps maps;
         private final DensityFunction.Visitor delegate;
-        private final IdentityHashMap<DensityFunction, DensityFunction> holders = new IdentityHashMap<>();
-        private final IdentityHashMap<DensityFunction, Boolean> selfMapped = new IdentityHashMap<>();
-        private final IdentityHashMap<DensityFunction, DensityFunction> markerKeys = new IdentityHashMap<>();
-        private IdentityHashMap<DensityFunction, Boolean> identical;
-        private IdentityHashMap<DensityFunction, Boolean> equal;
+        private final IdentityHashMap<DensityFunction, DensityFunction> holders;
+        private final IdentityHashMap<DensityFunction, Boolean> selfMapped;
+        private final IdentityHashMap<DensityFunction, DensityFunction> markerKeys;
+        private final IdentityHashMap<DensityFunction, Boolean> identical;
+        private final IdentityHashMap<DensityFunction, Boolean> equal;
 
         FirstPass(Plan plan, DensityFunction.Visitor delegate) {
             this.plan = plan;
             this.delegate = delegate;
+            Maps[] free = FREE_MAPS.get();
+            Maps maps = free[0];
+            free[0] = null;
+            this.maps = maps == null ? new Maps() : maps;
+            this.holders = this.maps.holders;
+            this.selfMapped = this.maps.selfMapped;
+            this.markerKeys = this.maps.markerKeys;
+            this.identical = this.maps.identical;
+            this.equal = this.maps.equal;
         }
 
         @Override
@@ -219,11 +257,8 @@ public final class DensityGraphReuse {
             if (!beardifier.getClass().getName().equals(VANILLA + "BeardifierMarker")) {
                 return null;
             }
-            this.identical = new IdentityHashMap<>();
-            this.equal = new IdentityHashMap<>();
             boolean reusable = identical(finalDensity);
-            this.identical = null;
-            this.equal = null;
+            this.maps.release();
             if (!reusable) {
                 return null;
             }
@@ -239,7 +274,7 @@ public final class DensityGraphReuse {
             }
             this.identical.put(node, Boolean.FALSE);
             boolean result = switch (KIND.get(node.getClass())) {
-                case SIMPLE -> this.selfMapped.containsKey(node);
+                case SIMPLE -> this.selfMapped.containsKey(node) || CHUNK_LOCAL.contains(node.getClass().getName());
                 case REBUILD -> this.selfMapped.containsKey(node) && childrenEqual(node);
                 case CACHE -> cacheMapsBack(node);
                 default -> false;
@@ -404,7 +439,7 @@ public final class DensityGraphReuse {
         List<DensityFunction> out = new ArrayList<>(3);
         switch (KIND.get(node.getClass())) {
             case CACHE -> out.add(((DensityFunctions.MarkerOrMarked) node).wrapped());
-            case SIMPLE, OTHER -> {
+            case SIMPLE, COLUMN, OTHER -> {
             }
             default -> {
                 for (MethodHandle accessor : COMPONENTS.get(node.getClass())) {
@@ -450,6 +485,8 @@ public final class DensityGraphReuse {
                 return Kind.HOLDER;
             case VANILLA + "Marker":
                 return Kind.MARKER;
+            case COLUMNS + "ColumnMarker":
+                return Kind.COLUMN;
             default:
                 break;
         }
