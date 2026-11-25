@@ -97,13 +97,18 @@ public final class FwaFastQuads {
     }
 
     private static final float[] POSITIONS = new float[12];
-    private static final double BACK_MARGIN = 0.15;
+    private static final double BACK_MARGIN = 0.15 * 0.15;
 
     private static boolean facesAway(float[] p, int a, int b, int c) {
         double ux = p[b] - p[a], uy = p[b + 1] - p[a + 1], uz = p[b + 2] - p[a + 2];
         double vx = p[c] - p[a], vy = p[c + 1] - p[a + 1], vz = p[c + 2] - p[a + 2];
         double nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
-        return nx * p[a] + ny * p[a + 1] + nz * p[a + 2] > BACK_MARGIN * Math.sqrt(nx * nx + ny * ny + nz * nz);
+        double dot = nx * p[a] + ny * p[a + 1] + nz * p[a + 2];
+        if (dot <= 0.0) {
+            return false;
+        }
+        double lenSq = nx * nx + ny * ny + nz * nz;
+        return dot * dot > BACK_MARGIN * lenSq;
     }
 
     public static void newFrame() {
