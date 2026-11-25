@@ -1,7 +1,10 @@
 package com.misanthropy.collections_of_optimizations.mixin.fwa;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.misanthropy.collections_of_optimizations.core.FwaLod;
+import fr.madu59.fwa.Animations;
 import fr.madu59.fwa.FancyWorldAnimationsClient;
 import fr.madu59.fwa.anims.Animation;
 import fr.madu59.fwa.rendering.AnimationRenderingContext;
@@ -11,8 +14,21 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Map;
+import java.util.Set;
+
 @Mixin(value = FancyWorldAnimationsClient.class, remap = false)
 public abstract class MixinFwaLod {
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lfr/madu59/fwa/Animations;entrySet()Ljava/util/Set;"), remap = false)
+    private static Set<Map.Entry<Long, Animations.Bucket>> coo$skipIdleSections(Animations animations, Operation<Set<Map.Entry<Long, Animations.Bucket>>> original) {
+        Set<Map.Entry<Long, Animations.Bucket>> all = original.call(animations);
+        if (!FwaLod.enabled) {
+            FwaLod.changed();
+            return all;
+        }
+        return FwaLod.activeSections(all);
+    }
+
     @Inject(method = "render", at = @At("HEAD"), remap = false)
     private static void coo$frame(AnimationRenderingContext context, CallbackInfo ci) {
         if (!context.isShadow()) {

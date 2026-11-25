@@ -1,5 +1,6 @@
 package com.misanthropy.collections_of_optimizations.mixin.fwa;
 
+import com.misanthropy.collections_of_optimizations.core.FwaLod;
 import fr.madu59.fwa.Animations;
 import fr.madu59.fwa.anims.Animation;
 import net.minecraft.core.BlockPos;
@@ -33,8 +34,14 @@ public abstract class MixinFwaAnimationsLookup {
         return (int) (mixed >>> 50);
     }
 
+    @Inject(method = {"removeAt(Lnet/minecraft/core/SectionPos;)V", "removeChunk", "clear"}, at = @At("HEAD"))
+    private void coo$sectionsChanged(CallbackInfo ci) {
+        FwaLod.changed();
+    }
+
     @Inject(method = "add", at = @At("HEAD"))
     private void coo$markSection(BlockPos pos, Animation animation, CallbackInfo ci) {
+        FwaLod.changed();
         synchronized (this.perSectionMap) {
             byte[] sections = this.coo$sections;
             int slot = coo$slot(SectionPos.asLong(pos));

@@ -4,9 +4,17 @@ import com.misanthropy.collections_of_optimizations.core.FwaLod;
 import fr.madu59.fwa.anims.Animation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = Animation.class, remap = false)
 public abstract class MixinFwaAnimationLodState implements FwaLod.State {
+    @Inject(method = "markForRemoval", at = @At("HEAD"))
+    private void coo$removalChanged(CallbackInfo ci) {
+        FwaLod.changed();
+    }
+
     @Unique
     private volatile int coo$state;
     @Unique
