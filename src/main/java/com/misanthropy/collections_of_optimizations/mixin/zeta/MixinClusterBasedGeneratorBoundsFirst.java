@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.violetmoon.zeta.world.generator.multichunk.ClusterBasedGenerator;
 import org.violetmoon.zeta.world.generator.multichunk.ClusterShape;
 
@@ -40,7 +41,7 @@ public abstract class MixinClusterBasedGeneratorBoundsFirst {
         original.call(generator, level, chunkCorner, minY, maxY, action);
     }
 
-    @WrapOperation(
+    @Redirect(
             method = "lambda$generateChunkPart$0",
             at = @At(
                     value = "INVOKE",
@@ -48,13 +49,11 @@ public abstract class MixinClusterBasedGeneratorBoundsFirst {
             ),
             require = 0
     )
-    private static boolean coo$boundsFirst(ClusterBasedGenerator.IGenerationContext context,
-                                           BlockPos pos,
-                                           Operation<Boolean> original,
-                                           @Local(argsOnly = true) ClusterShape shape) {
+    private static boolean coo$boundsFirst(ClusterBasedGenerator.IGenerationContext context, BlockPos pos,
+                                           ClusterBasedGenerator.IGenerationContext lambdaContext, ClusterShape shape) {
         if (CoOConfig.zetaClusterBoundsFirst && ClusterBoundsFirst.skips(context, shape, pos)) {
             return false;
         }
-        return original.call(context, pos);
+        return context.canPlaceAt(pos);
     }
 }

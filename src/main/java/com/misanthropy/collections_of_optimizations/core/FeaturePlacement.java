@@ -1,10 +1,12 @@
 package com.misanthropy.collections_of_optimizations.core;
 
+import com.misanthropy.collections_of_optimizations.CoOConfig;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.HeightRangePlacementAccessor;
 import com.misanthropy.collections_of_optimizations.mixin.vanilla.PlacementFilterInvoker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
@@ -51,7 +53,8 @@ public final class FeaturePlacement {
         while (index < size) {
             PlacementModifier modifier = modifiers.get(index);
             if (modifier instanceof PlacementFilter filter) {
-                if (!((PlacementFilterInvoker) filter).coo$shouldPlace(context, random, pos)) {
+                int decided = modifier.getClass() == BiomeFilter.class && CoOConfig.vanillaFeatureBiomeMasks ? FeatureBiomes.decide(context, pos) : FeatureBiomes.UNKNOWN;
+                if (decided == FeatureBiomes.NO || decided == FeatureBiomes.UNKNOWN && !((PlacementFilterInvoker) filter).coo$shouldPlace(context, random, pos)) {
                     return false;
                 }
                 index++;

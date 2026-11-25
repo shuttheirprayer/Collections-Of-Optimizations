@@ -9,22 +9,26 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.SplittableRandom;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 public final class FlatClimateTree {
     private static final Logger LOGGER = LogManager.getLogger("collections_of_optimizations");
     private static final int PARAMETERS = 7;
     private static final int CHECKED_TARGETS = 512;
-    private static final ThreadLocal<long[]> SCRATCH = ThreadLocal.withInitial(() -> new long[PARAMETERS + 1]);
+    private static final ThreadLocal<Scratch> SCRATCH = ThreadLocal.withInitial(Scratch::new);
 
+    private static final AtomicInteger IDS = new AtomicInteger();
     public static final FlatClimateTree UNUSABLE = new FlatClimateTree();
 
     private static final Map<Class<?>, Boolean> METRICS = new ConcurrentHashMap<>();
     private static volatile boolean checking;
+    private static Class<?> accepted;
 
     private static Class<?> leafClass;
     private static Field rootField;
@@ -37,6 +41,7 @@ public final class FlatClimateTree {
     private static boolean reflectionReady;
     private static boolean reflectionBroken;
 
+    private final int id = IDS.incrementAndGet();
     private final long[] mins;
     private final long[] maxs;
     private final int[] firstChild;
@@ -133,6 +138,9 @@ public final class FlatClimateTree {
 
     public boolean acceptsMetric(Object metric) {
         Class<?> type = metric.getClass();
+        if (type == accepted) {
+            return true;
+        }
         Boolean known = METRICS.get(type);
         if (known == null) {
             known = sameAsNodeDistance(metric);
@@ -141,18 +149,15 @@ public final class FlatClimateTree {
                 LOGGER.info("Biome tree searches through {} keep the vanilla search", type.getName());
             }
         }
+        if (known) {
+            accepted = type;
+        }
         return known;
     }
 
     public Object search(Climate.TargetPoint target) {
-        long[] t = SCRATCH.get();
-        t[0] = target.temperature();
-        t[1] = target.humidity();
-        t[2] = target.continentalness();
-        t[3] = target.erosion();
-        t[4] = target.depth();
-        t[5] = target.weirdness();
-        t[6] = 0L;
+        Scratch scratch = SCRATCH.get();
+        scratch.select(this, target);
         Object previous = last.get();
         int start = -1;
         long startDistance = Long.MAX_VALUE;
@@ -161,11 +166,11 @@ public final class FlatClimateTree {
             if (start < 0 || start >= nodes.length || nodes[start] != previous) {
                 return null;
             }
-            startDistance = distance(start, t);
+            startDistance = distance(start, scratch);
         } else if (previous != null) {
             return null;
         }
-        int leaf = childCount[0] == 0 ? 0 : search(0, t, start, startDistance);
+        int leaf = childCount[0] == 0 ? 0 : search(0, scratch, start, startDistance);
         if (nodes[leaf] != previous) {
             last.set(nodes[leaf]);
         }
@@ -176,12 +181,12 @@ public final class FlatClimateTree {
         return new long[]{t.temperature(), t.humidity(), t.continentalness(), t.erosion(), t.depth(), t.weirdness(), 0L};
     }
 
-    private int search(int node, long[] t, int best, long bestDistance) {
+    private int search(int node, Scratch scratch, int best, long bestDistance) {
         long i = bestDistance;
         int leaf = best;
         int end = firstChild[node] + childCount[node];
         for (int child = firstChild[node]; child < end; child++) {
-            long j = distance(child, t);
+            long j = distance(child, scratch);
             if (i > j) {
                 int found;
                 long k;
@@ -189,8 +194,8 @@ public final class FlatClimateTree {
                     found = child;
                     k = j;
                 } else {
-                    found = search(child, t, leaf, i);
-                    k = t[PARAMETERS];
+                    found = search(child, scratch, leaf, i);
+                    k = scratch.found;
                 }
                 if (i > k) {
                     i = k;
@@ -198,8 +203,85 @@ public final class FlatClimateTree {
                 }
             }
         }
-        t[PARAMETERS] = i;
+        scratch.found = i;
         return leaf;
+    }
+
+    private long distance(int node, Scratch scratch) {
+        int base = node * PARAMETERS;
+        long sum;
+        if (scratch.stamps[node] == scratch.stamp) {
+            sum = scratch.sums[node];
+        } else {
+            sum = squared(base, scratch.temperature) + squared(base + 1, scratch.humidity) + squared(base + 2, scratch.continentalness)
+                    + squared(base + 3, scratch.erosion) + squared(base + 5, scratch.weirdness) + squared(base + 6, 0L);
+            scratch.stamps[node] = scratch.stamp;
+            scratch.sums[node] = sum;
+        }
+        return sum + squared(base + 4, scratch.depth);
+    }
+
+    private static final class Scratch {
+        private static final int COLUMNS = 4;
+
+        private final int[][] columnStamps = new int[COLUMNS][0];
+        private final long[][] columnSums = new long[COLUMNS][];
+        private final int[] columnStamp = new int[COLUMNS];
+        private final long[] climate = new long[COLUMNS * 5];
+        private final int[] trees = new int[COLUMNS];
+        private int next;
+        private int lastStamp;
+
+        int[] stamps;
+        long[] sums;
+        int stamp;
+        long temperature, humidity, continentalness, erosion, depth, weirdness;
+        long found;
+
+        void select(FlatClimateTree tree, Climate.TargetPoint target) {
+            temperature = target.temperature();
+            humidity = target.humidity();
+            continentalness = target.continentalness();
+            erosion = target.erosion();
+            depth = target.depth();
+            weirdness = target.weirdness();
+            int column = -1;
+            for (int i = 0; i < COLUMNS; i++) {
+                int at = i * 5;
+                if (trees[i] == tree.id && climate[at] == temperature && climate[at + 1] == humidity && climate[at + 2] == continentalness
+                        && climate[at + 3] == erosion && climate[at + 4] == weirdness) {
+                    column = i;
+                    break;
+                }
+            }
+            if (column < 0) {
+                column = next;
+                next = (next + 1) % COLUMNS;
+                int at = column * 5;
+                climate[at] = temperature;
+                climate[at + 1] = humidity;
+                climate[at + 2] = continentalness;
+                climate[at + 3] = erosion;
+                climate[at + 4] = weirdness;
+                trees[column] = tree.id;
+                if (columnStamps[column].length < tree.nodes.length) {
+                    columnStamps[column] = new int[tree.nodes.length];
+                    columnSums[column] = new long[tree.nodes.length];
+                }
+                if (++lastStamp == 0) {
+                    for (int[] stamps : columnStamps) {
+                        Arrays.fill(stamps, 0);
+                    }
+                    Arrays.fill(trees, 0);
+                    trees[column] = tree.id;
+                    lastStamp = 1;
+                }
+                columnStamp[column] = lastStamp;
+            }
+            stamps = columnStamps[column];
+            sums = columnSums[column];
+            stamp = columnStamp[column];
+        }
     }
 
     private long distance(int node, long[] t) {
@@ -215,6 +297,13 @@ public final class FlatClimateTree {
         return sum;
     }
 
+    private long squared(int index, long p) {
+        long above = p - maxs[index];
+        long below = mins[index] - p;
+        long d = above > 0L ? above : Math.max(below, 0L);
+        return d * d;
+    }
+
     private boolean matchesVanilla(Function<Climate.TargetPoint, Object> vanillaSearch) {
         SplittableRandom random = new SplittableRandom(0x5EEDL ^ nodes.length);
         Object saved = last.get();
@@ -228,6 +317,15 @@ public final class FlatClimateTree {
                 last.set(null);
                 Object actual = search(target);
                 if (actual != expected || last.get() != expectedLeaf) {
+                    return false;
+                }
+                Climate.TargetPoint below = new Climate.TargetPoint(target.temperature(), target.humidity(), target.continentalness(),
+                        target.erosion(), random.nextLong(-22000, 22001), target.weirdness());
+                last.set(null);
+                expected = vanillaSearch.apply(below);
+                expectedLeaf = last.get();
+                last.set(null);
+                if (search(below) != expected || last.get() != expectedLeaf) {
                     return false;
                 }
                 int warmIndex = random.nextInt(nodes.length);
