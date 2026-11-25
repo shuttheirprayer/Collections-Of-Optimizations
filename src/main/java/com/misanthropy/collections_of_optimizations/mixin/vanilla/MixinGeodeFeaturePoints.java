@@ -11,7 +11,12 @@ import java.util.LinkedList;
 @Mixin(GeodeFeature.class)
 public abstract class MixinGeodeFeaturePoints {
 
-    @Redirect(method = "place", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newLinkedList()Ljava/util/LinkedList;", remap = false), require = 0)
+    @Redirect(method = "place", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newLinkedList()Ljava/util/LinkedList;", ordinal = 0, remap = false), require = 0)
+    private <E> LinkedList<E> coo$centers() {
+        return GeodePoints.startCenters();
+    }
+
+    @Redirect(method = "place", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newLinkedList()Ljava/util/LinkedList;", ordinal = 1, remap = false), require = 0)
     private <E> LinkedList<E> coo$reusableIteratorList() {
         return new GeodePoints<>();
     }

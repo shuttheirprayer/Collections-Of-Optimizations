@@ -6,9 +6,23 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 public final class GeodePoints<E> extends LinkedList<E> {
+    private static final ThreadLocal<GeodePoints<?>> CENTERS = new ThreadLocal<>();
+
+    public double outer;
     private Object[] items = new Object[16];
     private int count;
     private final Cursor cursor = new Cursor();
+
+    public static <E> GeodePoints<E> startCenters() {
+        GeodePoints<E> points = new GeodePoints<>();
+        CENTERS.set(points);
+        return points;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E> GeodePoints<E> centers() {
+        return (GeodePoints<E>) CENTERS.get();
+    }
 
     @Override
     public boolean add(E element) {
@@ -17,6 +31,12 @@ public final class GeodePoints<E> extends LinkedList<E> {
         }
         this.items[this.count++] = element;
         return super.add(element);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public E get(int index) {
+        return this.count == this.size() && index < this.count ? (E) this.items[index] : super.get(index);
     }
 
     @Override
