@@ -79,6 +79,9 @@ public final class CoOConfig {
     public static int xaeroworldmapVramPollInterval = 500;
     public static int xaeroworldmapRenderProcessInterval = 4;
     public static boolean xaeroworldmapMarkLayersOnce = true;
+    public static boolean xaeroworldmapMarkOnlyChangedChunk = true;
+    public static int xaeroworldmapTileRefreshMillis = 1500;
+    public static int xaeroworldmapSkippedChunksPerMilli = 16;
     public static boolean tooltipoverhaulCacheFrameTagKeys = true;
     public static boolean cablefacadesSkipEmptyLookup = true;
     public static boolean cablefacadesSkipGuardWhenEmpty = true;
@@ -114,6 +117,7 @@ public final class CoOConfig {
     public static boolean emfCompiledPatterns = true;
     public static boolean emfIndexedResourceExists = true;
     public static boolean emfReuseCompiledAnimations = true;
+    public static boolean emfFastModelRender = true;
     public static boolean mekanismSkipEmptyRadiationScan = true;
     public static boolean etfStacklessPropertyExceptions = true;
     public static boolean etfWarmTextures = true;
@@ -143,6 +147,7 @@ public final class CoOConfig {
     public static boolean vanillaReuseBiomeListEncoding = true;
     public static boolean vanillaGeometricHolderGrowth = true;
     public static boolean vanillaIndexedObjectHolders = true;
+    public static boolean vanillaMarkLoadedChunkOnce = true;
     public static boolean vanillaSkipOrderIndependentSort = true;
     public static boolean vanillaMemoSkyColourPerTick = true;
     public static boolean vanillaSkipEmptyBeardifier = true;
@@ -362,6 +367,7 @@ public final class CoOConfig {
     public static boolean punchyMemoAnimationMerge = true;
     public static boolean punchyMemoSpearChecks = true;
     public static boolean embeddiumCacheShaderSources = true;
+    public static boolean embeddiumKeepAirSections = true;
     public static boolean alltheleaksSkipCrashReportGc = true;
     public static boolean alltheleaksSkipServerStopGc = true;
     public static boolean l2hostilitySkipTraitlessCapLookup = true;
@@ -613,6 +619,10 @@ public final class CoOConfig {
     public static boolean vanillaCachePackNamespaces = true;
     public static boolean vanillaSkipAbsentPackNamespaces = true;
     public static boolean vanillaPlaceFeaturesWithoutStreams = true;
+    public static boolean vanillaFeatureBiomeMasks = true;
+    public static boolean vanillaCopyPalettesByEntry = true;
+    public static boolean vanillaListPaletteWithMask = true;
+    public static boolean byepregenDirectSectionLookup = true;
     public static boolean vanillaMultifaceWithoutStreams = true;
     public static boolean vanillaShareTemplatePositions = true;
     public static boolean flywheelParkWorkers = true;
@@ -831,7 +841,10 @@ public final class CoOConfig {
     public static boolean ribbitsFixPerformerCrash = true;
     public static boolean hazennstuffCacheGeoResources = true;
 
+    public static boolean fleroviumRealBoxSize = true;
+
     public static boolean speciesFixDoubleRenderListener = true;
+    public static boolean speciesSkipIdleDisguiseCheck = true;
     public static int speciesWickedHauntScanInterval = 20;
     public static int speciesLimpetScareScanInterval = 10;
 
@@ -881,6 +894,7 @@ public final class CoOConfig {
     public static boolean ironsspellbooksLeanCurioEquipCheck = true;
     public static boolean ironsspellbooksClearStaleSyncedData = true;
     public static boolean ironsspellbooksReuseArmorModelLocations = true;
+    public static boolean ironsspellbooksShareEmptySyncedData = true;
 
     public static boolean hostilenetworksCacheModelHolder = true;
     public static boolean hostilenetworksSkipBrokenModelOnKill = true;
@@ -1260,6 +1274,15 @@ public final class CoOConfig {
                 .comment("Mark a map region's other cave layers as outdated once per frame instead of once for every chunk written into it. In singleplayer every region is world save data, so stock looks up and flags the same region in every loaded cave layer for each chunk the map writer visits, which is about half of the writer's render thread time and grows with every cave depth you have mapped. The flags only ever get set, so the map is identical. Client.")
                 .define("markLayersOnce", true), v -> xaeroworldmapMarkLayersOnce = v);
         gate(builder
+                .comment("A block change, a light update or a chunk loading or unloading made the map redraw that chunk and all eight around it on the render thread. The map does not read across chunk borders, so only the chunk that changed is redrawn. Looks the same. Client.")
+                .define("markOnlyChangedChunk", true), v -> xaeroworldmapMarkOnlyChangedChunk = v);
+        gate(builder
+                .comment("Every chunk that loads made the map work out the colour of all 4096 pixels of its 4x4 chunk square again on the render thread. A square that keeps changing is redrawn at most this often in milliseconds, so freshly explored land can take that long to show up on the map. 0 disables. Client.")
+                .defineInRange("tileRefreshMillis", 1500, 0, 10000), 0, v -> xaeroworldmapTileRefreshMillis = v);
+        gate(builder
+                .comment("How many already mapped chunks the map writer may walk past per millisecond. Stock keeps walking through every loaded chunk until it finds one to update or has used 8.7 % of the frame, so with a large loaded area it always takes that 8.7 %, even standing still. 16 still visits 4000 loaded chunks four times a second. The world map screen is never limited. 0 restores the stock behaviour. Client.")
+                .defineInRange("skippedChunksPerMilli", 16, 0, 10000), 0, v -> xaeroworldmapSkippedChunksPerMilli = v);
+        gate(builder
                 .comment("Wait out the world map screen's frame budget by parking instead of spinning. While the map screen is open Xaero busy loops on System.nanoTime until 1.6ms of the frame has passed, which burns a whole core for most of every map frame. Pacing is unchanged, the thread just idles instead.")
                 .define("idleMapFrameWait", true), v -> xaeroworldmapIdleMapFrameWait = v);
         gate(builder
@@ -1391,6 +1414,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Keep each compiled animation class EMF makes and hand the same class back whenever a model with the same animations is built again. EMF turns the animation formulas of every animated model into a small class with its own class loader each time that model is built, and models are built again at runtime, for example statues and other blocks or mobs that make a fresh model. Every rebuilt model left a dead class behind, and each time the garbage collector found a dead class it had to sweep the whole compiled code cache during its remark pause, which turned a 35 ms pause into a 70 ms freeze every minute or so. With this on the bytes of each new animation class are compared with the classes already made and an identical class is reused, so no animation class ever dies and the remark pause stays short. Animations run the same code as before. Client.")
                 .define("reuseCompiledAnimations", true), v -> emfReuseCompiledAnimations = v);
+        gate(builder
+                .comment("Write the boxes of resource pack mob models straight into the vertex buffer the way Embeddium already does for vanilla models. EMF replaces the models of most vanilla mobs and moved every corner of every box three times over through the slow path. Looks the same. Client.")
+                .define("fastModelRender", true), v -> emfFastModelRender = v);
         builder.pop();
 
         builder.comment("Shoulder Surfing Reloaded patches.").push("shouldersurfing");
@@ -2102,6 +2128,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Keep each chunk shader source after it is first read. Embeddium reads every shader file again on each renderer reload by asking the class loader, which searches every mod jar and throws a missing file error for each one that lacks it, a stall of over 100 ms in a large pack. Shader files inside mod jars never change while the game runs. Client.")
                 .define("cacheShaderSources", true), v -> embeddiumCacheShaderSources = v);
+        gate(builder
+                .comment("Do not fill the block copy of an empty chunk section with air again when it still holds air from the section meshed before it. Every chunk mesh copies 27 sections and most of the ones above the ground are empty.")
+                .define("keepAirSections", true), v -> embeddiumKeepAirSections = v);
         builder.pop();
 
         builder.comment("AllTheLeaks patches.").push("alltheleaks");
@@ -2923,6 +2952,9 @@ public final class CoOConfig {
                 .comment("After each registry is filled at startup Forge refreshes every registry object reference in the game just to update the ones for that registry. Keep them sorted by registry so each refresh only touches its own. References Forge cannot place are still refreshed every time.")
                 .define("indexedObjectHolders", true), v -> vanillaIndexedObjectHolders = v);
         gate(builder
+                .comment("A loading chunk asked for the same sections around it to be redrawn about 1600 times, once for every section of sky light, block light and blocks. Ask once per section. Looks the same. Client.")
+                .define("markLoadedChunkOnce", true), v -> vanillaMarkLoadedChunkOnce = v);
+        gate(builder
                 .comment("When a world is closed, drop the references other mods keep to it (Citadel, Copycats, KubeJS, Opposing Force, Xaero's config library, Simply Swords, Subtle Effects). Without this the last world stays in memory on the title screen and next to the new world after rejoining.")
                 .define("releaseClosedWorld", true), v -> releaseStoppedServer = v);
         gate(builder
@@ -3006,6 +3038,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("Place features with plain loops instead of a stream pipeline. Vanilla builds a stream with a lambda and a flat map stage for every placement modifier of every feature placement, which makes up a large part of the garbage world generation produces. Positions come out in the same order and the random source is used in the same order. Does nothing when Bye Pregen's own placement rewrite is active.")
                 .define("placeFeaturesWithoutStreams", true), v -> vanillaPlaceFeaturesWithoutStreams = v);
+        gate(builder
+                .comment("Answer whether a feature may grow in a biome from the biomes of the chunk sections around it. The exact biome, which hashes eight corners, is only looked up where those biomes disagree. Same answer. Needs placeFeaturesWithoutStreams.")
+                .define("featureBiomeMasks", true), v -> vanillaFeatureBiomeMasks = v);
+        gate(builder
+                .comment("Move a chunk section to a bigger block palette by translating each palette entry once instead of looking up all 4096 blocks one by one. Same palette and same blocks.")
+                .define("copyPalettesByEntry", true), v -> vanillaCopyPalettesByEntry = v);
+        gate(builder
+                .comment("List the distinct blocks or biomes of a chunk section with a bit mask instead of searching a growing array for every entry. Same values in the same order.")
+                .define("listPaletteWithMask", true), v -> vanillaListPaletteWithMask = v);
         gate(builder
                 .comment("Check the faces of glow lichen, sculk veins and other multiface blocks with a plain loop instead of building a stream for every check. World generation and block updates of sculk veins run this for every block they touch. Same answer.")
                 .define("multifaceWithoutStreams", true), v -> vanillaMultifaceWithoutStreams = v);
@@ -3166,13 +3207,13 @@ public final class CoOConfig {
                 .comment("Spread the client tick of mobs over the next few frames instead of doing all of them inside the one frame that runs the tick. The client tick already makes one frame out of every twenty several milliseconds longer than the rest, and with many mobs around most of that is mob ticks, so those frames are the 1% lows. A mob that has not had its tick yet is drawn exactly where the tick starts it, so nothing moves differently on screen. Every mob still ticks once per tick, all of them before the next tick starts. The player, the camera, riders and ridden mobs tick as before. Client.")
                 .define("spreadEntityTicks", true), v -> vanillaSpreadEntityTicks = v);
         gate(builder
-                .comment("When the game runs far faster than a mob's pose needs to change, build each mob's model once every few frames and draw the same model again in between, moved to where the mob and the camera are this frame. At several hundred frames per second most of the frame goes into posing and building the same mobs again and again, and a screen can only show a new pose once per refresh, so each mob is rebuilt at least once per monitor refresh (at least 120 times a second) and only the frames in between reuse it. Below about twice the refresh rate, and with a shader pack, every frame builds every mob as before. Players, hurt or dying mobs, leashed or glowing mobs and any mob whose renderer draws outside the shared buffers are always built every frame. Client.")
+                .comment("When the game runs far faster than a mob's pose needs to change, build each mob's model once every few frames and draw the same model again in between, moved to where the mob and the camera are this frame. At several hundred frames per second most of the frame goes into posing and building the same mobs again and again, and a screen can only show a new pose once per refresh, so each mob is rebuilt at least once per monitor refresh (at least 120 times a second) and only the frames in between reuse it. Below about twice the refresh rate, and with a shader pack, every frame builds every mob as before. Players, leashed or glowing mobs and any mob whose renderer draws outside the shared buffers are always built every frame. Client.")
                 .define("reuseEntityMeshes", true), v -> vanillaReuseEntityMeshes = v);
         gate(builder
                 .comment("The same as reuseEntityMeshes for block entities with a renderer, such as chests, banners, signs, statues and notice boards: each is built at least once per monitor refresh and drawn again from that build on the frames in between. Castles and villages hold hundreds of them, and drawing them is most of what a frame does there. Client.")
                 .define("reuseBlockEntityMeshes", true), v -> vanillaReuseBlockEntityMeshes = v);
         gate(builder
-                .comment("With reuseEntityMeshes on, a mob shorter than this many pixels on your screen gets a new pose half as often, and one under half this height a third as often. It still moves smoothly every frame; only its limbs and animation step a little less often, which is hard to see at that size. Worked out from the mob's size, its distance, your field of view and window height. 0 turns this off. Client.")
+                .comment("With reuseEntityMeshes on, a mob shorter than this many pixels on your screen gets a new pose half as often, and one under half this height a third as often. It still moves smoothly every frame; only its limbs and animation step a little less often, which is hard to see at that size. Worked out from the mob's size, its distance, your field of view and window height. Below twice the refresh rate only mobs under half this height are drawn this way, and never under 30 poses a second. 0 turns this off. Client.")
                 .defineInRange("reuseSmallMobPixels", 120, 0, 2000), 0, v -> vanillaReuseSmallMobPixels = v);
         gate(builder
                 .comment("With spreadEntityTicks on, spread the client ticks of dropped items, experience orbs, arrows and thrown items the same way. Each of these is drawn from values its tick interpolates between, so drawing it exactly where its tick starts it shows the same position, spin and bob. After a fight there can be dozens of drops on the ground, each moving on the client every tick. Client.")
@@ -3725,10 +3766,25 @@ public final class CoOConfig {
                 .define("cacheGeoResources", true), v -> hazennstuffCacheGeoResources = v);
         builder.pop();
 
+        builder.comment("Bye Pregen patches.").push("byepregen");
+        gate(builder
+                .comment("Read the chunk section a feature check needs through the generation region class instead of through the interface Bye Pregen adds to it. The interface checks are slow on a class many mods add interfaces to, worse with many generation threads. Same section.")
+                .define("directSectionLookup", true), v -> byepregenDirectSectionLookup = v);
+        builder.pop();
+
+        builder.comment("Flerovium patches.").push("flerovium");
+        gate(builder
+                .comment("Flerovium replaces the frustum test of Embeddium with one that only looks at the middle of a box and treats every box as one chunk section, 18 blocks wide. Block entities with a bigger render box disappear while a part of them is still on screen, and small ones keep being drawn 9 blocks outside of the screen. With this on the real size of the box is used, chunk sections give the same answer as before.")
+                .define("realBoxSize", true), v -> fleroviumRealBoxSize = v);
+        builder.pop();
+
         builder.comment("Species patches.").push("species");
         gate(builder
                 .comment("Stop the Species living entity render listener from running a second time after every entity has already been drawn. The mod subscribes its big disguise renderer to the abstract parent of the render living event instead of to the pre variant, and Forge hands a parent listener both the pre event and the post event, so the whole body runs twice for every living entity on screen every frame. The second run is not just wasted work: the post event is not cancellable, and the disguise branch calls set canceled on it, which throws an unsupported operation exception straight out of the entity render dispatcher, so anything wearing a wicked mask with a stored mob id can hard crash the client. With this on the listener returns immediately unless the event really is the pre one, which is the only phase the code was written for, so the crash goes away and the per entity per frame cost of that listener is halved. Turn it off for stock behaviour.")
                 .define("fixDoubleRenderListener", true), v -> speciesFixDoubleRenderListener = v);
+        gate(builder
+                .comment("Every inventory slot read and every equipment read asks Species whether a disguise is being ticked on this thread, through a thread local. With this on it first looks at the counter of disguises being ticked anywhere, which is zero almost always. Same result.")
+                .define("skipIdleDisguiseCheck", true), v -> speciesSkipIdleDisguiseCheck = v);
         gate(builder
                 .comment("Let a wicked look for its haunted mob this many ticks apart instead of every tick. A wicked that has a haunted target id saved but has not found the mob object yet asks the level for every mob inside a forty by forty by forty block box, with a filter that allocates two fresh lambdas each time, and it does that twenty times a second on both the client and the server. That search is only there to reconnect the wicked to its victim after a load, so it normally succeeds on the first try, but if the victim died, despawned or is sitting in an unloaded chunk the id never clears and the wicked runs that sweep forever. With this at twenty the reconnect can take up to a second longer and the hopeless case costs a twentieth of what it did, and once the wicked is holding its victim again nothing is throttled at all. Set to 1 for stock behaviour.")
                 .defineInRange("wickedHauntScanInterval", 20, 1, 200), 1, v -> speciesWickedHauntScanInterval = v);
@@ -3876,6 +3932,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Hand the armour models the same resource location every time they ask for their model, texture or animation file instead of building and validating a new one on every draw. A cultist wearing its armour asked three times per frame. The transmog aware generic armour model is left alone. Client.")
                 .define("reuseArmorModelLocations", true), v -> ironsspellbooksReuseArmorModelLocations = v);
+        gate(builder
+                .comment("Every mob on screen built a whole new empty spell record every frame just to learn that it is not casting anything. They share one empty record now, the way players without spells already do. Looks the same. Client.")
+                .define("shareEmptySyncedData", true), v -> ironsspellbooksShareEmptySyncedData = v);
         builder.pop();
 
         builder.comment("Hostile Neural Networks patches.").push("hostilenetworks");
