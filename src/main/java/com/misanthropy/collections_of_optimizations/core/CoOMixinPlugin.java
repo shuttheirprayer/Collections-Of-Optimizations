@@ -625,6 +625,18 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
 
             Map.entry("fwa.MixinFwaFastQuads", new String[]{"embeddium"}),
 
+            Map.entry("vanilla.MixinLevelRendererMeshReuse", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinEntityMeshHolder", new String[]{"embeddium"}),
+            Map.entry("geckolib.MixinGeoArmorRendererMeshReuse", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinVertexBufferMeshReuse", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinRenderTypeMeshReuse", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinBlockEntityMeshHolder", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinBlockEntityRenderDispatcherMeshReuse", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinRenderLayerCutoutReplay", new String[]{"embeddium"}),
+            Map.entry("vanilla.MixinVillagerLayerModelReplay", new String[]{"embeddium"}),
+            Map.entry("geckolib.MixinGeoRenderer", new String[]{"embeddium"}),
+            Map.entry("lionfishapi.MixinLionfishModelBoxRender", new String[]{"embeddium"}),
+
 
             Map.entry("ironsspellbooks.MixinIsbCurioEquipCheck", new String[]{"curios"}),
 
