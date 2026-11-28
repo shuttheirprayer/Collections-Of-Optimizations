@@ -86,6 +86,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("konweapon", "weapon"),
             Map.entry("immersiveaircraft", "immersive_aircraft"),
             Map.entry("ftbchunks", "ftbchunks"),
+            Map.entry("ftblibrary", "ftblibrary"),
             Map.entry("jei", "jei"),
             Map.entry("ftbxmodcompat", "ftbxmodcompat"),
             Map.entry("structurify", "structurify"),
@@ -510,6 +511,7 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("goetydelight.MixinEntityVisualEffects", new String[]{"goetydelight", "1.5.0fix4"}),
             Map.entry("goetydelight.MixinEntityVisualEffectRenderDispatcher", new String[]{"goetydelight", "1.5.0fix4"}),
             Map.entry("goetydelight.MixinScreenSpaceDepthEffectPostProcessor", new String[]{"goetydelight", "1.5.0fix4"}),
+            Map.entry("goetydelight.MixinDisplaySkinBytes", new String[]{"goetydelight", "1.5.3"}),
             Map.entry("cataclysm.MixinCataclysmMonstrosityBlockBreaking", new String[]{"cataclysm", "3.16"}),
             Map.entry("geckolib.MixinAnimationControllerKeyframes", new String[]{"geckolib", "4.8.4"}),
             Map.entry("geckolib.MixinBakedAnimationsAdapterShare", new String[]{"geckolib", "4.8.4"}),
@@ -520,7 +522,9 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("subtleeffects.MixinEntityTickerManagerRange", new String[]{"subtle_effects", "1.15.0", "1.15.1-hotfix.1"}),
             Map.entry("subtleeffects.MixinEntityTickerRange", new String[]{"subtle_effects", "1.15.0", "1.15.1-hotfix.1"}),
             Map.entry("subtleeffects.MixinLavaFluidSparks", new String[]{"subtle_effects", "1.15.0", "1.15.1-hotfix.1"}),
-            Map.entry("subtleeffects.MixinWaterFluidSteam", new String[]{"subtle_effects", "1.15.0", "1.15.1-hotfix.1"})
+            Map.entry("subtleeffects.MixinWaterFluidSteam", new String[]{"subtle_effects", "1.15.0", "1.15.1-hotfix.1"}),
+            Map.entry("alexscaves.MixinACSkipUnlistedDimensions", new String[]{"alexscaves", "2.0.2"}),
+            Map.entry("ftblibrary.MixinSidebarPreparedReads", new String[]{"ftblibrary", "2001.2.13"})
     );
 
     private static final Map<String, String[]> GROUP_CONFLICTS = Map.of(
@@ -553,7 +557,13 @@ public class CoOMixinPlugin implements IMixinConfigPlugin {
             Map.entry("vanilla.MixinPoseStackAxisRotation", new String[]{"lomka"}),
             Map.entry("vanilla.MixinModelPartRotationReuse", new String[]{"sleepium"}),
             Map.entry("vanilla.MixinBlockPosBetweenClosed", new String[]{"lomka"}),
-            Map.entry("vanilla.MixinPalettedContainerUniform", new String[]{"lomka"})
+            Map.entry("vanilla.MixinPalettedContainerUniform", new String[]{"lomka"}),
+            Map.entry("citadel.MixinCitadelTrackedBroadcast", new String[]{"alexsmobsandcavesoptimization"}),
+            Map.entry("alexsmobs.MixinAlexsMobsTrackedBroadcast", new String[]{"alexsmobsandcavesoptimization"}),
+            Map.entry("alexscaves.MixinAlexsCavesTrackedBroadcast", new String[]{"alexsmobsandcavesoptimization"}),
+            Map.entry("citadel.MixinPathfindingBoundedQueue", new String[]{"alexsmobsandcavesoptimization"}),
+            Map.entry("citadel.MixinPathResultBoundedQueue", new String[]{"alexsmobsandcavesoptimization"}),
+            Map.entry("alexscaves.MixinACScareScanReuse", new String[]{"alexsmobsandcavesoptimization"})
     );
 
     private static final Map<String, Set<String>> INCOMPATIBLE_MODS = Map.of(

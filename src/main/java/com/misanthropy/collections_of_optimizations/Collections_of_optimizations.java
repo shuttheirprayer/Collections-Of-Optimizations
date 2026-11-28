@@ -113,6 +113,7 @@ public class Collections_of_optimizations {
             }
         }
         VehicleCount.register();
+        com.misanthropy.collections_of_optimizations.core.ServerMobWarmup.register();
 
         GhostPlayerPurge.register();
         LeakProbe.register();

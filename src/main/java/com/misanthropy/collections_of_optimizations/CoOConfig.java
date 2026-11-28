@@ -52,6 +52,7 @@ public final class CoOConfig {
     public static boolean goetydelightSkipIdleVisualEffects = true;
     public static boolean goetydelightLeanLogScan = true;
     public static boolean goetydelightCacheLogItems = true;
+    public static boolean goetydelightReuseSkinDownload = true;
 
     public static boolean regionsunexploredCacheFurnaceBurnTimes = true;
 
@@ -65,6 +66,8 @@ public final class CoOConfig {
 
     public static boolean citadelFastModelRender = true;
     public static boolean citadelSkipNonLavaFluidRenderEvent = true;
+    public static boolean citadelTrackingOnlyBroadcast = true;
+    public static boolean citadelBoundedPathQueue = true;
 
     public static boolean cofhCacheTranslucentRenderers = true;
 
@@ -82,6 +85,7 @@ public final class CoOConfig {
     public static boolean xaeroworldmapMarkOnlyChangedChunk = true;
     public static int xaeroworldmapTileRefreshMillis = 1500;
     public static int xaeroworldmapSkippedChunksPerMilli = 16;
+    public static boolean xaeroworldmapWriteWithinRenderDistance = true;
     public static boolean tooltipoverhaulCacheFrameTagKeys = true;
     public static boolean cablefacadesSkipEmptyLookup = true;
     public static boolean cablefacadesSkipGuardWhenEmpty = true;
@@ -573,6 +577,7 @@ public final class CoOConfig {
     public static int alexsmobsSpiderFlyScanInterval = 10;
     public static boolean alexsmobsReleaseLevelMaps = true;
     public static boolean alexsmobsCrowScanPrecheck = true;
+    public static boolean alexsmobsTrackingOnlyBroadcast = true;
 
     public static boolean alexscavesMemoRareBiomeQuads = true;
     public static boolean alexscavesMemoClimateSample = true;
@@ -581,6 +586,9 @@ public final class CoOConfig {
     public static boolean alexscavesSingleMagnetQuery = true;
     public static boolean alexscavesRadiumEntityCollisions = true;
     public static boolean alexscavesSkipDisabledBiomeHook = true;
+    public static boolean alexscavesSkipUnlistedDimensionHook = true;
+    public static boolean alexscavesTrackingOnlyBroadcast = true;
+    public static boolean alexscavesScareScanReuse = true;
     public static boolean alexscavesSkipDeadCaveMaps = true;
     public static boolean alexscavesCabinLootWithDimensions = true;
 
@@ -645,6 +653,18 @@ public final class CoOConfig {
     public static boolean vanillaBudgetLightPolls = true;
     public static boolean vanillaDeferAmbientParticles = true;
     public static boolean vanillaScheduleClientBlockEntities = true;
+    public static boolean vanillaParkServerBlockEntities = true;
+    public static boolean vanillaServerMobWarmup = true;
+    public static boolean vanillaParallelMipmaps = true;
+    public static boolean vanillaPrepareLanguage = true;
+    public static boolean vanillaLogRingPositionTiming = true;
+    public static boolean vanillaRingEarlyAnswer = true;
+    public static boolean ftblibraryPrepareSidebar = true;
+    public static boolean vanillaSleepIdleItems = true;
+    public static boolean vanillaMergeSettledItems = true;
+    public static boolean vanillaSleepIdleOrbs = true;
+    public static boolean vanillaSleepIdleArrows = true;
+    public static boolean vanillaSleepIdleArmorStands = true;
     public static boolean vanillaSpreadEntityTicks = true;
     public static boolean vanillaReuseEntityMeshes = true;
     public static boolean vanillaReuseBlockEntityMeshes = true;
@@ -1198,6 +1218,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("Keep the boat plate log list instead of rescanning the whole item registry on every result lookup. Rebuilt whenever tags reload.")
                 .define("cacheLogItems", true), v -> goetydelightCacheLogItems = v);
+        gate(builder
+                .comment("Display entities download each player skin twice, the second time on the render thread while you join a world. Keep the first download in memory so the render thread only decodes it. Client.")
+                .define("reuseSkinDownload", true), v -> goetydelightReuseSkinDownload = v);
         builder.pop();
 
         builder.comment("Better Combat patches.").push("bettercombat");
@@ -1216,6 +1239,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop Citadel firing an event for every water block the chunk builder meshes. Citadel builds a new event object and sends it through the whole Forge event bus every time the game asks which render layer a fluid block goes in, so a mod could swap it. In this pack only Alex's Mobs listens, and it only ever changes lava while you have Lava Vision. With this on the event still fires for lava exactly as before, but is skipped for every other fluid while Alex's Mobs is the only listener. If any other mod starts listening it fires for everything again. Client side only. Turn it off for stock behaviour.")
                 .define("skipNonLavaFluidRenderEvent", true), v -> citadelSkipNonLavaFluidRenderEvent = v);
+        gate(builder
+                .comment("Send Citadel's animation and entity data updates only to the players that can see the mob, instead of to every player on the server. A player who does not have the mob loaded ignored them anyway. Server.")
+                .define("trackingOnlyBroadcast", true), v -> citadelTrackingOnlyBroadcast = v);
+        gate(builder
+                .comment("Cap Citadel's pathfinding queue at 256 waiting jobs. Stock lets it grow without limit when many Alex's Mobs and Alex's Caves mobs ask for paths at once, so the paths that finally arrive are minutes old. A mob whose job is refused gets no new path for a second, then asks again. The search itself, including its node limit, is untouched. Server.")
+                .define("boundedPathQueue", true), v -> citadelBoundedPathQueue = v);
         builder.pop();
 
         builder.comment("CoFH Core patches.").push("cofh");
@@ -1282,6 +1311,9 @@ public final class CoOConfig {
         gate(builder
                 .comment("How many already mapped chunks the map writer may walk past per millisecond. Stock keeps walking through every loaded chunk until it finds one to update or has used 8.7 % of the frame, so with a large loaded area it always takes that 8.7 %, even standing still. 16 still visits 4000 loaded chunks four times a second. The world map screen is never limited. 0 restores the stock behaviour. Client.")
                 .defineInRange("skippedChunksPerMilli", 16, 0, 10000), 0, v -> xaeroworldmapSkippedChunksPerMilli = v);
+        gate(builder
+                .comment("Only write chunks inside your render distance into the world map. In singleplayer Xaero ignores its own writing distance and maps everything the game keeps loaded, so with CheapRD far terrain the writer walks four times the area and takes its full frame share all the time. Far chunks still get mapped once you get closer. The world map screen is never limited. Client.")
+                .define("writeWithinRenderDistance", true), v -> xaeroworldmapWriteWithinRenderDistance = v);
         gate(builder
                 .comment("Wait out the world map screen's frame budget by parking instead of spinning. While the map screen is open Xaero busy loops on System.nanoTime until 1.6ms of the frame has passed, which burns a whole core for most of every map frame. Pacing is unchanged, the thread just idles instead.")
                 .define("idleMapFrameWait", true), v -> xaeroworldmapIdleMapFrameWait = v);
@@ -1980,6 +2012,12 @@ public final class CoOConfig {
         gate(builder
                 .comment("Stop the FTB XMod Compat integration from putting Waystones icons on the FTB minimap and large map.")
                 .define("disableWaystoneIcons", false), v -> ftbchunksDisableWaystoneIcons = v);
+        builder.pop();
+
+        builder.comment("FTB Library patches.").push("ftblibrary");
+        gate(builder
+                .comment("Look up and parse the sidebar button JSON files of every mod on a background thread while the resources reload. The sidebar buttons are still built and announced to other mods on the main thread, in the same order, from the same parsed data; any file that cannot be prepared is read the old way. Client.")
+                .define("prepareSidebar", true), v -> ftblibraryPrepareSidebar = v);
         builder.pop();
 
         builder.comment("JEI patches.").push("jei");
@@ -2841,6 +2879,9 @@ public final class CoOConfig {
                 .comment("Stop attaching the snow leopard and tiger avoidance goals to every creeper.")
                 .define("skipCreeperAvoidGoals", true), v -> alexsmobsSkipCreeperAvoidGoals = v);
         gate(builder
+                .comment("Send the multipart hurt and visual flag updates only to the players that can see the mob, instead of to every player on the server. Server.")
+                .define("trackingOnlyBroadcast", true), v -> alexsmobsTrackingOnlyBroadcast = v);
+        gate(builder
                 .comment("How often a vanilla spider may scan for Alex's Mobs flies, in goal evaluations.")
                 .defineInRange("spiderFlyScanInterval", 10, 1, 200), 1, v -> alexsmobsSpiderFlyScanInterval = v);
         gate(builder
@@ -2873,6 +2914,15 @@ public final class CoOConfig {
         gate(builder
                 .comment("When every cave biome is set to disabled_completely in alexscaves_biome_generation, skip Alex's Caves' cave biome placement check on every biome lookup in every dimension. It can never place anything then. Worldgen.")
                 .define("skipDisabledBiomeHook", true), v -> alexscavesSkipDisabledBiomeHook = v);
+        gate(builder
+                .comment("Skip Alex's Caves' cave biome placement check on every biome lookup in dimensions that none of the alexscaves_biome_generation files list under dimensions. It can never place a cave biome there, and it was taking about a quarter of the worldgen time in space dimensions like the Moon. Worldgen.")
+                .define("skipUnlistedDimensionHook", true), v -> alexscavesSkipUnlistedDimensionHook = v);
+        gate(builder
+                .comment("Send the effect visual and held item updates only to the players that can see the entity, instead of to every player on the server. Cave map updates and everything else still go to everyone. Server.")
+                .define("trackingOnlyBroadcast", true), v -> alexscavesTrackingOnlyBroadcast = v);
+        gate(builder
+                .comment("Tremorsaurus, Tremorzilla and Luxtructosaurus roars look for every living thing around them on every tick of the roar. Reuse that list for up to three ticks, and look again on the tick the roar stops mobs' movement. Mobs that walk into range are scared up to three ticks later, and removed ones are skipped. Server.")
+                .define("scareScanReuse", true), v -> alexscavesScareScanReuse = v);
         gate(builder
                 .comment("End a cave map search right away when its biome is disabled_completely and the map is used outside the Alex's Caves dimensions, instead of sampling up to cave_map_search_attempts spots that can never match. Server.")
                 .define("skipDeadCaveMaps", true), v -> alexscavesSkipDeadCaveMaps = v);
@@ -3203,6 +3253,39 @@ public final class CoOConfig {
         gate(builder
                 .comment("On the client, remember when a block entity Immersive Optimization is slowing down is next allowed to tick and skip it until then, instead of looking it up and asking again every tick. At a high render distance the client holds thousands of ticking block entities and most of them are far enough away to tick only every few ticks, yet each one was visited every tick. They tick on exactly the same ticks as before. Removed block entities leave the list in one pass instead of one shift per removal, at most a second later for far ones. Client.")
                 .define("scheduleClientBlockEntities", true), v -> vanillaScheduleClientBlockEntities = v);
+        gate(builder
+                .comment("On the server, stop visiting block entities whose chunk is not ticking blocks. With a big render distance most loaded chunks only hold still, yet every block entity in them was looked at every tick just to be told no. They are set aside per chunk and handed back the moment the chunk ticks again (or Immersive Optimization lets it tick), with nothing lost. They can tick in a different order relative to block entities of other chunks than before. Server.")
+                .define("parkServerBlockEntities", true), v -> vanillaParkServerBlockEntities = v);
+        gate(builder
+                .comment("Once the server has started, load and link the classes of the mobs that spawn at night (read from every biome's monster spawn list) and the goal classes they create, on a low priority background thread. The first time a mob class is used the game has to verify it and mods patch it while the server tick waits, which showed up as the worst tick of the first night. Only loads classes: nothing is initialised and no mob is ever created. Server.")
+                .define("serverMobWarmup", true), v -> vanillaServerMobWarmup = v);
+        gate(builder
+                .comment("Build the mipmaps of the block, item and other atlas sprites on several threads. The game builds them for a whole atlas one sprite after another in a single task while the loading screen waits, which is several seconds of one core with a big pack. Each sprite is still mipmapped exactly as before and the textures come out bit for bit the same, only different sprites are handled at the same time. Client.")
+                .define("parallelMipmaps", true), v -> vanillaParallelMipmaps = v);
+        gate(builder
+                .comment("Read the language files (every mod's lang/en_us.json and the selected language) on a background thread while the resources reload, instead of on the main thread once everything else has finished. Same files in the same order, so the translations are identical; if the selected language, the resource packs or the text direction turn out different from what was prepared, or the work is not finished yet, the game reads them the old way. Client.")
+                .define("prepareLanguage", true), v -> vanillaPrepareLanguage = v);
+        gate(builder
+                .comment("Write one line to the log for every concentric ring structure set (strongholds and mod copies of them) saying how long its ring positions took to be ready after world generation asked for them, and, if a thread had to wait for them, how long and which thread. Only logs, changes nothing. Server.")
+                .define("logRingPositionTiming", true), v -> vanillaLogRingPositionTiming = v);
+        gate(builder
+                .comment("Strongholds and the mod copies of them make the first chunk that is asked whether it holds one wait for the whole ring list, which on a new world is several seconds of a world generation thread (or the spawn preparation) doing nothing. Each ring position starts from a guess that the biome search can move by at most seven chunks, so a chunk far from every guess is answered at once and a chunk near one waits only for those few positions. The answers are the same as with the whole list; the first answers after the list is ready are checked against it, and if one ever differs the early answers switch themselves off and say so in the log. Server.")
+                .define("ringEarlyAnswer", true), v -> vanillaRingEarlyAnswer = v);
+        gate(builder
+                .comment("Dropped items that lie still on the ground stop running their whole tick. They keep counting down their despawn timer and pickup delay, still merge with neighbours on the same ticks, can be picked up by players and hoppers as usual, and wake up on the same tick as before when the block under them goes, a block appears in them, water or lava reaches them, or anything pushes them. Stacks of items that run their own code every tick are left alone. Server.")
+                .define("sleepIdleItems", true), v -> vanillaSleepIdleItems = v);
+        gate(builder
+                .comment("When a lying item falls asleep, merge it once with identical sleeping items within a block of it, by the game's own merge rules (stack size, owner, pickup delay, items that never despawn are left alone). The game only merges items within half a block, so the drops under a farm stay many separate items that every client has to draw. Needs sleepIdleItems. Server.")
+                .define("mergeSettledItems", true), v -> vanillaMergeSettledItems = v);
+        gate(builder
+                .comment("Experience orbs that lie still on the ground stop running their whole tick. They keep ageing, wake up for the once a second check that makes them merge and look for a player, and wake up when the block under them goes, or water, lava or a push reaches them. Server.")
+                .define("sleepIdleOrbs", true), v -> vanillaSleepIdleOrbs = v);
+        gate(builder
+                .comment("Arrows stuck in a block stop running their whole tick. They keep their despawn and pickup timers and wake up on the same tick as before when the block they are stuck in changes or they catch fire. Server.")
+                .define("sleepIdleArrows", true), v -> vanillaSleepIdleArrows = v);
+        gate(builder
+                .comment("Armor stands that stand still and have nothing wrong with them stop running their whole living entity tick. They wake up when a player uses or hits one, when its equipment or data changes, when it is moved, or when the block under it, water or fire changes. Server.")
+                .define("sleepIdleArmorStands", true), v -> vanillaSleepIdleArmorStands = v);
         gate(builder
                 .comment("Spread the client tick of mobs over the next few frames instead of doing all of them inside the one frame that runs the tick. The client tick already makes one frame out of every twenty several milliseconds longer than the rest, and with many mobs around most of that is mob ticks, so those frames are the 1% lows. A mob that has not had its tick yet is drawn exactly where the tick starts it, so nothing moves differently on screen. Every mob still ticks once per tick, all of them before the next tick starts. The player, the camera, riders and ridden mobs tick as before. Client.")
                 .define("spreadEntityTicks", true), v -> vanillaSpreadEntityTicks = v);

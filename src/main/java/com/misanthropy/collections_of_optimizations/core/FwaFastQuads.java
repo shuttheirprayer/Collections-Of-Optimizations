@@ -126,7 +126,7 @@ public final class FwaFastQuads {
                 continue;
             }
             VertexConsumer consumer = source.getBuffer(type(slot));
-            VertexBufferWriter writer = VertexBufferWriter.tryOf(consumer);
+            VertexBufferWriter writer = IrisState.shaderPackInUse() ? null : VertexBufferWriter.tryOf(consumer);
             if (writer != null) {
                 if (format == null) {
                     format = VertexFormatRegistry.instance().get(DefaultVertexFormat.BLOCK);
